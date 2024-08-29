@@ -1,5 +1,6 @@
 import { AppRoutes } from '@/shared/const/AppRoutes';
 import { createBrowserRouter } from 'react-router-dom';
+import { AuthPage } from './auth';
 import { ContractDetailsPage } from './contractDetails';
 import { ContractNewPage } from './contractNew';
 import { ContractsPage } from './contracts';
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.CONTRACT_DETAILS,
         element: <ContractDetailsPage />,
+      },
+      {
+        path: AppRoutes.AUTH,
+        element: <AuthPage />,
       },
     ],
   },

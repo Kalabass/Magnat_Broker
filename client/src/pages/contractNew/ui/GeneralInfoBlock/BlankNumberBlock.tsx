@@ -26,7 +26,7 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
       </Grid>
       <Grid item xs={8}>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
-          {blank.insurance_type?.name.toUpperCase() !== 'ИПОТЕКА' && (
+          {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
             <Select
               size='small'
               value={series.id.toString()}

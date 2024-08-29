@@ -1,5 +1,6 @@
 import { useBlankStore } from '@/shared/stores/useBlankStore';
-import { Button, FormGroup, Grid, Paper } from '@mui/material';
+import CustomTextField from '@/shared/ui/CustomTextField';
+import { Button, FormGroup, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 import TextFieldWithTitle from '../ClientBlock/TextFieldWithTitle';
 import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock';
@@ -18,8 +19,15 @@ const PaymentBlock: FC = () => {
     <Paper sx={{ borderRadius: '10px', padding: '40px' }}>
       <FormGroup>
         <Grid container spacing={5} sx={{ paddingBottom: '40px' }}>
-          <Grid item container xs={6}>
-            <TextFieldWithTitle title='Страховая сумма' />
+          <Grid item xs={2}>
+            <Typography>страховая премия</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <CustomTextField
+              value=''
+              globalStoreKey='insuranceAmount'
+              type='number'
+            />
           </Grid>
           <Grid item container xs={6} spacing={1}>
             <SelectWithTitle

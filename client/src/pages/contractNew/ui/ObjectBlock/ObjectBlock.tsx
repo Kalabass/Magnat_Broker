@@ -18,13 +18,13 @@ const ObjectBlock: FC = () => {
       <FormGroup>
         <Grid container spacing={5}>
           <Grid container item xs={6} spacing={1}>
-            {blank.insurance_type?.name.toUpperCase() !== 'ИПОТЕКА' && (
+            {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
               <TextFieldWithTitle title='Название' />
             )}
             <TextFieldWithTitle title='Страховая сумма' />
           </Grid>
           <Grid container item xs={6} spacing={1}>
-            {blank.insurance_type?.name.toUpperCase() !== 'ИПОТЕКА' && (
+            {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
               <TextFieldWithTitle title='Мощность' />
             )}
             <SelectWithTitle items={BANKS} blankKey='bank' title='Банк' />

@@ -14,14 +14,15 @@ export interface BlankData {
   activeDateTo: Date;
   useDateFrom: Date;
   useDateTo: Date;
-  insurance_type: itemData;
-  mortgage_type: itemData;
+  insuranceType: itemData;
+  mortgageType: itemData;
   agent: itemData;
   company: itemData;
   blankSeries: BlankSeriesEnum;
   blankNumber: string;
   sellPoint: string;
   bank: itemData;
+  insuranceAmount: number;
   paymentType: itemData;
 }
 
@@ -44,6 +45,7 @@ export const useBlankStore = create<BlankStore>()(
       useDateFrom: undefined,
       useDateTo: undefined,
       type: undefined,
+      insuranceAmount: undefined,
     },
 
     setBlank: (newBlank) => set({ blank: newBlank }),

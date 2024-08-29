@@ -77,15 +77,15 @@ const GeneralInfoBlock: FC = () => {
               <SelectWithTitle
                 items={INSURANCE_TYPES}
                 title='Вид'
-                blankKey='insurance_type'
+                blankKey='insuranceType'
               />
               {/* FIXME: вынести ИПОТЕКА в константы */}
               {/* FIXME: подумать что делать с перерисовками */}
-              {blank.insurance_type?.name.toUpperCase() === 'ИПОТЕКА' && (
+              {blank.insuranceType?.name.toUpperCase() === 'ИПОТЕКА' && (
                 <SelectWithTitle
                   items={MORTGAGE_TYPES}
                   title='Направление'
-                  blankKey='mortgage_type'
+                  blankKey='mortgageType'
                 />
               )}
 
