@@ -14,18 +14,17 @@ interface Item {
 }
 
 interface SelectWithTitleProps {
-  title: string;
+  title?: string;
   blankKey: keyof BlankData;
   items: Item[];
 }
 
 const SelectWithTitle: FC<SelectWithTitleProps> = ({
   items,
-  title,
   blankKey,
+  title,
 }) => {
   const { updateBlankField } = useBlankStore();
-
   const [item, setItem] = useState(items[0]);
 
   const handleChange = (e: SelectChangeEvent) => {
@@ -38,21 +37,23 @@ const SelectWithTitle: FC<SelectWithTitleProps> = ({
   };
 
   return (
-    <>
-      <Grid
-        item
-        xs={4}
-        alignItems='center'
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'start',
-        }}
-      >
-        <Typography>{title}</Typography>
-      </Grid>
-      <Grid item xs={8}>
+    <Grid item container>
+      {title && (
+        <Grid
+          item
+          xs={4}
+          alignItems='center'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'start',
+          }}
+        >
+          <Typography>{title}</Typography>
+        </Grid>
+      )}
+      <Grid item xs={title ? 8 : 12}>
         <Select
           fullWidth
           size='small'
@@ -66,7 +67,7 @@ const SelectWithTitle: FC<SelectWithTitleProps> = ({
           ))}
         </Select>
       </Grid>
-    </>
+    </Grid>
   );
 };
 

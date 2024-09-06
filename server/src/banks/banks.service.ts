@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SeedOptions } from 'src/constants/seedOptions';
 import { Repository } from 'typeorm';
@@ -12,35 +12,84 @@ export class BanksService {
   constructor(
     @InjectRepository(Bank) private readonly bankRepository: Repository<Bank>,
   ) {}
-  create(createBankDto: CreateBankDto) {
-    return 'This action adds a new bank';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findBankById(id: number): Promise<Bank> {
+    const bank = await this.bankRepository.findOne({ where: { id } });
+    if (!bank) {
+      throw new NotFoundException('Bank not found');
+    }
+    return bank;
+  }
+
+  async create(createBankDto: CreateBankDto) {
+    try {
+      return await this.bankRepository.save(createBankDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
-    const banks = await this.bankRepository.find();
-    return banks;
+    try {
+      const banks = await this.bankRepository.find();
+      return banks;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} bank`;
+  async findAllNames() {
+    try {
+      const banks = await this.bankRepository.find({
+        select: ['id', 'name'],
+      });
+      return banks;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateBankDto: UpdateBankDto) {
-    return `This action updates a #${id} bank`;
+  async findOne(id: number) {
+    try {
+      return await this.findBankById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bank`;
+  async update(id: number, updateBankDto: UpdateBankDto) {
+    try {
+      const bank = await this.findBankById(id);
+      return await this.bankRepository.update(bank.id, updateBankDto);
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const bank = await this.findBankById(id);
+      return await this.bankRepository.delete(bank.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedDataWithFaker(): Promise<void> {
     const banks: Partial<Bank>[] = [];
 
     for (let i = 0; i < SeedOptions.BANK.seedCount; i++) {
-      const bank = new Bank();
-      bank.name = faker.company.name();
-      bank.comment = faker.lorem.sentence();
-      banks.push(await this.bankRepository.save(bank));
+      banks.push({
+        name: faker.company.name(),
+        comment: faker.lorem.sentence(),
+      });
     }
+
+    await this.bankRepository.save(banks);
   }
 }

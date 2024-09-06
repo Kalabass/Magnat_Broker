@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SeedOptions } from 'src/constants/seedOptions';
 import { Repository } from 'typeorm';
@@ -13,8 +13,28 @@ export class SellingPointsService {
     @InjectRepository(SellingPoint)
     private readonly sellingPointRepository: Repository<SellingPoint>,
   ) {}
-  create(createSellingPointDto: CreateSellingPointDto) {
-    return 'This action adds a new sellingPoint';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findSellingPointById(id: number): Promise<SellingPoint> {
+    const sellingPoint = await this.sellingPointRepository.findOne({
+      where: { id },
+    });
+    if (!sellingPoint) {
+      throw new NotFoundException('Selling point not found');
+    }
+    return sellingPoint;
+  }
+
+  async create(createSellingPointDto: CreateSellingPointDto) {
+    try {
+      return await this.sellingPointRepository.save(createSellingPointDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
@@ -22,29 +42,60 @@ export class SellingPointsService {
       const sellingPoints = await this.sellingPointRepository.find();
       return sellingPoints;
     } catch (error) {
-      throw new Error('Failed to fetch selling points: ' + error.message);
+      this.handleError(error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} sellingPoint`;
+  async findAllNames() {
+    try {
+      const sellingPoints = await this.sellingPointRepository.find({
+        select: ['id', 'name'],
+      });
+      return sellingPoints;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateSellingPointDto: UpdateSellingPointDto) {
-    return `This action updates a #${id} sellingPoint`;
+  async findOne(id: number) {
+    try {
+      return await this.findSellingPointById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} sellingPoint`;
+  async update(id: number, updateSellingPointDto: UpdateSellingPointDto) {
+    try {
+      const sellingPoint = await this.findSellingPointById(id);
+      return await this.sellingPointRepository.update(
+        sellingPoint.id,
+        updateSellingPointDto,
+      );
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const sellingPoint = await this.findSellingPointById(id);
+      return await this.sellingPointRepository.delete(sellingPoint.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedDataWithFaker(): Promise<void> {
-    const banks: Partial<SellingPoint>[] = [];
+    const sellingPoints: Partial<SellingPoint>[] = [];
+
     for (let i = 0; i < SeedOptions.SELLING_POINT.seedCount; i++) {
-      const bank = new SellingPoint();
-      bank.name = faker.company.name();
-      bank.comment = faker.lorem.sentence();
-      banks.push(await this.sellingPointRepository.save(bank));
+      sellingPoints.push({
+        name: faker.company.name(),
+        comment: faker.lorem.sentence(),
+      });
     }
+
+    await this.sellingPointRepository.save(sellingPoints);
   }
 }

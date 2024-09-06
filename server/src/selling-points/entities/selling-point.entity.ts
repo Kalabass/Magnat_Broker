@@ -9,7 +9,7 @@ export class SellingPoint {
   @Column()
   name: string;
 
-  @Column({ default: false })
+  @Column({ default: true })
   isActive: boolean;
 
   @Column({ nullable: true })

@@ -16,6 +16,16 @@ class BankService {
       throw error;
     }
   }
+
+  async findAllNames() {
+    try {
+      const response = await instance.get(this.baseUrl + '/names');
+      return response.data;
+    } catch (error) {
+      this.handleError(error, 'Failed to fetch all articles');
+      throw error;
+    }
+  }
 }
 
 export const bankService = new BankService();

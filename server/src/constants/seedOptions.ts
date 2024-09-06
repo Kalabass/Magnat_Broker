@@ -7,4 +7,5 @@ export const SeedOptions = {
   INSURANCE_COMPANY: { seedCount: 5 },
   INSURANCE_TYPE: { seedCount: 3 },
   SELLING_POINT: { seedCount: 5 },
+  BLANK_SERIES: { seedCount: 3 },
 };

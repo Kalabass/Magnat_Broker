@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -12,8 +12,26 @@ export class EmployeesService {
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
   ) {}
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findEmployeeById(id: number): Promise<Employee> {
+    const employee = await this.employeeRepository.findOne({ where: { id } });
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+    return employee;
+  }
+
+  async create(createEmployeeDto: CreateEmployeeDto) {
+    try {
+      return await this.employeeRepository.save(createEmployeeDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
@@ -21,34 +39,61 @@ export class EmployeesService {
       const employees = await this.employeeRepository.find();
       return employees;
     } catch (error) {
-      throw new Error('Failed to fetch employees: ' + error.message);
+      this.handleError(error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async findAllNames() {
+    try {
+      const employees = await this.employeeRepository.find({
+        select: ['id', 'name'],
+      });
+      return employees;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
+  async findOne(id: number) {
+    try {
+      return await this.findEmployeeById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+    try {
+      const employee = await this.findEmployeeById(id);
+      return await this.employeeRepository.update(
+        employee.id,
+        updateEmployeeDto,
+      );
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const employee = await this.findEmployeeById(id);
+      return await this.employeeRepository.delete(employee.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedDataWithFaker(): Promise<void> {
     const employees: Partial<Employee>[] = [];
-    const employeeCount = 10;
-    for (let i = 0; i < employeeCount; i++) {
+    for (let i = 0; i < 10; i++) {
       const employee = new Employee();
-      employee.name = faker.name.fullName();
+      employee.name = faker.person.fullName();
       employee.login = faker.internet.userName();
       employee.password = faker.internet.password();
       employee.comment = faker.lorem.sentence();
       employee.isActive = faker.datatype.boolean();
-      employee.series = Number(faker.random.numeric(4));
-      employee.number = Number(faker.random.numeric(6));
+      employee.series = faker.number.int({ min: 1111, max: 9999 });
+      employee.number = faker.number.int({ min: 111111, max: 999999 });
       employees.push(await this.employeeRepository.save(employee));
     }
   }

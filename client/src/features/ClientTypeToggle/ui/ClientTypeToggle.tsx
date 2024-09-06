@@ -13,7 +13,7 @@ export const ClientTypeToggle: FC<ClientTypeToggleProps> = ({
   selectedItem = items[0],
   onClick,
 }) => {
-  const handleChange = (e: MouseEvent<HTMLElement>, newClientType: string) => {
+  const handleChange = (_e: MouseEvent<HTMLElement>, newClientType: string) => {
     const selectedId = parseInt(newClientType, 10);
     const selectedType = items.find((type) => type.id === selectedId);
     if (selectedType) {

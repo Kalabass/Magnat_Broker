@@ -6,6 +6,8 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateInsuranceTypeDto } from './dto/create-insurance-type.dto';
 import { UpdateInsuranceTypeDto } from './dto/update-insurance-type.dto';
@@ -16,6 +18,7 @@ export class InsuranceTypesController {
   constructor(private readonly insuranceTypesService: InsuranceTypesService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   create(@Body() createInsuranceTypeDto: CreateInsuranceTypeDto) {
     return this.insuranceTypesService.create(createInsuranceTypeDto);
   }
@@ -23,6 +26,11 @@ export class InsuranceTypesController {
   @Get()
   findAll() {
     return this.insuranceTypesService.findAll();
+  }
+
+  @Get('/names')
+  findAllNames() {
+    return this.insuranceTypesService.findAllNames();
   }
 
   @Get(':id')

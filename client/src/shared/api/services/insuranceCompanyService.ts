@@ -1,7 +1,7 @@
 import instance from '../axiosInstance';
 
 class InsuranceCompanyService {
-  private baseUrl = 'insurance-companies';
+  private baseUrl = 'insuranceCompanies';
 
   private handleError(error: any, message: string) {
     console.error(message, error);
@@ -13,6 +13,16 @@ class InsuranceCompanyService {
       return response.data;
     } catch (error) {
       this.handleError(error, 'Failed to fetch all insurance companies');
+      throw error;
+    }
+  }
+
+  async findAllNames() {
+    try {
+      const response = await instance.get(this.baseUrl + '/names');
+      return response.data;
+    } catch (error) {
+      this.handleError(error, 'Failed to fetch all articles');
       throw error;
     }
   }

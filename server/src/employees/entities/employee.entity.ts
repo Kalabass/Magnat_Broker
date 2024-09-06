@@ -18,7 +18,7 @@ export class Employee {
   @Column({ nullable: true })
   comment: string;
 
-  @Column()
+  @Column({ default: true })
   isActive: boolean;
 
   @Column({ nullable: true })

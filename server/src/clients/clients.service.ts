@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -12,8 +12,26 @@ export class ClientsService {
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
   ) {}
-  create(createClientDto: CreateClientDto) {
-    return 'This action adds a new client';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findClientById(id: number): Promise<Client> {
+    const client = await this.clientRepository.findOne({ where: { id } });
+    if (!client) {
+      throw new NotFoundException('Client not found');
+    }
+    return client;
+  }
+
+  async create(createClientDto: CreateClientDto) {
+    try {
+      return await this.clientRepository.save(createClientDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
@@ -21,38 +39,51 @@ export class ClientsService {
       const clients = await this.clientRepository.find();
       return clients;
     } catch (error) {
-      throw new Error('Failed to fetch clients: ' + error.message);
+      this.handleError(error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: number) {
+    try {
+      return await this.findClientById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    try {
+      const client = await this.findClientById(id);
+      return await this.clientRepository.update(client.id, updateClientDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: number) {
+    try {
+      const client = await this.findClientById(id);
+      return await this.clientRepository.delete(client.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedDataWithFaker(): Promise<void> {
     const clients: Partial<Client>[] = [];
-    const clientCount = 10;
-    for (let i = 0; i < clientCount; i++) {
+    for (let i = 0; i < 10; i++) {
       const client = new Client();
-      client.name = faker.name.fullName();
+      client.name = faker.person.fullName();
       client.dateOfBirth = faker.date.birthdate({
         min: 18,
         max: 80,
         mode: 'age',
       });
       client.phone = faker.phone.number();
-      client.inn = Number(faker.random.numeric(10));
-      client.address = faker.address.streetAddress();
-      client.series = Number(faker.random.numeric(4));
-      client.number = Number(faker.random.numeric(6));
+      client.inn = faker.number.int({ min: 111111111111, max: 999999999999 });
+      client.address = faker.location.streetAddress();
+      client.series = faker.number.int({ min: 1111, max: 9999 });
+      client.number = faker.number.int({ min: 111111, max: 999999 });
       client.comment = faker.lorem.sentence();
       clients.push(await this.clientRepository.save(client));
     }

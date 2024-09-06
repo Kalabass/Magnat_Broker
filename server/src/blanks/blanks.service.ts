@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BanksService } from 'src/banks/banks.service';
 import { ClientsService } from 'src/clients/clients.service';
@@ -27,35 +27,71 @@ export class BlanksService {
     private readonly sellingPointService: SellingPointsService,
     private readonly vehicleService: VehiclesService,
   ) {}
-  create(createBlankDto: CreateBlankDto) {
-    return 'This action adds a new blank';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findBlankById(id: number): Promise<Blank> {
+    const blank = await this.blankRepository.findOne({ where: { id } });
+    if (!blank) {
+      throw new NotFoundException('Blank not found');
+    }
+    return blank;
+  }
+
+  async create(createBlankDto: CreateBlankDto) {
+    try {
+      return await this.blankRepository.save(createBlankDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
-    const blanks = await this.blankRepository.find({
-      relations: {
-        client: true,
-        employee: true,
-        sellingPoint: true,
-        bank: true,
-        insuranceCompany: true,
-        insuranceType: true,
-        vehicle: true,
-      },
-    });
-    return blanks;
+    try {
+      const blanks = await this.blankRepository.find({
+        relations: {
+          client: true,
+          employee: true,
+          sellingPoint: true,
+          bank: true,
+          insuranceCompany: true,
+          insuranceType: true,
+          vehicle: true,
+        },
+      });
+      return blanks;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} blank`;
+  async findOne(id: number) {
+    try {
+      return await this.findBlankById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateBlankDto: UpdateBlankDto) {
-    return `This action updates a #${id} blank`;
+  async update(id: number, updateBlankDto: UpdateBlankDto) {
+    try {
+      const blank = await this.findBlankById(id);
+      return await this.blankRepository.update(blank.id, updateBlankDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} blank`;
+  async remove(id: number) {
+    try {
+      const blank = await this.findBlankById(id);
+      return await this.blankRepository.delete(blank.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedDataWithFaker(): Promise<void> {
@@ -77,17 +113,25 @@ export class BlanksService {
     const sellingPoints = await this.sellingPointService.findAll();
     const vehicles = await this.vehicleService.findAll();
 
+    enum BLANK_SERIES {
+      AAB = 'AAB',
+      XXX = 'XXX',
+      TTT = 'TTT',
+    }
+
     for (let i = 0; i < SeedOptions.BLANK.seedCount; i++) {
       const blank = new Blank();
-      blank.series = faker.random.alphaNumeric(5).toUpperCase();
-      blank.number = faker.random.numeric(7);
+      blank.series = faker.helpers.enumValue(BLANK_SERIES);
+      blank.number = faker.number
+        .int({ min: 100000000, max: 999999999 })
+        .toString();
       blank.conclusionDate = faker.date.past();
       blank.activeDateStart = faker.date.future();
       blank.activeDateEnd = faker.date.future();
       blank.useDateStart = faker.date.future();
       blank.useDateEnd = faker.date.future();
-      blank.sum = parseInt(faker.finance.amount(1001, 10000, 2));
-      blank.premium = parseInt(faker.finance.amount(100, 500, 2));
+      blank.sum = faker.number.int({ min: 400000, max: 1000000 });
+      blank.premium = faker.number.int({ min: 3000, max: 25000 });
       blank.isProlonged = faker.datatype.boolean();
       blank.comment = faker.lorem.sentence();
 

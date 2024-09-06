@@ -6,6 +6,8 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateSellingPointDto } from './dto/create-selling-point.dto';
 import { UpdateSellingPointDto } from './dto/update-selling-point.dto';
@@ -16,6 +18,7 @@ export class SellingPointsController {
   constructor(private readonly sellingPointsService: SellingPointsService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   create(@Body() createSellingPointDto: CreateSellingPointDto) {
     return this.sellingPointsService.create(createSellingPointDto);
   }
@@ -23,6 +26,11 @@ export class SellingPointsController {
   @Get()
   findAll() {
     return this.sellingPointsService.findAll();
+  }
+
+  @Get('/names')
+  findAllNames() {
+    return this.sellingPointsService.findAllNames();
   }
 
   @Get(':id')

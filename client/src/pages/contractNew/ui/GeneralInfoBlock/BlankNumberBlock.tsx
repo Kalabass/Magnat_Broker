@@ -1,22 +1,14 @@
 import { useBlankStore } from '@/shared/stores/useBlankStore';
-import {
-  Box,
-  Grid,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { FC, useState } from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import { FC } from 'react';
 import { itemData } from './GeneralInfoBlock';
+import SelectWithTitle from './SelectWithTitle';
 
 interface BlankNumberBlock {
   items: itemData[];
 }
 //TODO: менять этот блок в зависимости от типа страхования
 const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
-  const [series, setSeries] = useState(items[0]);
   const { getBlank } = useBlankStore();
   const blank = getBlank();
   return (
@@ -24,25 +16,19 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
       <Grid item xs={4}>
         <Typography>Полис</Typography>
       </Grid>
-      <Grid item xs={8}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
-          {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
-            <Select
-              size='small'
-              value={series.id.toString()}
-              onChange={(e: SelectChangeEvent) => {
-                setSeries(items[+e.target.value]);
-              }}
-            >
-              {items.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
+      <Grid item container xs={8} spacing={1}>
+        {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
+          <Grid item xs={3}>
+            <SelectWithTitle items={items} blankKey='blankSeries' />
+          </Grid>
+        )}
+        <Grid
+          item
+          container
+          xs={blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' ? 9 : 12}
+        >
           <TextField fullWidth size='small' />
-        </Box>
+        </Grid>
       </Grid>
     </>
   );

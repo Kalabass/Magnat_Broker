@@ -12,6 +12,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmployeesModule } from './employees/employees.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { BlankSeriesModule } from './blank-series/blank-series.module';
+import { MortgageTypesModule } from './mortgage-types/mortgage-types.module';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { VehiclesModule } from './vehicles/vehicles.module';
     ReceiptsModule,
     EmployeesModule,
     VehiclesModule,
+    BlankSeriesModule,
+    MortgageTypesModule,
   ],
 })
 export class AppModule {}

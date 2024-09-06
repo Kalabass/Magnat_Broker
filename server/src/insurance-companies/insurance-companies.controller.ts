@@ -27,6 +27,11 @@ export class InsuranceCompaniesController {
     return this.insuranceCompaniesService.findAll();
   }
 
+  @Get('/names')
+  findAllNames() {
+    return this.insuranceCompaniesService.findAllNames();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.insuranceCompaniesService.findOne(+id);

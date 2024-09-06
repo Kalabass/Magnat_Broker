@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SeedOptions } from 'src/constants/seedOptions';
 import { Repository } from 'typeorm';
@@ -13,8 +13,28 @@ export class InsuranceTypesService {
     @InjectRepository(InsuranceType)
     private readonly insuranceTypeRepository: Repository<InsuranceType>,
   ) {}
-  create(createInsuranceTypeDto: CreateInsuranceTypeDto) {
-    return 'This action adds a new insuranceType';
+
+  private readonly handleError = (error: any) => {
+    console.error(error);
+    throw error;
+  };
+
+  private async findInsuranceTypeById(id: number): Promise<InsuranceType> {
+    const insuranceType = await this.insuranceTypeRepository.findOne({
+      where: { id },
+    });
+    if (!insuranceType) {
+      throw new NotFoundException('Insurance type not found');
+    }
+    return insuranceType;
+  }
+
+  async create(createInsuranceTypeDto: CreateInsuranceTypeDto) {
+    try {
+      return await this.insuranceTypeRepository.save(createInsuranceTypeDto);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async findAll() {
@@ -22,20 +42,48 @@ export class InsuranceTypesService {
       const insuranceTypes = await this.insuranceTypeRepository.find();
       return insuranceTypes;
     } catch (error) {
-      throw new Error('Failed to fetch insurance types: ' + error.message);
+      this.handleError(error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} insuranceType`;
+  async findAllNames() {
+    try {
+      const types = await this.insuranceTypeRepository.find({
+        select: ['id', 'name'],
+      });
+      return types;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  update(id: number, updateInsuranceTypeDto: UpdateInsuranceTypeDto) {
-    return `This action updates a #${id} insuranceType`;
+  async findOne(id: number) {
+    try {
+      return await this.findInsuranceTypeById(id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} insuranceType`;
+  async update(id: number, updateInsuranceTypeDto: UpdateInsuranceTypeDto) {
+    try {
+      const insuranceType = await this.findInsuranceTypeById(id);
+      return await this.insuranceTypeRepository.update(
+        insuranceType.id,
+        updateInsuranceTypeDto,
+      );
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const insuranceType = await this.findInsuranceTypeById(id);
+      return await this.insuranceTypeRepository.delete(insuranceType.id);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async seedData(): Promise<void> {
@@ -45,25 +93,26 @@ export class InsuranceTypesService {
       { name: 'КАСКО' },
       { name: 'ИПОТЕКА' },
     ];
-    insuranceTypesData.forEach(async (type) => {
-      console.log(type);
+
+    for (const type of insuranceTypesData) {
       const insuranceType = new InsuranceType();
       insuranceType.name = type.name;
       insuranceTypes.push(
         await this.insuranceTypeRepository.save(insuranceType),
       );
-    });
+    }
   }
+
   async seedDataWithFaker(): Promise<void> {
     const insuranceTypes: Partial<InsuranceType>[] = [];
 
     for (let i = 0; i < SeedOptions.INSURANCE_TYPE.seedCount; i++) {
-      const insuranceType = new InsuranceType();
-      insuranceType.name = faker.lorem.word();
-      insuranceType.comment = faker.lorem.sentence();
-      insuranceTypes.push(
-        await this.insuranceTypeRepository.save(insuranceType),
-      );
+      insuranceTypes.push({
+        name: faker.lorem.word(),
+        comment: faker.lorem.sentence(),
+      });
     }
+
+    await this.insuranceTypeRepository.save(insuranceTypes);
   }
 }

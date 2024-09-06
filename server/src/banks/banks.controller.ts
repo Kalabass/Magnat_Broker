@@ -6,6 +6,8 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { BanksService } from './banks.service';
 import { CreateBankDto } from './dto/create-bank.dto';
@@ -16,6 +18,7 @@ export class BanksController {
   constructor(private readonly banksService: BanksService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   create(@Body() createBankDto: CreateBankDto) {
     return this.banksService.create(createBankDto);
   }
@@ -23,6 +26,11 @@ export class BanksController {
   @Get()
   findAll() {
     return this.banksService.findAll();
+  }
+
+  @Get('/names')
+  findAllNames() {
+    return this.banksService.findAllNames();
   }
 
   @Get(':id')
@@ -41,7 +49,7 @@ export class BanksController {
   }
 
   @Get('seed/faker')
-  async seedDataWithFaker(): Promise<string> {
+  async seedDataWithFaker() {
     await this.banksService.seedDataWithFaker();
     return 'Bank table seeded successfully!';
   }
