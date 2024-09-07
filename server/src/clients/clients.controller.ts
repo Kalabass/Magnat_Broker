@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ClientsService } from './clients.service';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {ClientsService} from './clients.service';
+import {CreateClientDto} from './dto/create-client.dto';
+import {UpdateClientDto} from './dto/update-client.dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -25,9 +17,9 @@ export class ClientsController {
     return this.clientsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientsService.findOne(+id);
+  @Get('/unique')
+  findUniqueBy (@Body() createClientDto: CreateClientDto) {
+    return this.clientsService.findClient(createClientDto);
   }
 
   @Patch(':id')
@@ -44,5 +36,10 @@ export class ClientsController {
   async seedDataWithFaker(): Promise<string> {
     await this.clientsService.seedDataWithFaker();
     return 'Clients table seeded successfully!';
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.clientsService.findOne(+id);
   }
 }

@@ -1,10 +1,10 @@
-import { faker } from '@faker-js/faker';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { Employee } from './entities/employee.entity';
+import {faker} from '@faker-js/faker';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateEmployeeDto} from './dto/create-employee.dto';
+import {UpdateEmployeeDto} from './dto/update-employee.dto';
+import {Employee} from './entities/employee.entity';
 
 @Injectable()
 export class EmployeesService {
@@ -82,6 +82,8 @@ export class EmployeesService {
       this.handleError(error);
     }
   }
+
+
 
   async seedDataWithFaker(): Promise<void> {
     const employees: Partial<Employee>[] = [];

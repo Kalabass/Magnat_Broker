@@ -1,10 +1,11 @@
-import { faker } from '@faker-js/faker';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
-import { Client } from './entities/client.entity';
+import {faker} from '@faker-js/faker';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateClientDto} from './dto/create-client.dto';
+import {UpdateClientDto} from './dto/update-client.dto';
+import {Client} from './entities/client.entity';
+import {FindClientDto} from './dto/find-client.dto';
 
 @Injectable()
 export class ClientsService {
@@ -67,6 +68,18 @@ export class ClientsService {
     } catch (error) {
       this.handleError(error);
     }
+  }
+
+  async findClient(findClientDto : FindClientDto){
+    if(Object.keys(findClientDto).length === 0)
+      throw new BadRequestException('No criteria given')
+    const {inn,series,name,number,dateOfBirth} = findClientDto;
+    const clients = await this.clientRepository.find({where: {name, dateOfBirth, inn, series, number}});
+
+    if(clients.length === 0)
+      throw new NotFoundException('Clients not found');
+
+    return clients;
   }
 
   async seedDataWithFaker(): Promise<void> {
