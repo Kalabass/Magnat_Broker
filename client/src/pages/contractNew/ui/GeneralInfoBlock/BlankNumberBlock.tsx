@@ -8,6 +8,7 @@ interface BlankNumberBlock {
   items: itemData[];
 }
 //TODO: менять этот блок в зависимости от типа страхования
+//FIXME:кривые стили
 const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
   const { getBlank } = useBlankStore();
   const blank = getBlank();

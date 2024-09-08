@@ -1,28 +1,28 @@
 import { BaseTextFieldProps, TextField } from '@mui/material';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { BlankData, useBlankStore } from '../stores/useBlankStore';
 
 export interface CustomTextFieldProps extends BaseTextFieldProps {
   value?: string;
-  globalStoreKey?: keyof BlankData;
+  onBlurHandler?: (value: string) => void;
 }
 
 const CustomTextField: FC<CustomTextFieldProps> = ({
-  globalStoreKey,
   value = '',
   size = 'small',
   fullWidth = true,
+  onBlurHandler,
   ...props
 }) => {
-  const { updateBlankField } = useBlankStore();
   const [inputValue, setInputValue] = useState(value);
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
-  const onBlurHandler = () => {
-    if (globalStoreKey) updateBlankField(globalStoreKey, inputValue);
+  const handleBlur = () => {
+    if (onBlurHandler) {
+      onBlurHandler(inputValue);
+    }
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const CustomTextField: FC<CustomTextFieldProps> = ({
       fullWidth={fullWidth}
       value={inputValue}
       onChange={onChangeHandler}
-      onBlur={onBlurHandler}
+      onBlur={handleBlur}
       {...props}
     />
   );

@@ -1,9 +1,11 @@
 import { router } from '@/pages';
+import { ThemeProvider } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import './styles/cssReset.css';
 import './styles/main.css';
+import muiTheme from './styles/muiTheme';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -14,7 +16,9 @@ const queryClient = new QueryClient({
 const App: FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={muiTheme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

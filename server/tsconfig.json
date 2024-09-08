@@ -17,5 +17,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/data-source.js",
+    "1725801819232-testMigration.ts"
+  ],
+  "exclude": ["node_modules"]
 }

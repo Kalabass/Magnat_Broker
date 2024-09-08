@@ -10,9 +10,10 @@ import { SellingPointsModule } from './selling-points/selling-points.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployeesModule } from './employees/employees.module';
-import { VehiclesModule } from './vehicles/vehicles.module';
 import { BlankSeriesModule } from './blank-series/blank-series.module';
+import { EmployeesModule } from './employees/employees.module';
+import { InsuranceObjectTypesModule } from './insurance-object-types/insurance-object-types.module';
+import { InsuranceObjectsModule } from './insurance-objects/insurance-objects.module';
 import { MortgageTypesModule } from './mortgage-types/mortgage-types.module';
 
 @Module({
@@ -27,10 +28,10 @@ import { MortgageTypesModule } from './mortgage-types/mortgage-types.module';
         username: configService.get('TYPEORM_USERNAME'),
         password: configService.get('TYPEORM_PASSWORD'),
         database: configService.get('TYPEORM_DATABASE'),
-        synchronize: true,
+        synchronize: false,
         logging: true,
         entities: [__dirname + '/**/*.entity{.js, .ts}'],
-        migrations: [],
+        migrations: [__dirname + '/migrations/*{.js, .ts}'],
         subscribers: [],
       }),
       inject: [ConfigService],
@@ -43,9 +44,11 @@ import { MortgageTypesModule } from './mortgage-types/mortgage-types.module';
     InsuranceTypesModule,
     ReceiptsModule,
     EmployeesModule,
-    VehiclesModule,
+
     BlankSeriesModule,
     MortgageTypesModule,
+    InsuranceObjectTypesModule,
+    InsuranceObjectsModule,
   ],
 })
 export class AppModule {}

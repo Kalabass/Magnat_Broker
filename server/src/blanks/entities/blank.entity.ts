@@ -2,9 +2,11 @@ import { Bank } from 'src/banks/entities/bank.entity';
 import { Client } from 'src/clients/entities/client.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
 import { InsuranceCompany } from 'src/insurance-companies/entities/insurance-company.entity';
+import { InsuranceObject } from 'src/insurance-objects/entities/insurance-object.entity';
 import { InsuranceType } from 'src/insurance-types/entities/insurance-type.entity';
+import { Receipt } from 'src/receipts/entities/receipt.entity';
 import { SellingPoint } from 'src/selling-points/entities/selling-point.entity';
-import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+
 import {
   Column,
   CreateDateColumn,
@@ -89,6 +91,9 @@ export class Blank {
   @ManyToOne(() => SellingPoint, (sellingPoint) => sellingPoint.blanks)
   sellingPoint: SellingPoint;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.blanks)
-  vehicle: Vehicle;
+  @OneToOne(() => Receipt, (receipt) => receipt.blank)
+  receipt: Receipt;
+
+  @ManyToOne(() => InsuranceObject, (insuranceObject) => insuranceObject.blanks)
+  insuranceObject: InsuranceObject;
 }

@@ -9,6 +9,7 @@ export enum ClientTypeEnum {
 export interface ClientData {
   type: number;
   name: string;
+  birthDate: Date;
   phoneNumber: string;
   INN: number;
   address: string;

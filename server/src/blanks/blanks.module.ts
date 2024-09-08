@@ -18,16 +18,13 @@ import { InsuranceTypesService } from 'src/insurance-types/insurance-types.servi
 import { SellingPoint } from 'src/selling-points/entities/selling-point.entity';
 import { SellingPointsModule } from 'src/selling-points/selling-points.module';
 import { SellingPointsService } from 'src/selling-points/selling-points.service';
-import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
-import { VehiclesModule } from 'src/vehicles/vehicles.module';
-import { VehiclesService } from 'src/vehicles/vehicles.service';
+
 import { BlanksController } from './blanks.controller';
 import { BlanksService } from './blanks.service';
 import { Blank } from './entities/blank.entity';
 
 @Module({
   imports: [
-    VehiclesModule,
     BanksModule,
     ClientsModule,
     EmployeesModule,
@@ -42,12 +39,10 @@ import { Blank } from './entities/blank.entity';
       InsuranceCompany,
       InsuranceType,
       SellingPoint,
-      Vehicle,
     ]),
   ],
   controllers: [BlanksController],
   providers: [
-    VehiclesService,
     BlanksService,
     BanksService,
     ClientsService,

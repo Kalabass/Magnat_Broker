@@ -15,43 +15,6 @@ export interface itemData {
   name: string;
 }
 
-// const SELLING_POINTS: itemData[] = [
-//   { id: 0, name: 'Петровский' },
-//   { id: 1, name: 'Агент' },
-//   { id: 2, name: 'Северодвинск' },
-//   { id: 3, name: 'Котлас' },
-// ];
-
-// const INSURANCE_TYPES: itemData[] = [
-//   { id: 0, name: 'ОСАГО' },
-//   { id: 1, name: 'КАСКО' },
-//   { id: 2, name: 'ИПОТЕКА' },
-//   { id: 3, name: 'АВТО НС' },
-//   { id: 4, name: 'Домашнее имущество' },
-// ];
-
-// const AGENTS: itemData[] = [
-//   { id: 0, name: 'Иван' },
-//   { id: 1, name: 'Трапезников Дмитрий' },
-//   { id: 2, name: 'Билак Алёна' },
-//   { id: 3, name: 'Байдалова Ирина' },
-//   { id: 4, name: 'Сынкова Дарья' },
-// ];
-
-// const COMPANIES: itemData[] = [
-//   { id: 4, name: 'СК АЛЬФАСТРАХОВАНИЕ' },
-//   { id: 8, name: 'ВСК' },
-//   { id: 11, name: 'Югория' },
-//   { id: 0, name: 'Гайде' },
-//   { id: 2, name: 'Ингосстрах' },
-// ];
-
-// const BLANK_SERIES: itemData[] = [
-//   { id: 0, name: 'XXX' },
-//   { id: 1, name: 'ТТТ' },
-//   { id: 2, name: 'ААВ' },
-// ];
-
 const MORTGAGE_TYPES: itemData[] = [
   { id: 0, name: 'жизнь' },
   { id: 1, name: 'жилье' },
@@ -74,9 +37,9 @@ const GeneralInfoBlock: FC = () => {
   const BLANK_SERIES = blankSeriesData;
 
   return (
-    <Paper sx={{ borderRadius: '10px', padding: '40px' }}>
+    <Paper sx={{ borderRadius: '10px', padding: 5 }}>
       <FormGroup>
-        <Grid container spacing='40px'>
+        <Grid container spacing={5}>
           <Grid item xs={6}>
             <Grid container spacing={1}>
               <TimeBLock />

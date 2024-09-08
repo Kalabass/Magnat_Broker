@@ -1,4 +1,5 @@
 import { Blank } from 'src/blanks/entities/blank.entity';
+import { Receipt } from 'src/receipts/entities/receipt.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -32,4 +33,7 @@ export class Client {
 
   @OneToMany(() => Blank, (blank) => blank.client)
   blanks: Blank[];
+
+  @OneToMany(() => Receipt, (receipt) => receipt.client)
+  receipts: Receipt;
 }

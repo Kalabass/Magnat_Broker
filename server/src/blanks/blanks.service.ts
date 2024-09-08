@@ -8,7 +8,7 @@ import { EmployeesService } from 'src/employees/employees.service';
 import { InsuranceCompaniesService } from 'src/insurance-companies/insurance-companies.service';
 import { InsuranceTypesService } from 'src/insurance-types/insurance-types.service';
 import { SellingPointsService } from 'src/selling-points/selling-points.service';
-import { VehiclesService } from 'src/vehicles/vehicles.service';
+
 import { Repository } from 'typeorm';
 import { CreateBlankDto } from './dto/create-blank.dto';
 import { UpdateBlankDto } from './dto/update-blank.dto';
@@ -25,7 +25,6 @@ export class BlanksService {
     private readonly clientsService: ClientsService,
     private readonly employeesService: EmployeesService,
     private readonly sellingPointService: SellingPointsService,
-    private readonly vehicleService: VehiclesService,
   ) {}
 
   private readonly handleError = (error: any) => {
@@ -59,7 +58,6 @@ export class BlanksService {
           bank: true,
           insuranceCompany: true,
           insuranceType: true,
-          vehicle: true,
         },
       });
       return blanks;
@@ -101,7 +99,6 @@ export class BlanksService {
     await this.clientsService.seedDataWithFaker();
     await this.employeesService.seedDataWithFaker();
     await this.sellingPointService.seedDataWithFaker();
-    await this.vehicleService.seedDataWithFaker();
 
     const blanks: Partial<Blank>[] = [];
 
@@ -111,7 +108,6 @@ export class BlanksService {
     const clients = await this.clientsService.findAll();
     const employees = await this.employeesService.findAll();
     const sellingPoints = await this.sellingPointService.findAll();
-    const vehicles = await this.vehicleService.findAll();
 
     enum BLANK_SERIES {
       AAB = 'AAB',
@@ -141,7 +137,6 @@ export class BlanksService {
       blank.client = faker.helpers.arrayElement(clients);
       blank.employee = faker.helpers.arrayElement(employees);
       blank.sellingPoint = faker.helpers.arrayElement(sellingPoints);
-      blank.vehicle = faker.helpers.arrayElement(vehicles);
 
       blanks.push(await this.blankRepository.save(blank));
     }
