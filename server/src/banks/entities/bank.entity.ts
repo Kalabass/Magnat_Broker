@@ -10,15 +10,6 @@ export class Bank {
   @Column()
   name: string;
 
-  @Column()
-  hui: string;
-
-  @Column()
-  penis: string;
-
-  @Column()
-  huipenis: string;
-
   @Column({ nullable: true })
   comment: string;
 

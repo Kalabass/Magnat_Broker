@@ -19,11 +19,15 @@ export class BanksService {
   };
 
   private async findBankById(id: number): Promise<Bank> {
-    const bank = await this.bankRepository.findOne({ where: { id } });
-    if (!bank) {
-      throw new NotFoundException('Bank not found');
+    try {
+      const bank = await this.bankRepository.findOne({ where: { id } });
+      if (!bank) {
+        throw new NotFoundException('Bank not found');
+      }
+      return bank;
+    } catch (error) {
+      this.handleError(error);
     }
-    return bank;
   }
 
   async create(createBankDto: CreateBankDto) {
@@ -36,8 +40,7 @@ export class BanksService {
 
   async findAll() {
     try {
-      const banks = await this.bankRepository.find();
-      return banks;
+      return await this.bankRepository.find();
     } catch (error) {
       this.handleError(error);
     }

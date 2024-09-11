@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { InsuranceObjectsService } from './insurance-objects.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateInsuranceObjectDto } from './dto/create-insurance-object.dto';
 import { UpdateInsuranceObjectDto } from './dto/update-insurance-object.dto';
+import { InsuranceObjectsService } from './insurance-objects.service';
 
-@Controller('insurance-objects')
+@Controller('insuranceObjects')
 export class InsuranceObjectsController {
-  constructor(private readonly insuranceObjectsService: InsuranceObjectsService) {}
+  constructor(
+    private readonly insuranceObjectsService: InsuranceObjectsService,
+  ) {}
 
   @Post()
   create(@Body() createInsuranceObjectDto: CreateInsuranceObjectDto) {
@@ -23,12 +33,21 @@ export class InsuranceObjectsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInsuranceObjectDto: UpdateInsuranceObjectDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateInsuranceObjectDto: UpdateInsuranceObjectDto,
+  ) {
     return this.insuranceObjectsService.update(+id, updateInsuranceObjectDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.insuranceObjectsService.remove(+id);
+  }
+
+  @Get('seed/faker')
+  async seedDataWithFaker() {
+    await this.insuranceObjectsService.seedDataWithFaker();
+    return 'Insurance objects table seeded successfully!';
   }
 }

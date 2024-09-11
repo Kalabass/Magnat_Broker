@@ -4,7 +4,7 @@ import { Button, FormGroup, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 import TextFieldWithTitle from '../ClientBlock/TextFieldWithTitle';
 import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock';
-import SelectWithTitle from '../GeneralInfoBlock/SelectWithTitle';
+import CustomSelect from '../GeneralInfoBlock/SelectWithTitle';
 
 const PAYMENT_TYPES: itemData[] = [
   { id: 0, name: 'ibox' },
@@ -13,7 +13,7 @@ const PAYMENT_TYPES: itemData[] = [
 ];
 
 const PaymentBlock: FC = () => {
-  const { getBlank } = useBlankStore();
+  const { getBlank, updateBlankField } = useBlankStore();
   const blank = getBlank();
   return (
     <Paper sx={{ borderRadius: '10px', padding: '40px' }}>
@@ -24,18 +24,25 @@ const PaymentBlock: FC = () => {
           </Grid>
           <Grid item xs={2}>
             <CustomTextField
-              value=''
-              globalStoreKey='insuranceAmount'
-              type='number'
+              onBlurHandler={(value) => {
+                updateBlankField('premium', Number(value));
+              }}
             />
           </Grid>
           <Grid item container xs={6} spacing={1}>
-            <SelectWithTitle
-              items={PAYMENT_TYPES}
-              title='Вид оплаты'
-              blankKey='paymentType'
-            />
-            {blank.paymentType?.name.toUpperCase() === 'НАЛИЧНЫЕ' && (
+            <Grid item xs={4}>
+              <Typography>Способ оплаты</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <CustomSelect
+                items={PAYMENT_TYPES}
+                onChangeHandler={(value) => {
+                  updateBlankField('paymentType', Number(value));
+                }}
+              />
+            </Grid>
+            {/* TODO: подгружать почту из текущего клиента */}
+            {blank.paymentType === 1 && (
               <TextFieldWithTitle title='Почта' type='email' />
             )}
           </Grid>

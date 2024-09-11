@@ -1,7 +1,7 @@
 import instance from '../axiosInstance';
 
 class BankService {
-  private baseUrl = 'articles';
+  private baseUrl = 'banks';
 
   private handleError(error: any, message: string) {
     console.error(message, error);
@@ -12,7 +12,7 @@ class BankService {
       const response = await instance.get(this.baseUrl);
       return response.data;
     } catch (error) {
-      this.handleError(error, 'Failed to fetch all articles');
+      this.handleError(error, 'Failed to fetch all banks');
       throw error;
     }
   }
@@ -22,7 +22,7 @@ class BankService {
       const response = await instance.get(this.baseUrl + '/names');
       return response.data;
     } catch (error) {
-      this.handleError(error, 'Failed to fetch all articles');
+      this.handleError(error, 'Failed to fetch all bank names');
       throw error;
     }
   }

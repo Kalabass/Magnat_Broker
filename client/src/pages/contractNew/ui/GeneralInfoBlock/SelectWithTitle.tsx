@@ -1,30 +1,13 @@
-import { BlankData, useBlankStore } from '@/shared/stores/useBlankStore';
-import {
-  Grid,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { FC, useState } from 'react';
-
-interface Item {
-  id: number;
-  name: string;
-}
+import { itemData } from './GeneralInfoBlock';
 
 interface SelectWithTitleProps {
-  title?: string;
-  blankKey: keyof BlankData;
-  items: Item[];
+  onChangeHandler?: (value: number) => void;
+  items: itemData[];
 }
 
-const SelectWithTitle: FC<SelectWithTitleProps> = ({
-  items,
-  blankKey,
-  title,
-}) => {
-  const { updateBlankField } = useBlankStore();
+const CustomSelect: FC<SelectWithTitleProps> = ({ items, onChangeHandler }) => {
   const [item, setItem] = useState(items[0]);
 
   const handleChange = (e: SelectChangeEvent) => {
@@ -32,43 +15,24 @@ const SelectWithTitle: FC<SelectWithTitleProps> = ({
     const selectedItem = items.find((item) => item.id === selectedId);
     if (selectedItem) {
       setItem(selectedItem);
-      updateBlankField(blankKey, selectedItem);
+      if (onChangeHandler) onChangeHandler(selectedId);
     }
   };
 
   return (
-    <Grid item container>
-      {title && (
-        <Grid
-          item
-          xs={4}
-          alignItems='center'
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'start',
-          }}
-        >
-          <Typography>{title}</Typography>
-        </Grid>
-      )}
-      <Grid item xs={title ? 8 : 12}>
-        <Select
-          fullWidth
-          size='small'
-          value={item.id.toString()}
-          onChange={handleChange}
-        >
-          {items.map((item) => (
-            <MenuItem key={item.id} value={item.id}>
-              {item.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </Grid>
-    </Grid>
+    <Select
+      fullWidth
+      size='small'
+      value={item.id.toString()}
+      onChange={handleChange}
+    >
+      {items.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
+        </MenuItem>
+      ))}
+    </Select>
   );
 };
 
-export default SelectWithTitle;
+export default CustomSelect;

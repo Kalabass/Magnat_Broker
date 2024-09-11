@@ -1,7 +1,7 @@
+import { useBlankStore } from '@/shared/stores/useBlankStore';
 import CustomTextField from '@/shared/ui/CustomTextField';
 import { Checkbox, Grid, Typography } from '@mui/material';
 import { FC, useState } from 'react';
-import { formatDate, getDefaultDates } from '../../lib/dateUtils';
 import { useInitializeDates } from '../../lib/useInitializeData';
 
 // TODO: добавить кнопки для указания периода использования(год, 10 мес, 6 мес и тд)
@@ -9,9 +9,11 @@ import { useInitializeDates } from '../../lib/useInitializeData';
 
 const TimeBlock: FC = () => {
   useInitializeDates();
-  const { defaultStartDate, defaultEndDate } = getDefaultDates();
+  // const { defaultStartDate, defaultEndDate } = getDefaultDates();
 
   const [isMatches, setIsMatches] = useState(true);
+
+  const { updateBlankField } = useBlankStore();
 
   return (
     <>
@@ -21,8 +23,9 @@ const TimeBlock: FC = () => {
       <Grid item xs={4}>
         <CustomTextField
           type='date'
-          value={formatDate(defaultStartDate)}
-          globalStoreKey='conclusionDate'
+          onBlurHandler={(value) => {
+            updateBlankField('conclusionDate', new Date(value));
+          }}
         />
       </Grid>
       <Grid item xs={4} />
@@ -32,15 +35,17 @@ const TimeBlock: FC = () => {
       <Grid item xs={4}>
         <CustomTextField
           type='date'
-          value={formatDate(defaultStartDate)}
-          globalStoreKey='activeDateFrom'
+          onBlurHandler={(value) => {
+            updateBlankField('activeDateFrom', new Date(value));
+          }}
         />
       </Grid>
       <Grid item xs={4}>
         <CustomTextField
           type='date'
-          value={formatDate(defaultEndDate)}
-          globalStoreKey='activeDateTo'
+          onBlurHandler={(value) => {
+            updateBlankField('activeDateTo', new Date(value));
+          }}
         />
       </Grid>
       <Grid item xs={4}>
@@ -60,15 +65,17 @@ const TimeBlock: FC = () => {
           <Grid item xs={4}>
             <CustomTextField
               type='date'
-              value={formatDate(defaultStartDate)}
-              globalStoreKey='useDateFrom'
+              onBlurHandler={(value) => {
+                updateBlankField('useDateFrom', new Date(value));
+              }}
             />
           </Grid>
           <Grid item xs={4}>
             <CustomTextField
               type='date'
-              value={formatDate(defaultEndDate)}
-              globalStoreKey='useDateTo'
+              onBlurHandler={(value) => {
+                updateBlankField('useDateTo', new Date(value));
+              }}
             />
           </Grid>
         </>

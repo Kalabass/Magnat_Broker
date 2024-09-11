@@ -1,4 +1,3 @@
-import { itemData } from '@/pages/contractNew/ui/GeneralInfoBlock/GeneralInfoBlock';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -14,16 +13,17 @@ export interface BlankData {
   activeDateTo: Date;
   useDateFrom: Date;
   useDateTo: Date;
-  insuranceType: itemData;
-  mortgageType: itemData;
-  agent: itemData;
-  company: itemData;
-  blankSeries: BlankSeriesEnum;
+  insuranceType: number;
+  mortgageType: number;
+  agent: number;
+  company: number;
+  blankSeries: number;
   blankNumber: string;
-  sellPoint: string;
-  bank: itemData;
+  sellPoint: number;
+  bank: number;
   insuranceAmount: number;
-  paymentType: itemData;
+  paymentType: number;
+  premium: number;
 }
 
 interface BlankStore {

@@ -1,8 +1,9 @@
 import { useBlankStore } from '@/shared/stores/useBlankStore';
-import { Grid, TextField, Typography } from '@mui/material';
+import CustomTextField from '@/shared/ui/CustomTextField';
+import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
 import { itemData } from './GeneralInfoBlock';
-import SelectWithTitle from './SelectWithTitle';
+import CustomSelect from './SelectWithTitle';
 
 interface BlankNumberBlock {
   items: itemData[];
@@ -10,7 +11,7 @@ interface BlankNumberBlock {
 //TODO: менять этот блок в зависимости от типа страхования
 //FIXME:кривые стили
 const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
-  const { getBlank } = useBlankStore();
+  const { getBlank, updateBlankField } = useBlankStore();
   const blank = getBlank();
   return (
     <>
@@ -18,17 +19,22 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
         <Typography>Полис</Typography>
       </Grid>
       <Grid item container xs={8} spacing={1}>
-        {blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' && (
+        {blank.insuranceType !== 4 && (
           <Grid item xs={3}>
-            <SelectWithTitle items={items} blankKey='blankSeries' />
+            <CustomSelect
+              items={items}
+              onChangeHandler={(value) => {
+                updateBlankField('blankSeries', value);
+              }}
+            />
           </Grid>
         )}
-        <Grid
-          item
-          container
-          xs={blank.insuranceType?.name.toUpperCase() !== 'ИПОТЕКА' ? 9 : 12}
-        >
-          <TextField fullWidth size='small' />
+        <Grid item xs={blank.insuranceType === 4 ? 12 : 9}>
+          <CustomTextField
+            onBlurHandler={(value) => {
+              updateBlankField('blankNumber', value);
+            }}
+          />
         </Grid>
       </Grid>
     </>

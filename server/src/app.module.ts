@@ -28,7 +28,7 @@ import { MortgageTypesModule } from './mortgage-types/mortgage-types.module';
         username: configService.get('TYPEORM_USERNAME'),
         password: configService.get('TYPEORM_PASSWORD'),
         database: configService.get('TYPEORM_DATABASE'),
-        synchronize: false,
+        synchronize: true,
         logging: true,
         entities: [__dirname + '/**/*.entity{.js, .ts}'],
         migrations: [__dirname + '/migrations/*{.js, .ts}'],
