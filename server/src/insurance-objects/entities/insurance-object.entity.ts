@@ -20,16 +20,16 @@ export class InsuranceObject {
   @Column()
   premium: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   horsePowers: number;
 
-  @Column()
+  @Column({ nullable: true })
   year: number;
 
-  @Column()
+  @Column({ nullable: true })
   isCredited: boolean;
 
   @ManyToOne(() => Bank, (bank) => bank.insuranceObjects)

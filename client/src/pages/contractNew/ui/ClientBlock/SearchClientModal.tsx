@@ -1,4 +1,4 @@
-import { ClientTypeToggle } from '@/features/ClientTypeToggle';
+import { CustomToggle } from '@/features/ClientTypeToggle';
 import CustomTextField from '@/shared/ui/CustomTextField';
 import { Button, FormGroup, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -36,7 +36,8 @@ export const SearchCLientModal: FC<SearchCLientModal> = ({
   handleClose,
   open,
 }) => {
-  const [clientType, setClientType] = useState<itemData>(CLIENT_TYPES[0]);
+  //TODO: исправить или удалить компонент полностью
+  const [clientType, _setClientType] = useState<itemData>(CLIENT_TYPES[0]);
   return (
     <Modal
       open={open}
@@ -45,13 +46,7 @@ export const SearchCLientModal: FC<SearchCLientModal> = ({
       aria-describedby='modal-modal-description'
     >
       <Box sx={style}>
-        <ClientTypeToggle
-          items={CLIENT_TYPES}
-          selectedItem={clientType}
-          onClick={(item: itemData) => {
-            setClientType(item);
-          }}
-        />
+        <CustomToggle items={CLIENT_TYPES} />
         {clientType.name === 'ФЛ' ? (
           <FormGroup>
             <Grid container spacing={1}>

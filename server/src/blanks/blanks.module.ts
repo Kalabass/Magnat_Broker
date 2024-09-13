@@ -19,6 +19,12 @@ import { SellingPoint } from 'src/selling-points/entities/selling-point.entity';
 import { SellingPointsModule } from 'src/selling-points/selling-points.module';
 import { SellingPointsService } from 'src/selling-points/selling-points.service';
 
+import { InsuranceObjectType } from 'src/insurance-object-types/entities/insurance-object-type.entity';
+import { InsuranceObjectTypesModule } from 'src/insurance-object-types/insurance-object-types.module';
+import { InsuranceObjectTypesService } from 'src/insurance-object-types/insurance-object-types.service';
+import { InsuranceObject } from 'src/insurance-objects/entities/insurance-object.entity';
+import { InsuranceObjectsModule } from 'src/insurance-objects/insurance-objects.module';
+import { InsuranceObjectsService } from 'src/insurance-objects/insurance-objects.service';
 import { BlanksController } from './blanks.controller';
 import { BlanksService } from './blanks.service';
 import { Blank } from './entities/blank.entity';
@@ -29,8 +35,10 @@ import { Blank } from './entities/blank.entity';
     ClientsModule,
     EmployeesModule,
     InsuranceCompaniesModule,
+    InsuranceObjectsModule,
     InsuranceTypesModule,
     SellingPointsModule,
+    InsuranceObjectTypesModule,
     TypeOrmModule.forFeature([
       Blank,
       Bank,
@@ -39,10 +47,13 @@ import { Blank } from './entities/blank.entity';
       InsuranceCompany,
       InsuranceType,
       SellingPoint,
+      InsuranceObject,
+      InsuranceObjectType,
     ]),
   ],
   controllers: [BlanksController],
   providers: [
+    InsuranceObjectTypesService,
     BlanksService,
     BanksService,
     ClientsService,
@@ -50,6 +61,7 @@ import { Blank } from './entities/blank.entity';
     InsuranceCompaniesService,
     InsuranceTypesService,
     SellingPointsService,
+    InsuranceObjectsService,
   ],
 })
 export class BlanksModule {}

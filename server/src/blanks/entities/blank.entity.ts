@@ -1,4 +1,3 @@
-import { Bank } from 'src/banks/entities/bank.entity';
 import { Client } from 'src/clients/entities/client.entity';
 import { Employee } from 'src/employees/entities/employee.entity';
 import { InsuranceCompany } from 'src/insurance-companies/entities/insurance-company.entity';
@@ -50,12 +49,6 @@ export class Blank {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
-  sum: number;
-
-  @Column()
-  premium: number;
-
   @Column({ default: false })
   isProlonged: Boolean;
 
@@ -75,9 +68,6 @@ export class Blank {
 
   @ManyToOne(() => Employee, (employee) => employee.blanks)
   employee: Employee;
-
-  @ManyToOne(() => Bank, (bank) => bank.blanks)
-  bank: Bank;
 
   @ManyToOne(
     () => InsuranceCompany,

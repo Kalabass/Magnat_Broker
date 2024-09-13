@@ -55,7 +55,6 @@ export class BlanksService {
           client: true,
           employee: true,
           sellingPoint: true,
-          bank: true,
           insuranceCompany: true,
           insuranceType: true,
         },
@@ -102,7 +101,6 @@ export class BlanksService {
 
     const blanks: Partial<Blank>[] = [];
 
-    const banks = await this.bankService.findAll();
     const insuranceCompanies = await this.insuranceCompanyService.findAll();
     const insuranceTypes = await this.insuranceTypeService.findAll();
     const clients = await this.clientsService.findAll();
@@ -126,12 +124,10 @@ export class BlanksService {
       blank.activeDateEnd = faker.date.future();
       blank.useDateStart = faker.date.future();
       blank.useDateEnd = faker.date.future();
-      blank.sum = faker.number.int({ min: 400000, max: 1000000 });
-      blank.premium = faker.number.int({ min: 3000, max: 25000 });
+
       blank.isProlonged = faker.datatype.boolean();
       blank.comment = faker.lorem.sentence();
 
-      blank.bank = faker.helpers.arrayElement(banks);
       blank.insuranceCompany = faker.helpers.arrayElement(insuranceCompanies);
       blank.insuranceType = faker.helpers.arrayElement(insuranceTypes);
       blank.client = faker.helpers.arrayElement(clients);

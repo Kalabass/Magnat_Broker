@@ -1,13 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-export enum ClientTypeEnum {
-  PP = 'ФЛ',
-  LP = 'ЮЛ',
-}
-
 export interface ClientData {
-  type: number;
+  isIndividual: boolean;
   name: string;
   birthDate: Date;
   phoneNumber: string;

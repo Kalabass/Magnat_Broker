@@ -59,6 +59,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "typeorm-transactional-cls-hooked": "^0.1.21",
     "typescript": "^5.5.4"
   },
   "jest": {

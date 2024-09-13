@@ -1,41 +1,30 @@
-import { ClientTypeToggle } from '@/features/ClientTypeToggle';
+import { CustomToggle } from '@/features/ClientTypeToggle';
+import { CLIENT_TYPES } from '@/pages/contractNew/constants/clinetTypes.const';
 import { useClientStore } from '@/shared/stores/useClientStore';
 import CustomTextField from '@/shared/ui/CustomTextField';
 import { FormGroup, Grid, Typography } from '@mui/material';
-import { FC, useState } from 'react';
-import { itemData } from '../../GeneralInfoBlock/GeneralInfoBlock';
+import { FC, useEffect } from 'react';
 import IndividualFields from './IndividualFields';
 import OrganizationFields from './OrganizationFields';
 
-// TODO: вынести в КОНСТЭЭЭЭЭНТЫ
-const CLIENT_TYPES: itemData[] = [
-  {
-    id: 0,
-    name: 'ФЛ',
-  },
-  {
-    id: 1,
-    name: 'ЮЛ',
-  },
-];
-
 const ClientForm: FC = () => {
-  const [clientType, setClientType] = useState(CLIENT_TYPES[0]);
-  const { updateClientField } = useClientStore();
+  const { updateClientField, getClient } = useClientStore();
+  const client = getClient();
+  useEffect(() => {
+    updateClientField('isIndividual', true);
+  }, []);
+
   return (
     <FormGroup>
       <Grid item container spacing={1}>
         <Grid item xs={12}>
-          <ClientTypeToggle
+          <CustomToggle
             items={CLIENT_TYPES}
-            selectedItem={clientType}
-            onClick={(item: itemData) => {
-              setClientType(item);
-            }}
+            onClick={(value) => updateClientField('isIndividual', value)}
           />
         </Grid>
 
-        {clientType.id == 0 ? <IndividualFields /> : <OrganizationFields />}
+        {client.isIndividual ? <IndividualFields /> : <OrganizationFields />}
 
         <Grid item xs={2}>
           <Typography>Номер телефона</Typography>

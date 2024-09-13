@@ -2,7 +2,7 @@ import { useBlankStore } from '@/shared/stores/useBlankStore';
 import CustomTextField from '@/shared/ui/CustomTextField';
 import { Button, FormGroup, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
-import TextFieldWithTitle from '../ClientBlock/TextFieldWithTitle';
+
 import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock';
 import CustomSelect from '../GeneralInfoBlock/SelectWithTitle';
 
@@ -19,15 +19,17 @@ const PaymentBlock: FC = () => {
     <Paper sx={{ borderRadius: '10px', padding: '40px' }}>
       <FormGroup>
         <Grid container spacing={5} sx={{ paddingBottom: '40px' }}>
-          <Grid item xs={2}>
-            <Typography>страховая премия</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <CustomTextField
-              onBlurHandler={(value) => {
-                updateBlankField('premium', Number(value));
-              }}
-            />
+          <Grid item container spacing={1} xs={6}>
+            <Grid item xs={4}>
+              <Typography>страховая премия</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <CustomTextField
+                onBlurHandler={(value) => {
+                  updateBlankField('premium', Number(value));
+                }}
+              />
+            </Grid>
           </Grid>
           <Grid item container xs={6} spacing={1}>
             <Grid item xs={4}>
@@ -43,7 +45,14 @@ const PaymentBlock: FC = () => {
             </Grid>
             {/* TODO: подгружать почту из текущего клиента */}
             {blank.paymentType === 1 && (
-              <TextFieldWithTitle title='Почта' type='email' />
+              <>
+                <Grid item xs={4}>
+                  <Typography>Почта</Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <CustomTextField type='email' />
+                </Grid>
+              </>
             )}
           </Grid>
         </Grid>
