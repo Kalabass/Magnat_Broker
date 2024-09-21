@@ -1,25 +1,52 @@
-import { Container, Stack } from '@mui/material';
-import { FC } from 'react';
-import ClientBlock from './ClientBlock/ClientBlock';
-import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock';
-import ObjectBlock from './ObjectBlock/ObjectBlock';
-import PaymentBlock from './PaymentBlock/PaymentBlock';
+import { useCreateBlankMutation } from '@/entities/blank/lib/useCreateBlank.mutation'
+import { useBlankStore } from '@/shared/stores/useBlankStore'
+import { useClientStore } from '@/shared/stores/useClientStore'
+import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore'
+import { Box, Button, Container } from '@mui/material'
+import { FC } from 'react'
+import ClientBlock from './ClientBlock/ClientBlock'
+import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock'
+import ObjectBlock from './ObjectBlock/ObjectBlock'
+import PaymentBlock from './PaymentBlock/PaymentBlock'
 
 export const ContractNewPage: FC = () => {
-  return (
-    <Container
-      sx={{
-        background: 'lightBlue',
-        padding: '40px 0 40px 0 ',
-        marginTop: '64px',
-      }}
-    >
-      <Stack gap='10px'>
-        <GeneralInfoBlock />
-        <ClientBlock />
-        <ObjectBlock />
-        <PaymentBlock />
-      </Stack>
-    </Container>
-  );
-};
+	const crateBlankMutation = useCreateBlankMutation()
+
+	const { getBlank } = useBlankStore()
+	const { getInsuranceObject } = useInsuranceObjectStore()
+	const { getClient } = useClientStore()
+
+	const blank = getBlank()
+	const client = getClient()
+	const insuranceObject = getInsuranceObject()
+
+	return (
+		<Container
+			sx={{
+				background: ' rgb(203, 234, 244)',
+				padding: '40px 0 40px 0 ',
+				marginTop: '64px',
+			}}
+		>
+			<Box
+				component={'form'}
+				sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+			>
+				<GeneralInfoBlock />
+				<ClientBlock />
+				<ObjectBlock />
+				<PaymentBlock />
+				<Button
+					sx={{ alignSelf: 'end' }}
+					variant='contained'
+					onClick={() => {
+						alert('hui')
+						crateBlankMutation.mutate({ blank, client, insuranceObject })
+					}}
+				>
+					Сохранить
+				</Button>
+			</Box>
+		</Container>
+	)
+}
