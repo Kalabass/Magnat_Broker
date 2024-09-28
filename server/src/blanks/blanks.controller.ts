@@ -6,21 +6,20 @@ import {
 	Param,
 	Patch,
 	Post,
+	Res,
+	UseGuards,
 } from '@nestjs/common'
-import { ClientsService } from 'src/clients/clients.service'
-import { InsuranceObjectsService } from 'src/insurance-objects/insurance-objects.service'
+import { Response } from 'express'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { BlanksService } from './blanks.service'
 import { CreateBlankDto } from './dto/create-blank.dto'
 import { CreateContractDto } from './dto/create-contract.dto'
+import { FiltersDto } from './dto/filters-blank.dto'
 import { UpdateBlankDto } from './dto/update-blank.dto'
-
+@UseGuards(JwtAuthGuard)
 @Controller('blanks')
 export class BlanksController {
-	constructor(
-		private readonly blanksService: BlanksService,
-		private readonly clientService: ClientsService,
-		private readonly insuranceObjectService: InsuranceObjectsService
-	) {}
+	constructor(private readonly blanksService: BlanksService) {}
 
 	@Post()
 	async create(@Body() createBlankDto: CreateBlankDto) {
@@ -37,14 +36,19 @@ export class BlanksController {
 		return this.blanksService.findAll()
 	}
 
-	@Get('processed')
-	findAllProcessed() {
-		return this.blanksService.findAllProcessed()
+	@Post('processed')
+	findAllProcessed(@Body() filtersDto: FiltersDto) {
+		return this.blanksService.findAllProcessed(filtersDto)
+	}
+
+	@Post('processed/export-excel')
+	findAllProcessedExcel(@Body() filtersDto: FiltersDto, @Res() res: Response) {
+		return this.blanksService.findAllProcessedExcel(filtersDto, res)
 	}
 
 	@Get(':id')
 	findOne(@Param('id') id: string) {
-		return this.blanksService.findOne(+id)
+		return this.blanksService.findBlankById(+id)
 	}
 
 	@Patch(':id')

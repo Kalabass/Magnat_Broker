@@ -1,6 +1,7 @@
 import { itemData } from '@/pages/contractNew/ui/GeneralInfoBlock/GeneralInfoBlock'
 import { BlankData } from '@/shared/stores/useBlankStore'
 import { ClientData } from '@/shared/stores/useClientStore'
+import { FilterData } from '@/shared/stores/useFiltersStore'
 import { InsuranceObjectData } from '@/shared/stores/useInsuranceObjectStore'
 import instance from '../axiosInstance'
 
@@ -45,7 +46,7 @@ export interface Blank {
 	bankId: itemData
 }
 
-export interface ProcessedBlank extends Omit<Blank, 'client'> {
+export interface ProcessedBlank extends Omit<Blank, 'client' | 'bankId'> {
 	clientName: string
 	insuranceTypeName: string
 	insuranceCompanyName: string
@@ -75,10 +76,32 @@ class BlankService {
 		}
 	}
 
-	async findAllProcessed(): Promise<ProcessedBlank[]> {
+	async findAllProcessed(data: Partial<FilterData>): Promise<ProcessedBlank[]> {
 		try {
-			const response = await instance.get(`${this.baseUrl}/processed`)
+			const response = await instance.post(`${this.baseUrl}/processed`, data)
 			return response.data
+		} catch (error) {
+			this.handleError(error, 'Failed to fetch all processed blanks')
+			throw error
+		}
+	}
+
+	async allProcessedToExcel(data: Partial<FilterData>) {
+		try {
+			const response = await instance.post(
+				`${this.baseUrl}/processed/export-excel`,
+				data,
+				{
+					responseType: 'blob',
+				}
+			)
+			const url = window.URL.createObjectURL(new Blob([response.data]))
+			const link = document.createElement('a')
+			link.href = url
+			link.setAttribute('download', 'processed_blanks.xlsx')
+			document.body.appendChild(link)
+			link.click()
+			link.remove()
 		} catch (error) {
 			this.handleError(error, 'Failed to fetch all processed blanks')
 			throw error

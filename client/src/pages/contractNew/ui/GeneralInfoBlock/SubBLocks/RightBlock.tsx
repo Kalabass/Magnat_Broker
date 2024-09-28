@@ -22,7 +22,9 @@ const RightBlock: FC = () => {
 		<>
 			{/* FIXME: вынести ИПОТЕКА в константы */}
 			{/* FIXME: подумать что делать с перерисовками */}
-			<InsuranceTypeSelect />
+			<InsuranceTypeSelect
+				onChangeHandler={value => updateBlankField('insuranceTypeId', value)}
+			/>
 			{blank.insuranceTypeId === 4 && (
 				<CustomSelectWithTitle
 					title='Направление'
@@ -34,7 +36,9 @@ const RightBlock: FC = () => {
 			)}
 
 			{BLANK_SERIES && <BlankNumberBlock items={BLANK_SERIES} />}
-			<SellingPointSelect />
+			<SellingPointSelect
+				onChangeHandler={value => updateBlankField('sellingPointId', value)}
+			/>
 		</>
 	)
 }

@@ -12,12 +12,21 @@ import { EmployeesService } from 'src/employees/employees.service'
 import { InsuranceCompaniesService } from 'src/insurance-companies/insurance-companies.service'
 import { InsuranceTypesService } from 'src/insurance-types/insurance-types.service'
 import { SellingPointsService } from 'src/selling-points/selling-points.service'
+import * as XLSX from 'xlsx'
 
+import { Response } from 'express'
 import { BlankSeriesService } from 'src/blank-series/blank-series.service'
 import { InsuranceObjectsService } from 'src/insurance-objects/insurance-objects.service'
-import { Repository } from 'typeorm'
+import {
+	Between,
+	ILike,
+	LessThanOrEqual,
+	MoreThanOrEqual,
+	Repository,
+} from 'typeorm'
 import { CreateBlankDto } from './dto/create-blank.dto'
 import { CreateContractDto } from './dto/create-contract.dto'
+import { FiltersDto } from './dto/filters-blank.dto'
 import { UpdateBlankDto } from './dto/update-blank.dto'
 import { Blank } from './entities/blank.entity'
 
@@ -41,7 +50,7 @@ export class BlanksService {
 		throw error
 	}
 
-	private async findBlankById(id: number): Promise<Blank> {
+	async findBlankById(id: number): Promise<Blank> {
 		const blank = await this.blankRepository.findOne({ where: { id } })
 		if (!blank) {
 			throw new NotFoundException('Blank not found')
@@ -144,9 +153,76 @@ export class BlanksService {
 		return `${day}.${month}.${year}`
 	}
 
-	async findAllProcessed() {
+	async findAllProcessedExcel(filtersDto: FiltersDto, res: Response) {
 		try {
-			const blanks = await this.findAll()
+			let {
+				conclusionDateStart,
+				conclusionDateEnd,
+				policeNumber,
+				client,
+				employeeId,
+				insuranceCompanyId,
+				sellingPointId,
+				typeId,
+			} = filtersDto
+
+			const whereConditions: any = {}
+
+			if (policeNumber) {
+				whereConditions.number = ILike(`%${policeNumber}%`)
+			}
+
+			if (employeeId) {
+				whereConditions.employee = { id: employeeId }
+			}
+
+			if (insuranceCompanyId) {
+				whereConditions.insuranceCompany = { id: insuranceCompanyId }
+			}
+
+			if (sellingPointId) {
+				whereConditions.sellingPoint = { id: sellingPointId }
+			}
+
+			if (typeId) {
+				whereConditions.insuranceType = { id: typeId }
+			}
+
+			if (conclusionDateStart && conclusionDateEnd) {
+				const endDatePlusOne = new Date(conclusionDateEnd)
+				endDatePlusOne.setDate(endDatePlusOne.getDate() + 1)
+
+				whereConditions.conclusionDate = Between(
+					conclusionDateStart,
+					endDatePlusOne
+				)
+			} else if (conclusionDateStart) {
+				whereConditions.conclusionDate = MoreThanOrEqual(conclusionDateStart)
+			} else if (conclusionDateEnd) {
+				whereConditions.conclusionDate = LessThanOrEqual(conclusionDateEnd)
+			}
+
+			if (client) {
+				whereConditions.client = { name: ILike(`%${client}%`) }
+			}
+
+			const blanks = await this.blankRepository.find({
+				where: whereConditions,
+				relations: {
+					client: true,
+					insuranceType: true,
+					insuranceCompany: true,
+					insuranceObject: {
+						bank: true,
+					},
+					employee: true,
+					sellingPoint: true,
+					blankSeries: true,
+				},
+				order: {
+					conclusionDate: 'DESC',
+				},
+			})
 
 			const processedBlanks = blanks.map(blank => ({
 				...blank,
@@ -163,33 +239,129 @@ export class BlanksService {
 				seriesNumber: `${blank.blankSeries.name}  ${blank.number}`,
 				dateRange: `${this.formatDate(blank.activeDateStart)} - ${this.formatDate(blank.activeDateEnd)}`,
 				conclusionDate: this.formatDate(blank.conclusionDate),
-
-				number: undefined,
-				activeDateStart: undefined,
-				activeDateEnd: undefined,
-				useDateStart: undefined,
-				useDateEnd: undefined,
-				createdAt: undefined,
-				updatedAt: undefined,
-				comment: undefined,
-
-				client: undefined,
-				insuranceType: undefined,
-				insuranceCompany: undefined,
-				insuranceObject: undefined,
-				employee: undefined,
-				sellingPoint: undefined,
-				blankSeries: undefined,
 			}))
 
-			return processedBlanks
+			const worksheet = XLSX.utils.json_to_sheet(processedBlanks)
+			const workbook = XLSX.utils.book_new()
+			XLSX.utils.book_append_sheet(workbook, worksheet, 'Processed Blanks')
+
+			// Генерация файла
+			const excelBuffer = XLSX.write(workbook, {
+				bookType: 'xlsx',
+				type: 'buffer',
+			})
+
+			res.setHeader(
+				'Content-Disposition',
+				'attachment; filename=processed_blanks.xlsx'
+			)
+			res.setHeader(
+				'Content-Type',
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+			)
+
+			// Отправка файла
+			res.send(excelBuffer)
 		} catch (error) {
 			this.handleError(error)
 		}
 	}
-	async findOne(id: number) {
+
+	async findAllProcessed(filtersDto: FiltersDto) {
 		try {
-			return await this.findBlankById(id)
+			let {
+				conclusionDateStart,
+				conclusionDateEnd,
+				policeNumber,
+				client,
+				employeeId,
+				insuranceCompanyId,
+				sellingPointId,
+				typeId,
+			} = filtersDto
+
+			const whereConditions: any = {}
+
+			if (policeNumber) {
+				whereConditions.number = ILike(`%${policeNumber}%`)
+			}
+
+			if (employeeId) {
+				whereConditions.employee = { id: employeeId }
+			}
+
+			if (insuranceCompanyId) {
+				whereConditions.insuranceCompany = { id: insuranceCompanyId }
+			}
+
+			if (sellingPointId) {
+				whereConditions.sellingPoint = { id: sellingPointId }
+			}
+
+			if (typeId) {
+				whereConditions.insuranceType = { id: typeId }
+			}
+
+			if (conclusionDateStart && conclusionDateEnd) {
+				const endDatePlusOne = new Date(conclusionDateEnd)
+				endDatePlusOne.setDate(endDatePlusOne.getDate() + 1)
+
+				whereConditions.conclusionDate = Between(
+					conclusionDateStart,
+					endDatePlusOne
+				)
+			} else if (conclusionDateStart) {
+				whereConditions.conclusionDate = MoreThanOrEqual(conclusionDateStart)
+			} else if (conclusionDateEnd) {
+				whereConditions.conclusionDate = LessThanOrEqual(conclusionDateEnd)
+			}
+
+			if (client) {
+				whereConditions.client = { name: ILike(`%${client}%`) }
+			}
+
+			console.log(whereConditions)
+
+			const blanks = await this.blankRepository.find({
+				where: whereConditions,
+				relations: {
+					client: true,
+					insuranceType: true,
+					insuranceCompany: true,
+					insuranceObject: {
+						bank: true,
+					},
+					employee: true,
+					sellingPoint: true,
+					blankSeries: true,
+				},
+				order: {
+					id: 'DESC',
+				},
+			})
+
+			console.log(blanks[0])
+
+			const processedBlanks = blanks.map(blank => ({
+				...blank,
+				clientName: blank.client.name,
+				insuranceTypeName:
+					blank.insuranceType.name.toLowerCase() === 'ипотека'
+						? blank.insuranceType.name
+						: blank.insuranceType.name,
+				insuranceCompanyName: blank.insuranceCompany.name,
+				insuranceObjectName: blank.insuranceObject.name ?? undefined,
+				insuranceObjectYear: blank.insuranceObject.year ?? undefined,
+				sum: blank.insuranceObject.sum,
+				premium: blank.insuranceObject.premium,
+				employeeName: blank.employee.name,
+				sellingPointName: blank.sellingPoint.name,
+				seriesNumber: `${blank.blankSeries.name}  ${blank.number}`,
+				dateRange: `${this.formatDate(blank.activeDateStart)} - ${this.formatDate(blank.activeDateEnd)}`,
+				conclusionDate: this.formatDate(blank.conclusionDate),
+			}))
+
+			return processedBlanks
 		} catch (error) {
 			this.handleError(error)
 		}

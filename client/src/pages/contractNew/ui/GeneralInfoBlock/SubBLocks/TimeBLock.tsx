@@ -14,14 +14,21 @@ const TimeBlock: FC = () => {
 	const { updateBlankField, getBlank } = useBlankStore()
 	const blank = getBlank()
 	const { defaultStartDate, defaultEndDate } = getDefaultDates()
+
+	const checkBoxOnChangeHandler = () => {
+		if (!isMatches) {
+			updateBlankField('useDateStart', blank.activeDateStart!)
+			updateBlankField('useDateEnd', blank.activeDateEnd!)
+		}
+		setIsMatches(!isMatches)
+	}
+
 	useEffect(() => {
-		if (!blank.conclusionDate)
-			updateBlankField('conclusionDate', defaultStartDate)
-		if (!blank.activeDateStart)
-			updateBlankField('activeDateStart', defaultStartDate)
-		if (!blank.activeDateEnd) updateBlankField('activeDateEnd', defaultEndDate)
-		if (!blank.useDateStart) updateBlankField('useDateStart', defaultStartDate)
-		if (!blank.useDateEnd) updateBlankField('useDateEnd', defaultEndDate)
+		updateBlankField('conclusionDate', defaultStartDate)
+		updateBlankField('activeDateStart', defaultStartDate)
+		updateBlankField('activeDateEnd', defaultEndDate)
+		updateBlankField('useDateStart', defaultStartDate)
+		updateBlankField('useDateEnd', defaultEndDate)
 	}, [])
 
 	return (
@@ -66,10 +73,7 @@ const TimeBlock: FC = () => {
 				Равен периоду использования
 			</Grid>
 			<Grid item xs={8}>
-				<Checkbox
-					checked={isMatches}
-					onChange={() => setIsMatches(!isMatches)}
-				/>
+				<Checkbox checked={isMatches} onChange={checkBoxOnChangeHandler} />
 			</Grid>
 			{!isMatches && (
 				<>

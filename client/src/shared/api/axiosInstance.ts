@@ -1,7 +1,24 @@
-import axios from 'axios';
-//TODO: добавить переменную окружения
-const instance = axios.create({
-  baseURL: 'http://localhost:5252/',
-});
+import axios from 'axios'
+import { getTokenFromLocalStorage } from '../lib/localStorage/tokenStorage'
 
-export default instance;
+const instance = axios.create({
+	baseURL: 'http://localhost:5252/',
+	headers: {
+		Authorization: 'Bearer ' + getTokenFromLocalStorage(),
+	},
+})
+
+instance.interceptors.request.use(
+	config => {
+		const token = getTokenFromLocalStorage()
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`
+		}
+		return config
+	},
+	error => {
+		return Promise.reject(error)
+	}
+)
+
+export default instance

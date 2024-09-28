@@ -1,9 +1,10 @@
 import { blankService } from '@/shared/api/services/blankService'
+import { FilterData } from '@/shared/stores/useFiltersStore'
 import { useQuery } from '@tanstack/react-query'
 
-export const useProcessedBlanks = () => {
+export const useProcessedBlanks = (filters: Partial<FilterData>) => {
 	return useQuery({
-		queryFn: () => blankService.findAllProcessed(),
-		queryKey: ['blanks', 'processed'],
+		queryFn: () => blankService.findAllProcessed(filters),
+		queryKey: ['blanks', 'processed', filters],
 	})
 }

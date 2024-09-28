@@ -3,14 +3,15 @@ import { useBlankStore } from '@/shared/stores/useBlankStore'
 import { useClientStore } from '@/shared/stores/useClientStore'
 import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore'
 import { Box, Button, Container } from '@mui/material'
-import { FC } from 'react'
+import { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ClientBlock from './ClientBlock/ClientBlock'
 import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock'
 import ObjectBlock from './ObjectBlock/ObjectBlock'
 import PaymentBlock from './PaymentBlock/PaymentBlock'
 
 export const ContractNewPage: FC = () => {
-	const crateBlankMutation = useCreateBlankMutation()
+	const createBlankMutation = useCreateBlankMutation()
 
 	const { getBlank } = useBlankStore()
 	const { getInsuranceObject } = useInsuranceObjectStore()
@@ -19,6 +20,10 @@ export const ContractNewPage: FC = () => {
 	const blank = getBlank()
 	const client = getClient()
 	const insuranceObject = getInsuranceObject()
+
+	const navigate = useNavigate()
+
+	const [buttonDisabled, setButtonDisabled] = useState(false)
 
 	return (
 		<Container
@@ -38,10 +43,11 @@ export const ContractNewPage: FC = () => {
 				<PaymentBlock />
 				<Button
 					sx={{ alignSelf: 'end' }}
+					disabled={createBlankMutation.isPending ? true : false}
 					variant='contained'
 					onClick={() => {
-						alert('hui')
-						crateBlankMutation.mutate({ blank, client, insuranceObject })
+						createBlankMutation.mutate({ blank, client, insuranceObject })
+						if (createBlankMutation.isSuccess) navigate('/contracts')
 					}}
 				>
 					Сохранить

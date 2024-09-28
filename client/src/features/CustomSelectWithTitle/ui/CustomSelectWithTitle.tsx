@@ -6,7 +6,7 @@ import CustomSelect from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomS
 interface UniversalWrapperProps {
 	title: string
 	items: ItemData[] | undefined
-	onChangeHandler: (value: number) => void
+	onChangeHandler: (value: number | undefined) => void
 }
 
 export const CustomSelectWithTitle: FC<UniversalWrapperProps> = ({
@@ -15,15 +15,22 @@ export const CustomSelectWithTitle: FC<UniversalWrapperProps> = ({
 	onChangeHandler,
 }) => {
 	return (
-		<>
-			<Grid item xs={4} justifyContent='center' alignItems='center'>
+		<Grid
+			item
+			container
+			xs={12}
+			justifyContent='center'
+			alignItems='center'
+			spacing={1}
+		>
+			<Grid item xs={4}>
 				<Typography>{title}</Typography>
 			</Grid>
-			<Grid item xs={8} justifyContent='center' alignItems='center'>
+			<Grid item xs={8}>
 				{items && (
 					<CustomSelect items={items} onChangeHandler={onChangeHandler} />
 				)}
 			</Grid>
-		</>
+		</Grid>
 	)
 }

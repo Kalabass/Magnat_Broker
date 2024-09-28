@@ -35,22 +35,14 @@ interface BlankStore {
 	setBlank: (newBlank: BlankData) => void
 	updateBlankField: <K extends keyof BlankData>(
 		key: K,
-		value: BlankData[K]
+		value: BlankData[K] | undefined
 	) => void
 	getBlank: () => Partial<BlankData>
 }
 
 export const useBlankStore = create<BlankStore>()(
 	devtools((set, get) => ({
-		blank: {
-			conclusionDate: undefined,
-			activeDateStart: undefined,
-			activeDateEnd: undefined,
-			useDateStart: undefined,
-			useDateEnd: undefined,
-			type: undefined,
-			insuranceAmount: undefined,
-		},
+		blank: {},
 
 		setBlank: newBlank => set({ blank: newBlank }),
 
