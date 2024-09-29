@@ -1,10 +1,43 @@
-import { BaseTextFieldProps, TextField } from '@mui/material';
+import {
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	OutlinedInput,
+	OutlinedInputProps,
+} from '@mui/material';
 import { forwardRef } from 'react';
 
-const CustomTextFieldRef = forwardRef<HTMLInputElement, BaseTextFieldProps>(
-	({ size = 'small', fullWidth = true, ...props }, ref) => {
+interface CustomOutlinedInputProps extends OutlinedInputProps {
+	helperText: string;
+	inputLabel: string;
+}
+
+const CustomTextFieldRef = forwardRef<
+	HTMLInputElement,
+	CustomOutlinedInputProps
+>(
+	(
+		{
+			size = 'small',
+			fullWidth = true,
+			helperText,
+			inputLabel,
+			error,
+			...props
+		},
+		ref
+	) => {
 		return (
-			<TextField inputRef={ref} size={size} fullWidth={fullWidth} {...props} />
+			<FormControl size='small' error={error}>
+				<InputLabel>{inputLabel}</InputLabel>
+				<OutlinedInput
+					inputRef={ref}
+					fullWidth={fullWidth}
+					slotProps={{}}
+					{...props}
+				/>
+				<FormHelperText>{helperText}</FormHelperText>
+			</FormControl>
 		);
 	}
 );

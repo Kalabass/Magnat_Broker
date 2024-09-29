@@ -14,15 +14,23 @@ export class AuthService {
 		const user = await this.employeeService.findOneByLogin(login);
 
 		if (!user) {
-			return null;
+			return {
+				user: null,
+				message: 'Неверный логин',
+				errorCode: 'INVALID_LOGIN',
+			};
 		}
 
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
-			return null;
+			return {
+				user: null,
+				message: 'Неверный пароль',
+				errorCode: 'INVALID_PASSWORD',
+			};
 		}
 
-		return user;
+		return { user: user };
 	}
 
 	async login(employee: Employee) {

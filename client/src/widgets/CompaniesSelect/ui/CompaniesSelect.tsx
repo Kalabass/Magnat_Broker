@@ -1,21 +1,15 @@
-import { useInsuranceCompaniesNames } from '@/entities/insuranceCompany'
-import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle'
+import { useInsuranceCompaniesNames } from '@/entities/insuranceCompany';
+import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
 
-import { FC } from 'react'
+import { FC } from 'react';
 
 interface CompaniesSelectProps {
-	onChangeHandler: (value: number | undefined) => void
+	onChangeHandler: (value: number | undefined) => void;
+	formHelperText?: string;
+	error?: boolean;
 }
 
-export const CompaniesSelect: FC<CompaniesSelectProps> = ({
-	onChangeHandler,
-}) => {
-	const { data: COMPANIES } = useInsuranceCompaniesNames()
-	return (
-		<CustomSelectWithTitle
-			title='СК'
-			items={COMPANIES}
-			onChangeHandler={onChangeHandler}
-		/>
-	)
-}
+export const CompaniesSelect: FC<CompaniesSelectProps> = (props) => {
+	const { data: COMPANIES } = useInsuranceCompaniesNames();
+	return <CustomSelectWithTitle title='СК' items={COMPANIES} {...props} />;
+};
