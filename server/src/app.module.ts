@@ -16,6 +16,7 @@ import { EmployeesModule } from './employees/employees.module'
 import { InsuranceObjectTypesModule } from './insurance-object-types/insurance-object-types.module'
 import { InsuranceObjectsModule } from './insurance-objects/insurance-objects.module'
 import { MortgageTypesModule } from './mortgage-types/mortgage-types.module'
+import { RedisModule } from './redis/redis.module';
 
 @Module({
 	imports: [
@@ -51,6 +52,7 @@ import { MortgageTypesModule } from './mortgage-types/mortgage-types.module'
 		InsuranceObjectTypesModule,
 		InsuranceObjectsModule,
 		AuthModule,
+		RedisModule,
 	],
 })
 export class AppModule {}

@@ -1,10 +1,10 @@
-import { useBanks } from '@/entities/bank'
-import { useBlankStore } from '@/shared/stores/useBlankStore'
-import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { Box, Grid, Paper, Typography } from '@mui/material'
-import { FC } from 'react'
-import CustomSelect from '../GeneralInfoBlock/CustomSelect'
+import { useBanks } from '@/entities/bank';
+import { useBlankStore } from '@/shared/stores/useBlankStore';
+import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
+import CustomTextField from '@/shared/ui/CustomTextField';
+import { Box, Grid, Paper, Typography } from '@mui/material';
+import { FC } from 'react';
+import CustomSelect from '../GeneralInfoBlock/CustomSelect';
 //TODO: объеденить с payment блоком
 // const BANKS: itemData[] = [
 //   { id: 0, name: 'Сбербанк' },
@@ -12,12 +12,12 @@ import CustomSelect from '../GeneralInfoBlock/CustomSelect'
 // ];
 
 const ObjectBlock: FC = () => {
-	const { getBlank } = useBlankStore()
-	const blank = getBlank()
+	const { getBlank } = useBlankStore();
+	const blank = getBlank();
 
-	const { updateInsuranceObjectField } = useInsuranceObjectStore()
+	const { updateInsuranceObjectField } = useInsuranceObjectStore();
 
-	const { data: BANKS } = useBanks()
+	const { data: BANKS } = useBanks();
 	return (
 		<Paper component={'section'} sx={{ borderRadius: '10px', padding: '40px' }}>
 			<Box component={'section'}>
@@ -38,7 +38,7 @@ const ObjectBlock: FC = () => {
 								<Grid item xs={8}>
 									<CustomTextField
 										onBlurHandler={(value: string) => {
-											updateInsuranceObjectField('name', value)
+											updateInsuranceObjectField('name', value);
 										}}
 									/>
 								</Grid>
@@ -51,7 +51,7 @@ const ObjectBlock: FC = () => {
 							<CustomTextField
 								type='number'
 								onBlurHandler={(value: string) => {
-									updateInsuranceObjectField('sum', Number(value))
+									updateInsuranceObjectField('sum', Number(value));
 								}}
 							/>
 						</Grid>
@@ -73,7 +73,7 @@ const ObjectBlock: FC = () => {
 									<CustomTextField
 										type='number'
 										onBlurHandler={(value: string) => {
-											updateInsuranceObjectField('horsePowers', Number(value))
+											updateInsuranceObjectField('horsePowers', Number(value));
 										}}
 									/>
 								</Grid>
@@ -90,8 +90,8 @@ const ObjectBlock: FC = () => {
 								<Grid item xs={8}>
 									<CustomSelect
 										items={BANKS}
-										onChangeHandler={(value: number) => {
-											updateInsuranceObjectField('bank', value)
+										onChangeHandler={(value) => {
+											updateInsuranceObjectField('bank', value);
 										}}
 									/>
 								</Grid>
@@ -101,7 +101,7 @@ const ObjectBlock: FC = () => {
 				</Grid>
 			</Box>
 		</Paper>
-	)
-}
+	);
+};
 
-export default ObjectBlock
+export default ObjectBlock;

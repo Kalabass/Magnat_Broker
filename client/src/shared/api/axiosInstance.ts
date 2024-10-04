@@ -1,24 +1,55 @@
-import axios from 'axios'
-import { getTokenFromLocalStorage } from '../lib/localStorage/tokenStorage'
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import {
+	getTokenFromLocalStorage,
+	setTokenToLocalStorage,
+} from '../lib/localStorage/tokenStorage';
+import { employeeService } from './services/employeeService';
+
+// Создаем отдельный экземпляр axios для обновления токенов
+export const tokenRefreshInstance = axios.create({
+	baseURL: 'http://localhost:5252/',
+	withCredentials: true,
+});
 
 const instance = axios.create({
 	baseURL: 'http://localhost:5252/',
-	headers: {
-		Authorization: 'Bearer ' + getTokenFromLocalStorage(),
-	},
-})
+	withCredentials: true,
+});
+
+const isTokenExpired = (token: string) => {
+	const { exp } = jwtDecode(token);
+	return exp ? Date.now() >= exp * 1000 : false;
+};
 
 instance.interceptors.request.use(
-	config => {
-		const token = getTokenFromLocalStorage()
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`
-		}
-		return config
-	},
-	error => {
-		return Promise.reject(error)
-	}
-)
+	async (config) => {
+		let token = getTokenFromLocalStorage();
 
-export default instance
+		// Проверяем, истек ли токен
+		if (token && isTokenExpired(token)) {
+			try {
+				// Обновляем токен с помощью отдельного экземпляра axios
+				const newToken = await employeeService.refresh();
+				console.log(newToken);
+				setTokenToLocalStorage(newToken.access_token);
+				token = newToken.access_token; // Обновляем переменную для заголовка
+			} catch (error) {
+				console.error('Ошибка обновления токена:', error);
+				return Promise.reject(error); // Если не удалось обновить токен, отклоняем запрос
+			}
+		}
+
+		// Добавляем токен в заголовки запроса
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+export default instance;

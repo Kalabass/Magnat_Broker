@@ -1,6 +1,5 @@
 import { useLoginMutation } from '@/entities/employee';
 import { AppRoutes } from '@/shared/const/AppRoutes';
-import { setTokenToLocalStorage } from '@/shared/lib/localStorage/tokenStorage';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, Button, IconButton, InputAdornment, Stack } from '@mui/material';
@@ -44,8 +43,7 @@ const AuthPageForm: FC = () => {
 
 	const onSubmit: SubmitHandler<ILoginData> = (data) => {
 		loginMutation.mutate(data, {
-			onSuccess: (data) => {
-				setTokenToLocalStorage(data.token);
+			onSuccess: () => {
 				navigate(AppRoutes.CONTRACTS);
 			},
 			onError: (error) => {

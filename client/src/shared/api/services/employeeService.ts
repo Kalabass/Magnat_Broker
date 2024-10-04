@@ -1,4 +1,4 @@
-import instance from '../axiosInstance';
+import instance, { tokenRefreshInstance } from '../axiosInstance';
 import { ItemData } from './bankService';
 
 interface employeesData {
@@ -39,12 +39,29 @@ class EmployeeService {
 		}
 	}
 
-	async login(login: string, password: string): Promise<{ token: string }> {
+	async login(
+		login: string,
+		password: string
+	): Promise<{ access_token: string }> {
 		try {
-			const response = await instance.post('auth/login', { login, password });
+			const response = await tokenRefreshInstance.post('auth/login', {
+				login,
+				password,
+			});
+
 			return response.data;
 		} catch (error) {
 			this.handleError(error, 'Failed to login');
+			throw error;
+		}
+	}
+
+	async refresh(): Promise<{ access_token: string }> {
+		try {
+			const response = await tokenRefreshInstance.post('auth/refreshTokens');
+			return response.data;
+		} catch (error) {
+			this.handleError(error, 'Failed to refresh tokens');
 			throw error;
 		}
 	}

@@ -7,14 +7,16 @@ import {
 	Patch,
 	Post,
 	Res,
+	UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { BlanksService } from './blanks.service';
 import { CreateBlankDto } from './dto/create-blank.dto';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { FiltersDto } from './dto/filters-blank.dto';
 import { UpdateBlankDto } from './dto/update-blank.dto';
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('blanks')
 export class BlanksController {
 	constructor(private readonly blanksService: BlanksService) {}

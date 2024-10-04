@@ -3,7 +3,7 @@ import { BlankData, useBlankStore } from '@/shared/stores/useBlankStore';
 import { useClientStore } from '@/shared/stores/useClientStore';
 import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
 import { Box, Button, Container } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ClientBlock from './ClientBlock/ClientBlock';
@@ -24,7 +24,7 @@ export const ContractNewPage: FC = () => {
 
 	const navigate = useNavigate();
 
-	const [buttonDisabled, setButtonDisabled] = useState(false);
+	// const [buttonDisabled, setButtonDisabled] = useState(false);
 
 	interface NewBlank extends BlankData {}
 
