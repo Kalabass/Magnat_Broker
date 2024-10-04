@@ -1,5 +1,7 @@
-import instance, { tokenRefreshInstance } from '../axiosInstance';
-import { ItemData } from './bankService';
+import { handleError } from '@/shared/lib/utils/errorHandler';
+import { ItemData } from '@/shared/model/interface';
+import { API_ENDPOINTS } from '../../const/APIEndpoints';
+import instance from '../axiosInstance';
 
 interface employeesData {
 	id: number;
@@ -13,55 +15,24 @@ interface employeesData {
 }
 
 class EmployeeService {
-	private baseUrl = 'employees';
-
-	private handleError(error: any, message: string) {
-		console.error(message, error);
-	}
-
 	async findAll(): Promise<employeesData[]> {
 		try {
-			const response = await instance.get(this.baseUrl);
+			const response = await instance.get(API_ENDPOINTS.EMPLOYEE.FIND_ALL);
 			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all employees');
+			handleError(error, 'Failed to fetch all employees');
 			throw error;
 		}
 	}
 
 	async findAllNames(): Promise<ItemData[]> {
 		try {
-			const response = await instance.get(this.baseUrl + '/names');
+			const response = await instance.get(
+				API_ENDPOINTS.EMPLOYEE.FIND_ALL_NAMES
+			);
 			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all articles');
-			throw error;
-		}
-	}
-
-	async login(
-		login: string,
-		password: string
-	): Promise<{ access_token: string }> {
-		try {
-			const response = await tokenRefreshInstance.post('auth/login', {
-				login,
-				password,
-			});
-
-			return response.data;
-		} catch (error) {
-			this.handleError(error, 'Failed to login');
-			throw error;
-		}
-	}
-
-	async refresh(): Promise<{ access_token: string }> {
-		try {
-			const response = await tokenRefreshInstance.post('auth/refreshTokens');
-			return response.data;
-		} catch (error) {
-			this.handleError(error, 'Failed to refresh tokens');
+			handleError(error, 'Failed to fetch all employee names');
 			throw error;
 		}
 	}

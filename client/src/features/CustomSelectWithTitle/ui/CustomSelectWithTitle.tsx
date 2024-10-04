@@ -1,4 +1,4 @@
-import { ItemData } from '@/shared/api/services/bankService';
+import { ItemData } from '@/shared/model/interface';
 import {
 	FormControl,
 	FormHelperText,

@@ -4,7 +4,7 @@ import {
 	getTokenFromLocalStorage,
 	setTokenToLocalStorage,
 } from '../lib/localStorage/tokenStorage';
-import { employeeService } from './services/employeeService';
+import { authService } from './services/authService';
 
 // Создаем отдельный экземпляр axios для обновления токенов
 export const tokenRefreshInstance = axios.create({
@@ -30,7 +30,7 @@ instance.interceptors.request.use(
 		if (token && isTokenExpired(token)) {
 			try {
 				// Обновляем токен с помощью отдельного экземпляра axios
-				const newToken = await employeeService.refresh();
+				const newToken = await authService.refresh();
 				console.log(newToken);
 				setTokenToLocalStorage(newToken.access_token);
 				token = newToken.access_token; // Обновляем переменную для заголовка

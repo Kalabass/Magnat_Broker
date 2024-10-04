@@ -1,38 +1,38 @@
-import instance from '../axiosInstance'
-import { ItemData } from './bankService'
+import { handleError } from '@/shared/lib/utils/errorHandler';
+import { ItemData } from '@/shared/model/interface';
+import { API_ENDPOINTS } from '../../const/APIEndpoints';
+import instance from '../axiosInstance';
 
 interface InsuranceCompaniesData {
-	id: number
-	name: string
-	comment: string
+	id: number;
+	name: string;
+	comment: string;
 }
 
 class InsuranceCompanyService {
-	private baseUrl = 'insuranceCompanies'
-
-	private handleError(error: any, message: string) {
-		console.error(message, error)
-	}
-
 	async findAll(): Promise<InsuranceCompaniesData[]> {
 		try {
-			const response = await instance.get(this.baseUrl)
-			return response.data
+			const response = await instance.get(
+				API_ENDPOINTS.INSURANCE_COMPANY.FIND_ALL
+			);
+			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all insurance companies')
-			throw error
+			handleError(error, 'Failed to fetch all insurance companies');
+			throw error;
 		}
 	}
 
 	async findAllNames(): Promise<ItemData[]> {
 		try {
-			const response = await instance.get(this.baseUrl + '/names')
-			return response.data
+			const response = await instance.get(
+				API_ENDPOINTS.INSURANCE_COMPANY.FIND_ALL
+			);
+			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all articles')
-			throw error
+			handleError(error, 'Failed to fetch all insurance companies names');
+			throw error;
 		}
 	}
 }
 
-export const insuranceCompanyService = new InsuranceCompanyService()
+export const insuranceCompanyService = new InsuranceCompanyService();

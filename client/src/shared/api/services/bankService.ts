@@ -1,42 +1,34 @@
-import instance from '../axiosInstance'
+import { handleError } from '@/shared/lib/utils/errorHandler';
+import { ItemData } from '@/shared/model/interface';
+import { API_ENDPOINTS } from '../../const/APIEndpoints';
+import instance from '../axiosInstance';
 
 interface BankData {
-	id: number
-	name: string
-	comment: string
-}
-
-export interface ItemData {
-	id: number
-	name: string
+	id: number;
+	name: string;
+	comment: string;
 }
 
 class BankService {
-	private baseUrl = 'banks'
-
-	private handleError(error: any, message: string) {
-		console.error(message, error)
-	}
-
 	async findAll(): Promise<BankData[]> {
 		try {
-			const response = await instance.get(this.baseUrl)
-			return response.data
+			const response = await instance.get(API_ENDPOINTS.BANK.FIND_ALL);
+			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all banks')
-			throw error
+			handleError(error, 'Failed to fetch all banks');
+			throw error;
 		}
 	}
 
 	async findAllNames(): Promise<ItemData[]> {
 		try {
-			const response = await instance.get(this.baseUrl + '/names')
-			return response.data
+			const response = await instance.get(API_ENDPOINTS.BANK.FIND_ALL_NAMES);
+			return response.data;
 		} catch (error) {
-			this.handleError(error, 'Failed to fetch all bank names')
-			throw error
+			handleError(error, 'Failed to fetch all bank names');
+			throw error;
 		}
 	}
 }
 
-export const bankService = new BankService()
+export const bankService = new BankService();

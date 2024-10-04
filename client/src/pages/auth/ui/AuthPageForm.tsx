@@ -1,4 +1,4 @@
-import { useLoginMutation } from '@/entities/employee';
+import { useLoginMutation } from '@/entities/auth';
 import { AppRoutes } from '@/shared/const/AppRoutes';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
