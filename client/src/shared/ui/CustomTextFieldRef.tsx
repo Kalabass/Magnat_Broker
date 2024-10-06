@@ -8,8 +8,8 @@ import {
 import { forwardRef } from 'react';
 
 interface CustomOutlinedInputProps extends OutlinedInputProps {
-	helperText: string;
-	inputLabel: string;
+	helperText?: string;
+	inputLabel?: string;
 }
 
 const CustomTextFieldRef = forwardRef<
@@ -28,14 +28,9 @@ const CustomTextFieldRef = forwardRef<
 		ref
 	) => {
 		return (
-			<FormControl size='small' error={error}>
+			<FormControl size='small' error={error} fullWidth>
 				<InputLabel>{inputLabel}</InputLabel>
-				<OutlinedInput
-					inputRef={ref}
-					fullWidth={fullWidth}
-					slotProps={{}}
-					{...props}
-				/>
+				<OutlinedInput inputRef={ref} fullWidth={fullWidth} {...props} />
 				<FormHelperText>{helperText}</FormHelperText>
 			</FormControl>
 		);

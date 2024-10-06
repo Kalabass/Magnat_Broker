@@ -124,7 +124,7 @@ export class AuthService {
 
 		const newAccessToken = this.jwtService.sign(newPayload, {
 			secret: this.configService.get('JWT_ACCESS_SECRET'),
-			expiresIn: '1m', // Указываем время жизни access token
+			expiresIn: '15m', // Указываем время жизни access token
 		});
 
 		const newRefreshToken = this.jwtService.sign(newPayload, {

@@ -1,25 +1,33 @@
-import { useClientStore } from '@/shared/stores/useClientStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { Grid, Typography } from '@mui/material'
-import { FC } from 'react'
+import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
+import { Grid, Typography } from '@mui/material';
+import { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 const OrganizationFields: FC = () => {
-	const { updateClientField } = useClientStore()
+	const { control } = useFormContext();
 	return (
 		<>
 			<Grid item xs={2}>
 				<Typography>Название</Typography>
 			</Grid>
 			<Grid item xs={10}>
-				<CustomTextField
-					required
-					onBlurHandler={(value: string) => {
-						updateClientField('name', value)
-					}}
+				<Controller
+					name='organizationName'
+					control={control}
+					defaultValue={undefined}
+					rules={{ required: 'Введите название организации' }}
+					render={({ field, fieldState: { error } }) => (
+						<CustomTextFieldRef
+							error={error ? true : false}
+							helperText={error?.message}
+							{...field}
+							value={field.value ?? ''}
+						/>
+					)}
 				/>
 			</Grid>
 		</>
-	)
-}
+	);
+};
 
-export default OrganizationFields
+export default OrganizationFields;

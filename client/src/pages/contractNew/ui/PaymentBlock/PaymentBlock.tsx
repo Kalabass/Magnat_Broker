@@ -1,22 +1,24 @@
-import { useBlankStore } from '@/shared/stores/useBlankStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { Box, Grid, Paper, Typography } from '@mui/material'
-import { FC } from 'react'
+import { useBlankStore } from '@/shared/stores/useBlankStore';
+import { Box, Grid, Paper, Typography } from '@mui/material';
+import { FC } from 'react';
 
-import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore'
-import CustomSelect from '../GeneralInfoBlock/CustomSelect'
-import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock'
+import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
+import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
+import { Controller, useFormContext } from 'react-hook-form';
+import CustomSelect from '../GeneralInfoBlock/CustomSelect';
+import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock';
 
 const PAYMENT_TYPES: itemData[] = [
 	{ id: 0, name: 'ibox' },
 	{ id: 1, name: 'Наличные' },
 	{ id: 2, name: 'По ссылке' },
-]
+];
 
 const PaymentBlock: FC = () => {
-	const { getBlank, updateBlankField } = useBlankStore()
-	const { updateInsuranceObjectField } = useInsuranceObjectStore()
-	const blank = getBlank()
+	const { getBlank, updateBlankField } = useBlankStore();
+	const { updateInsuranceObjectField } = useInsuranceObjectStore();
+	const blank = getBlank();
+	const { control } = useFormContext();
 	return (
 		<Paper component={'section'} sx={{ borderRadius: '10px', padding: '40px' }}>
 			<Box component={'section'}>
@@ -33,10 +35,19 @@ const PaymentBlock: FC = () => {
 							<Typography>страховая премия</Typography>
 						</Grid>
 						<Grid item xs={8}>
-							<CustomTextField
-								onBlurHandler={value => {
-									updateInsuranceObjectField('premium', Number(value))
-								}}
+							<Controller
+								name='premium'
+								control={control}
+								rules={{ required: 'Введите премию' }}
+								defaultValue={undefined}
+								render={({ field, fieldState: { error } }) => (
+									<CustomTextFieldRef
+										error={!!error}
+										helperText={error?.message}
+										{...field}
+										value={field.value ?? undefined}
+									/>
+								)}
 							/>
 						</Grid>
 					</Grid>
@@ -52,11 +63,22 @@ const PaymentBlock: FC = () => {
 							<Typography>Способ оплаты</Typography>
 						</Grid>
 						<Grid item xs={8}>
-							<CustomSelect
-								items={PAYMENT_TYPES}
-								onChangeHandler={value => {
-									updateBlankField('paymentType', Number(value))
-								}}
+							<Controller
+								name='premium'
+								control={control}
+								rules={{ required: 'Выберите способ оплаты' }}
+								defaultValue={undefined}
+								render={({ field: { onChange }, fieldState: { error } }) => (
+									<CustomSelect
+										error={!!error}
+										formHelperText={error?.message}
+										items={PAYMENT_TYPES}
+										onChangeHandler={(value) => {
+											onChange(value);
+											updateBlankField('paymentType', Number(value));
+										}}
+									/>
+								)}
 							/>
 						</Grid>
 						{/* TODO: подгружать почту из текущего клиента */}
@@ -66,7 +88,21 @@ const PaymentBlock: FC = () => {
 									<Typography>Почта</Typography>
 								</Grid>
 								<Grid item xs={8}>
-									<CustomTextField type='email' />
+									<Controller
+										name='email'
+										control={control}
+										rules={{ required: 'Введите почту' }}
+										defaultValue={undefined}
+										render={({ field, fieldState: { error } }) => (
+											<CustomTextFieldRef
+												type='email'
+												error={!!error}
+												helperText={error?.message}
+												{...field}
+												value={field.value ?? undefined}
+											/>
+										)}
+									/>
 								</Grid>
 							</>
 						)}
@@ -74,7 +110,7 @@ const PaymentBlock: FC = () => {
 				</Grid>
 			</Box>
 		</Paper>
-	)
-}
+	);
+};
 
-export default PaymentBlock
+export default PaymentBlock;

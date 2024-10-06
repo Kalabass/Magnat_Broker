@@ -48,7 +48,7 @@ const RightBlock: FC = () => {
 					rules={{ required: 'Выберите направление' }}
 					render={({ field: { onChange }, fieldState: { error } }) => (
 						<CustomSelectWithTitle
-							error={error ? true : false}
+							error={!!error}
 							formHelperText={error?.message}
 							title='Направление'
 							items={MORTGAGE_TYPES}
@@ -62,8 +62,20 @@ const RightBlock: FC = () => {
 			)}
 
 			{BLANK_SERIES && <BlankNumberBlock items={BLANK_SERIES} />}
-			<SellingPointSelect
-				onChangeHandler={(value) => updateBlankField('sellingPointId', value)}
+			<Controller
+				name='sellingPointId'
+				control={control}
+				rules={{ required: 'Выберите точку продажи' }}
+				render={({ field: { onChange }, fieldState: { error } }) => (
+					<SellingPointSelect
+						error={!!error}
+						formHelperText={error?.message}
+						onChangeHandler={(selectedValue) => {
+							onChange(selectedValue);
+							updateBlankField('sellingPointId', selectedValue);
+						}}
+					/>
+				)}
 			/>
 		</>
 	);

@@ -1,10 +1,8 @@
 import { useCreateBlankMutation } from '@/entities/blank/lib/useCreateBlank.mutation';
-import { BlankData, useBlankStore } from '@/shared/stores/useBlankStore';
-import { useClientStore } from '@/shared/stores/useClientStore';
-import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
+import { BlankData } from '@/shared/stores/useBlankStore';
 import { Box, Button, Container } from '@mui/material';
 import { FC } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ClientBlock from './ClientBlock/ClientBlock';
 import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock';
@@ -14,17 +12,7 @@ import PaymentBlock from './PaymentBlock/PaymentBlock';
 export const ContractNewPage: FC = () => {
 	const createBlankMutation = useCreateBlankMutation();
 
-	const { getBlank } = useBlankStore();
-	const { getInsuranceObject } = useInsuranceObjectStore();
-	const { getClient } = useClientStore();
-
-	const blank = getBlank();
-	const client = getClient();
-	const insuranceObject = getInsuranceObject();
-
 	const navigate = useNavigate();
-
-	// const [buttonDisabled, setButtonDisabled] = useState(false);
 
 	interface NewBlank extends BlankData {}
 
@@ -34,9 +22,12 @@ export const ContractNewPage: FC = () => {
 		},
 	});
 
-	const onSubmit = () => {
-		createBlankMutation.mutate({ blank, client, insuranceObject });
-		if (createBlankMutation.isSuccess) navigate('/contracts');
+	interface IFormData {}
+
+	const onSubmit: SubmitHandler<IFormData> = (data) => {
+		console.log(data);
+		// createBlankMutation.mutate({ blank, client, insuranceObject });
+		// if (createBlankMutation.isSuccess) navigate('/contracts');
 	};
 
 	return (

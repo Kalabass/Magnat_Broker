@@ -1,11 +1,5 @@
 import { ItemData } from '@/shared/model/interface';
-import {
-	FormControl,
-	FormHelperText,
-	Grid,
-	InputLabel,
-	Typography,
-} from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
 import CustomSelect from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomSelect';
 
@@ -39,15 +33,13 @@ export const CustomSelectWithTitle: FC<UniversalWrapperProps> = ({
 			<Grid item xs={8}>
 				{items && (
 					<>
-						<FormControl fullWidth error={error}>
-							<InputLabel size='small'>{title}</InputLabel>
-							<CustomSelect
-								label={title}
-								items={items}
-								onChangeHandler={onChangeHandler}
-							/>
-							<FormHelperText>{formHelperText}</FormHelperText>
-						</FormControl>
+						<CustomSelect
+							label={title}
+							items={items}
+							error={error}
+							formHelperText={formHelperText}
+							onChangeHandler={onChangeHandler}
+						/>
 					</>
 				)}
 			</Grid>

@@ -1,23 +1,17 @@
 import { useBanks } from '@/entities/bank';
 import { useBlankStore } from '@/shared/stores/useBlankStore';
-import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
-import CustomTextField from '@/shared/ui/CustomTextField';
+import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import CustomSelect from '../GeneralInfoBlock/CustomSelect';
-//TODO: объеденить с payment блоком
-// const BANKS: itemData[] = [
-//   { id: 0, name: 'Сбербанк' },
-//   { id: 1, name: 'Совкомбанк' },
-// ];
 
 const ObjectBlock: FC = () => {
 	const { getBlank } = useBlankStore();
 	const blank = getBlank();
 
-	const { updateInsuranceObjectField } = useInsuranceObjectStore();
-
 	const { data: BANKS } = useBanks();
+	const { control } = useFormContext();
 	return (
 		<Paper component={'section'} sx={{ borderRadius: '10px', padding: '40px' }}>
 			<Box component={'section'}>
@@ -30,16 +24,26 @@ const ObjectBlock: FC = () => {
 						justifyContent='center'
 						alignItems='center'
 					>
+						{/* TODO: что-то сделать с этим безобразием */}
 						{blank.insuranceTypeId !== 4 && (
 							<>
 								<Grid item xs={4}>
 									Название
 								</Grid>
 								<Grid item xs={8}>
-									<CustomTextField
-										onBlurHandler={(value: string) => {
-											updateInsuranceObjectField('name', value);
-										}}
+									{/* TODO: сделать обязательным, когда страхование не ипотека */}
+									<Controller
+										name='insuranceObjectName'
+										control={control}
+										defaultValue={undefined}
+										render={({ field, fieldState: { error } }) => (
+											<CustomTextFieldRef
+												error={!!error}
+												helperText={error?.message}
+												{...field}
+												value={field.value ?? undefined}
+											/>
+										)}
 									/>
 								</Grid>
 							</>
@@ -48,11 +52,20 @@ const ObjectBlock: FC = () => {
 							<Typography>Страховая сумма</Typography>
 						</Grid>
 						<Grid item xs={8}>
-							<CustomTextField
-								type='number'
-								onBlurHandler={(value: string) => {
-									updateInsuranceObjectField('sum', Number(value));
-								}}
+							<Controller
+								name='sum'
+								control={control}
+								defaultValue={undefined}
+								rules={{ required: 'Введите страховую сумму' }}
+								render={({ field, fieldState: { error } }) => (
+									<CustomTextFieldRef
+										type='number'
+										error={!!error}
+										helperText={error?.message}
+										{...field}
+										value={field.value ?? ''}
+									/>
+								)}
 							/>
 						</Grid>
 					</Grid>
@@ -70,29 +83,41 @@ const ObjectBlock: FC = () => {
 									Мощность
 								</Grid>
 								<Grid item xs={8}>
-									<CustomTextField
-										type='number'
-										onBlurHandler={(value: string) => {
-											updateInsuranceObjectField('horsePowers', Number(value));
-										}}
+									<Controller
+										name='insuranceObjectHorsePowers'
+										control={control}
+										defaultValue={undefined}
+										rules={{ required: 'Введите кол-во лошадиных сил' }}
+										render={({ field, fieldState: { error } }) => (
+											<CustomTextFieldRef
+												type='number'
+												error={!!error}
+												helperText={error?.message}
+												{...field}
+												value={field.value ?? undefined}
+											/>
+										)}
 									/>
 								</Grid>
 							</>
 						)}
-						{/* TODO: подумать насчет кредитованных объектов, каким образом это указывать, сейчас я вижу 2 пути: 
-              1)Вместо решения брокера добавить чекбокс, при нажатии которого будет появляться поле банк
-              2) заузать решение брокера, но тогда надо подумать над реализацие, либо добавить пустой элемент в массив банков(что звучит как жижа) или как-то добавить дефолтное значение в селект  */}
 						{BANKS && (
 							<>
 								<Grid item xs={4}>
 									<Typography>Банк</Typography>
 								</Grid>
 								<Grid item xs={8}>
-									<CustomSelect
-										items={BANKS}
-										onChangeHandler={(value) => {
-											updateInsuranceObjectField('bank', value);
-										}}
+									<Controller
+										name='bankId'
+										control={control}
+										render={({ field: { onChange } }) => (
+											<CustomSelect
+												items={BANKS}
+												onChangeHandler={(selectedValue) => {
+													onChange(selectedValue);
+												}}
+											/>
+										)}
 									/>
 								</Grid>
 							</>

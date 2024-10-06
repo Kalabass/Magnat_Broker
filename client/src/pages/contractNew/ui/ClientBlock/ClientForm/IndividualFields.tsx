@@ -1,54 +1,95 @@
-import { useClientStore } from '@/shared/stores/useClientStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { Grid, Typography } from '@mui/material'
-import { FC } from 'react'
+import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
+import { Grid, Typography } from '@mui/material';
+import { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 const IndividualFields: FC = () => {
-	const { updateClientField } = useClientStore()
+	const { control } = useFormContext();
 	return (
 		<>
 			<Grid item xs={2}>
 				<Typography>ФИО</Typography>
 			</Grid>
-			<Grid item xs={8}>
-				<CustomTextField
-					required
-					onBlurHandler={(value: string) => {
-						updateClientField('name', value)
-					}}
+			<Grid item xs={8} width={'100%'}>
+				<Controller
+					name='name'
+					control={control}
+					rules={{ required: 'Введите имя' }}
+					defaultValue={undefined}
+					render={({ field, fieldState: { error } }) => (
+						<CustomTextFieldRef
+							error={!!error}
+							helperText={error?.message}
+							{...field}
+							value={field.value ?? ''}
+						/>
+					)}
 				/>
 			</Grid>
 			<Grid item xs={2}>
-				<CustomTextField
-					type='date'
-					onBlurHandler={(value: string) => {
-						updateClientField('birthDate', new Date(value))
-					}}
+				<Controller
+					name='date'
+					control={control}
+					render={({ field }) => (
+						<CustomTextFieldRef
+							type='date'
+							{...field}
+							value={field.value ?? ''}
+						/>
+					)}
 				/>
 			</Grid>
 
+			{/*TODO: сделать обязательными, когда тип оплаты наличные  */}
 			<Grid item xs={2}>
 				<Typography>Паспорт</Typography>
 			</Grid>
 			<Grid item xs={1}>
-				<CustomTextField
-					type='number'
-					onBlurHandler={(value: string) => {
-						updateClientField('passportSeries', +value)
+				<Controller
+					name='passportSeries'
+					control={control}
+					defaultValue={undefined}
+					rules={{
+						maxLength: {
+							value: 4,
+							message: '',
+						},
+						minLength: {
+							value: 4,
+							message: '',
+						},
 					}}
+					render={({ field, fieldState: { error } }) => (
+						<CustomTextFieldRef
+							type='number'
+							error={!!error}
+							helperText={error?.message}
+							{...field}
+							value={field.value ?? ''}
+						/>
+					)}
 				/>
 			</Grid>
 			<Grid item xs={3}>
-				<CustomTextField
-					type='number'
-					onBlurHandler={(value: string) => {
-						updateClientField('passportNumber', +value)
-					}}
+				<Controller
+					name='passportNumber'
+					control={control}
+					defaultValue={undefined}
+					rules={{ minLength: 6, maxLength: 6 }}
+					render={({ field, fieldState: { error } }) => (
+						<CustomTextFieldRef
+							type='number'
+							error={!!error}
+							helperText={error?.message}
+							{...field}
+							value={field.value ?? ''}
+						/>
+					)}
 				/>
 			</Grid>
 			<Grid item xs={6} />
 		</>
-	)
-}
+	);
+};
 
-export default IndividualFields
+export default IndividualFields;

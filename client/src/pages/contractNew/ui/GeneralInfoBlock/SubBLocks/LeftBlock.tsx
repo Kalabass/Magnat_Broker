@@ -19,7 +19,7 @@ const LeftBlock: FC = () => {
 				rules={{ required: 'Выберите страховую' }}
 				render={({ field: { onChange }, fieldState: { error } }) => (
 					<CompaniesSelect
-						error={error ? true : false}
+						error={!!error}
 						formHelperText={error?.message}
 						onChangeHandler={(selectedValue) => {
 							onChange(selectedValue);
