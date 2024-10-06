@@ -137,5 +137,6 @@ dist
 *.sln
 *.sw?
 
+.vite/
 
 test

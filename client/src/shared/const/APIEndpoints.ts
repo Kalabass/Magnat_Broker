@@ -14,8 +14,8 @@ const BLANK_SERIES_ENDPOINTS = {
 
 const BLANK_ENDPOINTS = {
 	FIND_ALL: 'blanks',
-	FIND_ALL_PROCESSED: 'banks/processed',
-	ALL_PROCESSED_TO_EXCEL: 'banks/processed/export-excel',
+	FIND_ALL_PROCESSED: 'blanks/processed',
+	ALL_PROCESSED_TO_EXCEL: 'blanks/processed/export-excel',
 	CREATE: 'blanks/createContract',
 };
 

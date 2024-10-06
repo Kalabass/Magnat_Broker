@@ -110,11 +110,11 @@ legend {
 }
 
 input[type='number'] {
-	-moz-appearance: textfield; /* Для Firefox */
+	-moz-appearance: textfield;
 }
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
-	-webkit-appearance: none; /* Для Chrome, Safari и Opera */
-	margin: 0; /* Убираем отступы */
+	-webkit-appearance: none;
+	margin: 0;
 }
