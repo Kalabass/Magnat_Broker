@@ -4,5 +4,6 @@ export const AppRoutes = {
 	AUTH: '/auth',
 	CONTRACTS: '/contracts',
 	CONTRACT_DETAILS: '/contracts/:id',
+	CONTRACT_EDIT: '/contracts/:id/edit',
 	CONTRACT_CREATION: '/contracts/new',
-}
+};

@@ -4,6 +4,7 @@ import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { FormFieldNamesMap } from '../../constants/FormFieldNames';
 import CustomSelect from '../GeneralInfoBlock/CustomSelect';
 
 const ObjectBlock: FC = () => {
@@ -33,15 +34,18 @@ const ObjectBlock: FC = () => {
 								<Grid item xs={8}>
 									{/* TODO: сделать обязательным, когда страхование не ипотека */}
 									<Controller
-										name='insuranceObjectName'
+										name={FormFieldNamesMap.insuranceObjectName}
 										control={control}
 										defaultValue={undefined}
+										rules={{
+											required: 'Введите название объекта',
+										}}
 										render={({ field, fieldState: { error } }) => (
 											<CustomTextFieldRef
 												error={!!error}
 												helperText={error?.message}
 												{...field}
-												value={field.value ?? undefined}
+												value={field.value ?? ''}
 											/>
 										)}
 									/>
@@ -53,7 +57,7 @@ const ObjectBlock: FC = () => {
 						</Grid>
 						<Grid item xs={8}>
 							<Controller
-								name='sum'
+								name={FormFieldNamesMap.blankSum}
 								control={control}
 								defaultValue={undefined}
 								rules={{ required: 'Введите страховую сумму' }}
@@ -63,6 +67,9 @@ const ObjectBlock: FC = () => {
 										error={!!error}
 										helperText={error?.message}
 										{...field}
+										onChange={(e) => {
+											field.onChange(Number(e.target.value));
+										}}
 										value={field.value ?? ''}
 									/>
 								)}
@@ -84,17 +91,22 @@ const ObjectBlock: FC = () => {
 								</Grid>
 								<Grid item xs={8}>
 									<Controller
-										name='insuranceObjectHorsePowers'
+										name={FormFieldNamesMap.insuranceObjectHorsePowers}
 										control={control}
 										defaultValue={undefined}
-										rules={{ required: 'Введите кол-во лошадиных сил' }}
+										rules={{
+											required: 'Введите кол-во лошадиных сил',
+										}}
 										render={({ field, fieldState: { error } }) => (
 											<CustomTextFieldRef
 												type='number'
 												error={!!error}
 												helperText={error?.message}
 												{...field}
-												value={field.value ?? undefined}
+												value={field.value ?? ''}
+												onChange={(e) => {
+													field.onChange(Number(e.target.value));
+												}}
 											/>
 										)}
 									/>
@@ -108,7 +120,7 @@ const ObjectBlock: FC = () => {
 								</Grid>
 								<Grid item xs={8}>
 									<Controller
-										name='bankId'
+										name={FormFieldNamesMap.blankBankId}
 										control={control}
 										render={({ field: { onChange } }) => (
 											<CustomSelect

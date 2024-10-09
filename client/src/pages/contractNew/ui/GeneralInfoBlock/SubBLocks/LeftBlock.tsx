@@ -1,3 +1,4 @@
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { useBlankStore } from '@/shared/stores/useBlankStore';
 import { CompaniesSelect } from '@/widgets/CompaniesSelect';
 import { EmployeeSelect } from '@/widgets/EmployeeSelect';
@@ -14,7 +15,8 @@ const LeftBlock: FC = () => {
 			<TimeBlock />
 
 			<Controller
-				name='insuranceCompanyId'
+				disabled={true}
+				name={FormFieldNamesMap.blankInsuranceCompanyId}
 				control={control}
 				rules={{ required: 'Выберите страховую' }}
 				render={({ field: { onChange }, fieldState: { error } }) => (
@@ -23,14 +25,14 @@ const LeftBlock: FC = () => {
 						formHelperText={error?.message}
 						onChangeHandler={(selectedValue) => {
 							onChange(selectedValue);
-							updateBlankField('insuranceCompanyId', selectedValue);
+							//updateBlankField('insuranceCompanyId', selectedValue);
 						}}
 					/>
 				)}
 			/>
 
 			<Controller
-				name='employeeId'
+				name={FormFieldNamesMap.blankEmployeeId}
 				control={control}
 				rules={{ required: 'Выберите агента' }}
 				render={({ field: { onChange }, fieldState: { error } }) => (

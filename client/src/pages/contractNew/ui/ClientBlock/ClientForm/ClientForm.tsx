@@ -1,5 +1,7 @@
 import { CustomToggle } from '@/features/ClientTypeToggle';
 import { CLIENT_TYPES } from '@/pages/contractNew/constants/clinetTypes.const';
+
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { useClientStore } from '@/shared/stores/useClientStore';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Box, Grid, Typography } from '@mui/material';
@@ -26,10 +28,7 @@ const ClientForm: FC = () => {
 				alignItems='center'
 			>
 				<Grid item xs={12}>
-					<CustomToggle
-						items={CLIENT_TYPES}
-						onClick={(value) => updateClientField('isIndividual', value)}
-					/>
+					<CustomToggle items={CLIENT_TYPES} />
 				</Grid>
 
 				{client.isIndividual ? <IndividualFields /> : <OrganizationFields />}
@@ -39,7 +38,7 @@ const ClientForm: FC = () => {
 				</Grid>
 				<Grid item xs={4}>
 					<Controller
-						name='phoneNumber'
+						name={FormFieldNamesMap.clientPhoneNumber}
 						control={control}
 						defaultValue={undefined}
 						render={({ field }) => (
@@ -60,7 +59,7 @@ const ClientForm: FC = () => {
 				</Grid>
 				<Grid item xs={4}>
 					<Controller
-						name='INN'
+						name={FormFieldNamesMap.clientINN}
 						control={control}
 						defaultValue={undefined}
 						rules={{
@@ -79,6 +78,9 @@ const ClientForm: FC = () => {
 								error={!!error}
 								helperText={error?.message}
 								{...field}
+								onChange={(e) => {
+									field.onChange(Number(e.target.value));
+								}}
 								value={field.value ?? ''}
 							/>
 						)}
@@ -93,7 +95,7 @@ const ClientForm: FC = () => {
 				<Grid item xs={10}>
 					<Controller
 						defaultValue={undefined}
-						name='address'
+						name={FormFieldNamesMap.clientAddress}
 						control={control}
 						render={({ field }) => (
 							<CustomTextFieldRef {...field} value={field.value ?? ''} />

@@ -1,14 +1,9 @@
 import { useSellingPointsNames } from '@/entities/sellingPoint';
 import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
+import { WidgetSelectProps } from '@/widgets/CompaniesSelect/ui/CompaniesSelect';
 import { FC } from 'react';
 
-interface SellingPointSelectProps {
-	onChangeHandler: (value: number | undefined) => void;
-	formHelperText?: string;
-	error?: boolean;
-}
-
-export const SellingPointSelect: FC<SellingPointSelectProps> = (props) => {
+export const SellingPointSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: SELLING_POINTS } = useSellingPointsNames();
 	return (
 		<CustomSelectWithTitle

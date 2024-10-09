@@ -3,6 +3,7 @@ import { useBlankStore } from '@/shared/stores/useBlankStore';
 import { FC } from 'react';
 
 import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { InsuranceTypeSelect } from '@/widgets/InsuraceTypeSelect';
 import { SellingPointSelect } from '@/widgets/SellingPointSelect';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -26,7 +27,7 @@ const RightBlock: FC = () => {
 			{/* FIXME: вынести ИПОТЕКА в константы */}
 			{/* FIXME: подумать что делать с перерисовками */}
 			<Controller
-				name='InsuranceTypeId'
+				name={FormFieldNamesMap.blankInsuranceTypeId}
 				control={control}
 				rules={{ required: 'Выберите тип страховки' }}
 				render={({ field: { onChange }, fieldState: { error } }) => (
@@ -43,7 +44,7 @@ const RightBlock: FC = () => {
 
 			{blank.insuranceTypeId === 4 && (
 				<Controller
-					name='MortgageTypeId'
+					name={FormFieldNamesMap.blankMortgageTypeId}
 					control={control}
 					rules={{ required: 'Выберите направление' }}
 					render={({ field: { onChange }, fieldState: { error } }) => (
@@ -63,7 +64,7 @@ const RightBlock: FC = () => {
 
 			{BLANK_SERIES && <BlankNumberBlock items={BLANK_SERIES} />}
 			<Controller
-				name='sellingPointId'
+				name={FormFieldNamesMap.blankSellingPointId}
 				control={control}
 				rules={{ required: 'Выберите точку продажи' }}
 				render={({ field: { onChange }, fieldState: { error } }) => (

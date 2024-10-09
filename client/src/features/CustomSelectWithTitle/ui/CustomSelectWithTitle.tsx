@@ -3,15 +3,15 @@ import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
 import CustomSelect from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomSelect';
 
-interface UniversalWrapperProps {
+export interface CustomSelectWithTitleProps {
 	title: string;
-	items: ItemData[] | undefined;
-	onChangeHandler: (value: number | undefined) => void;
+	items?: ItemData[] | undefined;
+	onChangeHandler?: (value: number | undefined) => void;
 	formHelperText?: string;
 	error?: boolean;
 }
 
-export const CustomSelectWithTitle: FC<UniversalWrapperProps> = ({
+export const CustomSelectWithTitle: FC<CustomSelectWithTitleProps> = ({
 	title,
 	items,
 	onChangeHandler,

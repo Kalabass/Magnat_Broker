@@ -1,5 +1,5 @@
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { getDefaultDates } from '@/pages/contractNew/lib/dateUtils';
-import { formatDateToISO } from '@/pages/contractNew/lib/formatDate';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Checkbox, Grid, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
@@ -11,17 +11,28 @@ const TimeBlock: FC = () => {
 	const { defaultStartDate, defaultEndDate } = getDefaultDates();
 	const { control, setValue } = useFormContext();
 
-	// Следим за полями activeDateStart и activeDateEnd
-	const activeDateStart = useWatch({ control, name: 'activeDateStart' });
-	const activeDateEnd = useWatch({ control, name: 'activeDateEnd' });
+	const activeDateStart = useWatch({
+		control,
+		name: FormFieldNamesMap.blankActiveDateStart,
+	});
+	const activeDateEnd = useWatch({
+		control,
+		name: FormFieldNamesMap.blankActiveDateEnd,
+	});
 
-	// Обновляем поля useDateStart и useDateEnd при изменении activeDateStart, activeDateEnd и isMatches
 	useEffect(() => {
 		if (isMatches) {
-			setValue('useDateStart', activeDateStart);
-			setValue('useDateEnd', activeDateEnd);
+			setValue('blankUseDateStart', activeDateStart || defaultStartDate);
+			setValue('blankUseDateEnd', activeDateEnd || defaultEndDate);
 		}
-	}, [isMatches, activeDateStart, activeDateEnd, setValue]);
+	}, [
+		isMatches,
+		activeDateStart,
+		activeDateEnd,
+		setValue,
+		defaultStartDate,
+		defaultEndDate,
+	]);
 
 	const onChangeHandler = () => {
 		setIsMatches(!isMatches);
@@ -34,9 +45,9 @@ const TimeBlock: FC = () => {
 			</Grid>
 			<Grid item xs={4}>
 				<Controller
-					name='conclusionDate'
+					name={FormFieldNamesMap.blankConclusionDate}
 					control={control}
-					defaultValue={formatDateToISO(defaultStartDate)}
+					defaultValue={defaultStartDate}
 					rules={{ required: true }}
 					render={({ field, fieldState: { error } }) => (
 						<CustomTextFieldRef
@@ -44,6 +55,20 @@ const TimeBlock: FC = () => {
 							error={!!error}
 							helperText={error?.message}
 							{...field}
+							onChange={(e) => {
+								const dateValue = e.target.value;
+								if (dateValue) {
+									const parsedDate = new Date(dateValue);
+									if (!isNaN(parsedDate.getTime())) {
+										field.onChange(parsedDate);
+									} else {
+										field.onChange(null);
+									}
+								} else {
+									field.onChange(null);
+								}
+							}}
+							value={field.value ? field.value.toISOString().split('T')[0] : ''}
 						/>
 					)}
 				/>
@@ -54,9 +79,9 @@ const TimeBlock: FC = () => {
 			</Grid>
 			<Grid item xs={4}>
 				<Controller
-					name='activeDateStart'
+					name={FormFieldNamesMap.blankActiveDateStart}
 					control={control}
-					defaultValue={formatDateToISO(defaultStartDate)}
+					defaultValue={defaultStartDate}
 					rules={{ required: true }}
 					render={({ field, fieldState: { error } }) => (
 						<CustomTextFieldRef
@@ -64,15 +89,29 @@ const TimeBlock: FC = () => {
 							error={!!error}
 							helperText={error?.message}
 							{...field}
+							onChange={(e) => {
+								const dateValue = e.target.value;
+								if (dateValue) {
+									const parsedDate = new Date(dateValue);
+									if (!isNaN(parsedDate.getTime())) {
+										field.onChange(parsedDate);
+									} else {
+										field.onChange(null);
+									}
+								} else {
+									field.onChange(null);
+								}
+							}}
+							value={field.value ? field.value.toISOString().split('T')[0] : ''}
 						/>
 					)}
 				/>
 			</Grid>
 			<Grid item xs={4}>
 				<Controller
-					name='activeDateEnd'
+					name={FormFieldNamesMap.blankActiveDateEnd}
 					control={control}
-					defaultValue={formatDateToISO(defaultEndDate)}
+					defaultValue={defaultEndDate}
 					rules={{ required: true }}
 					render={({ field, fieldState: { error } }) => (
 						<CustomTextFieldRef
@@ -80,6 +119,20 @@ const TimeBlock: FC = () => {
 							error={!!error}
 							helperText={error?.message}
 							{...field}
+							onChange={(e) => {
+								const dateValue = e.target.value;
+								if (dateValue) {
+									const parsedDate = new Date(dateValue);
+									if (!isNaN(parsedDate.getTime())) {
+										field.onChange(parsedDate);
+									} else {
+										field.onChange(null);
+									}
+								} else {
+									field.onChange(null);
+								}
+							}}
+							value={field.value ? field.value.toISOString().split('T')[0] : ''}
 						/>
 					)}
 				/>
@@ -97,9 +150,9 @@ const TimeBlock: FC = () => {
 					</Grid>
 					<Grid item xs={4}>
 						<Controller
-							name='useDateStart'
+							name={FormFieldNamesMap.blankUseDateStart}
 							control={control}
-							defaultValue={formatDateToISO(defaultStartDate)}
+							defaultValue={defaultStartDate}
 							rules={{ required: true }}
 							render={({ field, fieldState: { error } }) => (
 								<CustomTextFieldRef
@@ -107,15 +160,31 @@ const TimeBlock: FC = () => {
 									error={!!error}
 									helperText={error?.message}
 									{...field}
+									onChange={(e) => {
+										const dateValue = e.target.value;
+										if (dateValue) {
+											const parsedDate = new Date(dateValue);
+											if (!isNaN(parsedDate.getTime())) {
+												field.onChange(parsedDate);
+											} else {
+												field.onChange(null);
+											}
+										} else {
+											field.onChange(null);
+										}
+									}}
+									value={
+										field.value ? field.value.toISOString().split('T')[0] : ''
+									}
 								/>
 							)}
 						/>
 					</Grid>
 					<Grid item xs={4}>
 						<Controller
-							name='useDateEnd'
+							name={FormFieldNamesMap.blankUseDateEnd}
 							control={control}
-							defaultValue={formatDateToISO(defaultEndDate)}
+							defaultValue={defaultEndDate}
 							rules={{ required: true }}
 							render={({ field, fieldState: { error } }) => (
 								<CustomTextFieldRef
@@ -123,6 +192,22 @@ const TimeBlock: FC = () => {
 									error={!!error}
 									helperText={error?.message}
 									{...field}
+									onChange={(e) => {
+										const dateValue = e.target.value;
+										if (dateValue) {
+											const parsedDate = new Date(dateValue);
+											if (!isNaN(parsedDate.getTime())) {
+												field.onChange(parsedDate);
+											} else {
+												field.onChange(null);
+											}
+										} else {
+											field.onChange(null);
+										}
+									}}
+									value={
+										field.value ? field.value.toISOString().split('T')[0] : ''
+									}
 								/>
 							)}
 						/>

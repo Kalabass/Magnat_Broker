@@ -1,5 +1,7 @@
-import { useCreateBlankMutation } from '@/entities/blank/lib/useCreateBlank.mutation';
-import { BlankData } from '@/shared/stores/useBlankStore';
+import {
+	IMutationData,
+	useCreateBlankMutation,
+} from '@/entities/blank/lib/useCreateBlank.mutation';
 import { Box, Button, Container } from '@mui/material';
 import { FC } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
@@ -14,20 +16,12 @@ export const ContractNewPage: FC = () => {
 
 	const navigate = useNavigate();
 
-	interface NewBlank extends BlankData {}
+	const formMethods = useForm<IMutationData>({});
 
-	const formMethods = useForm<NewBlank>({
-		defaultValues: {
-			insuranceCompanyId: undefined,
-		},
-	});
-
-	interface IFormData {}
-
-	const onSubmit: SubmitHandler<IFormData> = (data) => {
+	const onSubmit: SubmitHandler<IMutationData> = (data) => {
 		console.log(data);
-		// createBlankMutation.mutate({ blank, client, insuranceObject });
-		// if (createBlankMutation.isSuccess) navigate('/contracts');
+		createBlankMutation.mutate(data);
+		if (createBlankMutation.isSuccess) navigate('/contracts');
 	};
 
 	return (
