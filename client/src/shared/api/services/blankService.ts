@@ -1,9 +1,7 @@
+import { IMutationData } from '@/entities/blank/lib/useCreateBlank.mutation';
 import { itemData } from '@/pages/contractNew/ui/GeneralInfoBlock/GeneralInfoBlock';
 import { handleError } from '@/shared/lib/utils/errorHandler';
-import { BlankData } from '@/shared/stores/useBlankStore';
-import { ClientData } from '@/shared/stores/useClientStore';
 import { FilterData } from '@/shared/stores/useFiltersStore';
-import { InsuranceObjectData } from '@/shared/stores/useInsuranceObjectStore';
 import { API_ENDPOINTS } from '../../const/APIEndpoints';
 import instance from '../axiosInstance';
 
@@ -107,17 +105,9 @@ class BlankService {
 		}
 	}
 
-	async create(
-		blank: Partial<BlankData>,
-		client: Partial<ClientData>,
-		insuranceObject: Partial<InsuranceObjectData>
-	): Promise<Blank> {
+	async create(data: IMutationData): Promise<Blank> {
 		try {
-			const response = await instance.post(API_ENDPOINTS.BLANK.CREATE, {
-				client: client,
-				insuranceObject: insuranceObject,
-				blank: blank,
-			});
+			const response = await instance.post(API_ENDPOINTS.BLANK.CREATE, data);
 			return response.data;
 		} catch (error) {
 			handleError(error, 'Failed to create blank  ');

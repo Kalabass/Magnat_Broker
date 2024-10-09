@@ -1,3 +1,4 @@
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
@@ -12,7 +13,7 @@ const IndividualFields: FC = () => {
 			</Grid>
 			<Grid item xs={8} width={'100%'}>
 				<Controller
-					name='name'
+					name={FormFieldNamesMap.clientName}
 					control={control}
 					rules={{ required: 'Введите имя' }}
 					defaultValue={undefined}
@@ -28,13 +29,27 @@ const IndividualFields: FC = () => {
 			</Grid>
 			<Grid item xs={2}>
 				<Controller
-					name='date'
+					name={FormFieldNamesMap.clientBirthDate}
 					control={control}
+					defaultValue={undefined}
 					render={({ field }) => (
 						<CustomTextFieldRef
 							type='date'
 							{...field}
-							value={field.value ?? ''}
+							onChange={(e) => {
+								const dateValue = e.target.value;
+								if (dateValue) {
+									const parsedDate = new Date(dateValue);
+									if (!isNaN(parsedDate.getTime())) {
+										field.onChange(parsedDate);
+									} else {
+										field.onChange(null);
+									}
+								} else {
+									field.onChange(null);
+								}
+							}}
+							value={field.value ? field.value.toISOString().split('T')[0] : ''}
 						/>
 					)}
 				/>
@@ -46,7 +61,7 @@ const IndividualFields: FC = () => {
 			</Grid>
 			<Grid item xs={1}>
 				<Controller
-					name='passportSeries'
+					name={FormFieldNamesMap.clientPassportSeries}
 					control={control}
 					defaultValue={undefined}
 					rules={{
@@ -72,7 +87,7 @@ const IndividualFields: FC = () => {
 			</Grid>
 			<Grid item xs={3}>
 				<Controller
-					name='passportNumber'
+					name={FormFieldNamesMap.clientPassportNumber}
 					control={control}
 					defaultValue={undefined}
 					rules={{ minLength: 6, maxLength: 6 }}

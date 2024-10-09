@@ -1,22 +1,11 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { InsuranceObject } from '../entities/insurance-object.entity';
 
-export class CreateInsuranceObjectDto extends OmitType(InsuranceObject, [
-  'id',
-]) {
-  @IsNotEmpty()
-  sum: number;
+export class CreateInsuranceObjectDto extends PartialType(InsuranceObject) {
+	@IsNotEmpty()
+	name: string;
 
-  @IsNotEmpty()
-  premium: number;
-
-  @IsNotEmpty()
-  name: string;
-
-  @IsNumber()
-  horsePowers: number;
-
-  @IsBoolean()
-  isCredited: boolean;
+	@IsNumber()
+	horsePowers: number;
 }

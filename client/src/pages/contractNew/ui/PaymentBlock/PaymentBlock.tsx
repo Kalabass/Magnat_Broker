@@ -1,22 +1,14 @@
 import { useBlankStore } from '@/shared/stores/useBlankStore';
 import { Box, Grid, Paper, Typography } from '@mui/material';
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 
-import { useInsuranceObjectStore } from '@/shared/stores/useInsuranceObjectStore';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
+import { PaymentTypesSelect } from '@/widgets/PaymentTypesSelect';
 import { Controller, useFormContext } from 'react-hook-form';
-import CustomSelect from '../GeneralInfoBlock/CustomSelect';
-import { itemData } from '../GeneralInfoBlock/GeneralInfoBlock';
-
-const PAYMENT_TYPES: itemData[] = [
-	{ id: 0, name: 'ibox' },
-	{ id: 1, name: 'Наличные' },
-	{ id: 2, name: 'По ссылке' },
-];
+import { FormFieldNamesMap } from '../../constants/FormFieldNames';
 
 const PaymentBlock: FC = () => {
 	const { getBlank, updateBlankField } = useBlankStore();
-	const { updateInsuranceObjectField } = useInsuranceObjectStore();
 	const blank = getBlank();
 	const { control } = useFormContext();
 	return (
@@ -36,7 +28,7 @@ const PaymentBlock: FC = () => {
 						</Grid>
 						<Grid item xs={8}>
 							<Controller
-								name='premium'
+								name={FormFieldNamesMap.blankPremium}
 								control={control}
 								rules={{ required: 'Введите премию' }}
 								defaultValue={undefined}
@@ -45,7 +37,10 @@ const PaymentBlock: FC = () => {
 										error={!!error}
 										helperText={error?.message}
 										{...field}
-										value={field.value ?? undefined}
+										value={field.value ?? ''}
+										onChange={(e: ChangeEvent<HTMLInputElement>) => {
+											field.onChange(Number(e.target.value));
+										}}
 									/>
 								)}
 							/>
@@ -59,28 +54,23 @@ const PaymentBlock: FC = () => {
 						justifyContent='center'
 						alignItems='center'
 					>
-						<Grid item xs={4}>
-							<Typography>Способ оплаты</Typography>
-						</Grid>
-						<Grid item xs={8}>
-							<Controller
-								name='premium'
-								control={control}
-								rules={{ required: 'Выберите способ оплаты' }}
-								defaultValue={undefined}
-								render={({ field: { onChange }, fieldState: { error } }) => (
-									<CustomSelect
-										error={!!error}
-										formHelperText={error?.message}
-										items={PAYMENT_TYPES}
-										onChangeHandler={(value) => {
-											onChange(value);
-											updateBlankField('paymentType', Number(value));
-										}}
-									/>
-								)}
-							/>
-						</Grid>
+						<Controller
+							name={FormFieldNamesMap.blankPaymentTypeId}
+							control={control}
+							rules={{ required: 'Выберите способ оплаты' }}
+							defaultValue={undefined}
+							render={({ field: { onChange }, fieldState: { error } }) => (
+								<PaymentTypesSelect
+									error={!!error}
+									formHelperText={error?.message}
+									onChangeHandler={(value) => {
+										onChange(value);
+										updateBlankField('paymentType', Number(value));
+									}}
+								/>
+							)}
+						/>
+
 						{/* TODO: подгружать почту из текущего клиента */}
 						{blank.paymentType === 1 && (
 							<>
@@ -89,7 +79,7 @@ const PaymentBlock: FC = () => {
 								</Grid>
 								<Grid item xs={8}>
 									<Controller
-										name='email'
+										name={FormFieldNamesMap.blankEmail}
 										control={control}
 										rules={{ required: 'Введите почту' }}
 										defaultValue={undefined}
@@ -99,7 +89,7 @@ const PaymentBlock: FC = () => {
 												error={!!error}
 												helperText={error?.message}
 												{...field}
-												value={field.value ?? undefined}
+												value={field.value ?? ''}
 											/>
 										)}
 									/>

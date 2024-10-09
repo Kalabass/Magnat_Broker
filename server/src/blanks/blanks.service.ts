@@ -17,6 +17,7 @@ import * as XLSX from 'xlsx';
 import { Response } from 'express';
 import { BlankSeriesService } from 'src/blank-series/blank-series.service';
 import { InsuranceObjectsService } from 'src/insurance-objects/insurance-objects.service';
+import { PaymentTypesService } from 'src/payment-types/payment-types.service';
 import {
 	Between,
 	ILike,
@@ -25,7 +26,6 @@ import {
 	Repository,
 } from 'typeorm';
 import { CreateBlankDto } from './dto/create-blank.dto';
-import { CreateContractDto } from './dto/create-contract.dto';
 import { FiltersDto } from './dto/filters-blank.dto';
 import { UpdateBlankDto } from './dto/update-blank.dto';
 import { Blank } from './entities/blank.entity';
@@ -42,7 +42,8 @@ export class BlanksService {
 		private readonly employeesService: EmployeesService,
 		private readonly sellingPointService: SellingPointsService,
 		private readonly blankSeriesService: BlankSeriesService,
-		private readonly insuranceObjectService: InsuranceObjectsService
+		private readonly insuranceObjectService: InsuranceObjectsService,
+		private readonly paymentTypeService: PaymentTypesService
 	) {}
 
 	private readonly handleError = (error: any) => {
@@ -59,64 +60,112 @@ export class BlanksService {
 	}
 
 	async create(createBlankDto: CreateBlankDto) {
+		const queryRunner =
+			this.blankRepository.manager.connection.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+
 		try {
-			return await this.blankRepository.save(createBlankDto);
-		} catch (error) {
-			this.handleError(error);
-		}
-	}
+			const client = await this.clientsService.create({
+				address: createBlankDto.clientAddress,
+				dateOfBirth: createBlankDto.clientBirthDate,
+				inn: createBlankDto.clientINN,
+				name: createBlankDto.clientName,
+				number: createBlankDto.clientPassportNumber,
+				series: createBlankDto.clientPassportSeries,
+				phone: createBlankDto.clientPhoneNumber,
+			});
 
-	async createBlank(createContractDto: CreateContractDto) {
-		const {
-			client: clientDTO,
-			insuranceObject: insuranceObjectDTO,
-			blank: blankDTO,
-		} = createContractDto;
-		const {
-			insuranceCompanyId,
-			employeeId,
-			insuranceTypeId,
-			blankSeriesId,
-			sellingPointId,
-		} = blankDTO;
-		try {
-			const client = await this.clientsService.create(clientDTO);
-			const insuranceObject =
-				await this.insuranceObjectService.create(insuranceObjectDTO);
+			const insuranceObject = await this.insuranceObjectService.create({
+				horsePowers: createBlankDto.insuranceObjectHorsePowers,
+				name: createBlankDto.insuranceObjectName,
+			});
 
-			const insuranceCompany =
-				await this.insuranceCompanyService.findOne(insuranceCompanyId);
+			if (!client) throw new BadRequestException('Не удалось создать клиента');
+			if (!insuranceObject)
+				throw new BadRequestException('Не удалось создать объект страхования');
 
-			const blankSeries = await this.blankSeriesService.findOne(blankSeriesId);
-
-			const sellingPoint =
-				await this.sellingPointService.findOne(sellingPointId);
-
-			const insuranceType =
-				await this.insuranceTypeService.findOne(insuranceTypeId);
-
-			const employee = await this.employeesService.findOne(employeeId);
-
-			const blank = await this.create({
-				...blankDTO,
-				sellingPoint,
-				employee,
-				insuranceType,
-				blankSeries,
-				insuranceCompany,
+			const blank = await this.blankRepository.save({
+				employee: { id: createBlankDto.blankEmployeeId },
+				insuranceCompany: { id: createBlankDto.blankInsuranceCompanyId },
+				insuranceType: { id: createBlankDto.blankInsuranceTypeId },
+				paymentType: { id: createBlankDto.blankPaymentTypeId },
+				sellingPoint: { id: createBlankDto.blankSellingPointId },
+				blankSeries: { id: createBlankDto.blankSeriesId },
+				number: createBlankDto.blankNumber,
+				conclusionDate: createBlankDto.blankConclusionDate,
+				activeDateStart: createBlankDto.blankActiveDateStart,
+				activeDateEnd: createBlankDto.blankActiveDateEnd,
+				useDateStart: createBlankDto.blankUseDateStart,
+				useDateEnd: createBlankDto.blankUseDateEnd,
+				email: createBlankDto.blankEmail,
+				premium: createBlankDto.blankPremium,
+				sum: createBlankDto.blankSum,
 				client: client,
 				insuranceObject: insuranceObject,
 			});
 
-			if (!blank) {
-				throw new BadRequestException('Не удалось создать бланк');
-			}
-
+			await queryRunner.commitTransaction();
 			return blank;
 		} catch (error) {
+			await queryRunner.rollbackTransaction();
 			this.handleError(error);
+		} finally {
+			await queryRunner.release();
 		}
 	}
+
+	// async createBlank(createContractDto: CreateContractDto) {
+	// 	const {
+	// 		client: clientDTO,
+	// 		insuranceObject: insuranceObjectDTO,
+	// 		blank: blankDTO,
+	// 	} = createContractDto;
+	// 	const {
+	// 		insuranceCompanyId,
+	// 		employeeId,
+	// 		insuranceTypeId,
+	// 		blankSeriesId,
+	// 		sellingPointId,
+	// 	} = blankDTO;
+	// 	try {
+	// 		const client = await this.clientsService.create(clientDTO);
+	// 		const insuranceObject =
+	// 			await this.insuranceObjectService.create(insuranceObjectDTO);
+
+	// 		const insuranceCompany =
+	// 			await this.insuranceCompanyService.findOne(insuranceCompanyId);
+
+	// 		const blankSeries = await this.blankSeriesService.findOne(blankSeriesId);
+
+	// 		const sellingPoint =
+	// 			await this.sellingPointService.findOne(sellingPointId);
+
+	// 		const insuranceType =
+	// 			await this.insuranceTypeService.findOne(insuranceTypeId);
+
+	// 		const employee = await this.employeesService.findOne(employeeId);
+
+	// 		const blank = await this.create({
+	// 			...blankDTO,
+	// 			sellingPoint,
+	// 			employee,
+	// 			insuranceType,
+	// 			blankSeries,
+	// 			insuranceCompany,
+	// 			client: client,
+	// 			insuranceObject: insuranceObject,
+	// 		});
+
+	// 		if (!blank) {
+	// 			throw new BadRequestException('Не удалось создать бланк');
+	// 		}
+
+	// 		return blank;
+	// 	} catch (error) {
+	// 		this.handleError(error);
+	// 	}
+	// }
 
 	async findAll() {
 		try {
@@ -231,8 +280,8 @@ export class BlanksService {
 				insuranceCompanyName: blank.insuranceCompany.name,
 				insuranceObjectName: blank.insuranceObject.name,
 				insuranceObjectYear: blank.insuranceObject.year,
-				sum: blank.insuranceObject.sum,
-				premium: blank.insuranceObject.premium,
+				sum: blank.sum,
+				premium: blank.premium,
 				bankName: blank.insuranceObject.bank.name,
 				employeeName: blank.employee.name,
 				sellingPointName: blank.sellingPoint.name,
@@ -348,8 +397,8 @@ export class BlanksService {
 				insuranceCompanyName: blank.insuranceCompany.name,
 				insuranceObjectName: blank.insuranceObject.name ?? undefined,
 				insuranceObjectYear: blank.insuranceObject.year ?? undefined,
-				sum: blank.insuranceObject.sum,
-				premium: blank.insuranceObject.premium,
+				sum: blank.sum,
+				premium: blank.premium,
 				employeeName: blank.employee.name,
 				sellingPointName: blank.sellingPoint.name,
 				seriesNumber: `${blank.blankSeries.name}  ${blank.number}`,
@@ -382,6 +431,7 @@ export class BlanksService {
 	}
 
 	async seedDataWithFaker(): Promise<void> {
+		await this.paymentTypeService.seed();
 		await this.bankService.seedDataWithFaker();
 		await this.insuranceCompanyService.seedDataWithFaker();
 		await this.insuranceTypeService.seedDataWithFaker();
@@ -411,6 +461,9 @@ export class BlanksService {
 			blank.activeDateEnd = faker.date.future();
 			blank.useDateStart = faker.date.future();
 			blank.useDateEnd = faker.date.future();
+
+			blank.sum = faker.number.int({ min: 400000, max: 1000000 });
+			blank.premium = faker.number.int({ min: 3000, max: 25000 });
 
 			blank.isProlonged = faker.datatype.boolean();
 			blank.comment = faker.lorem.sentence();

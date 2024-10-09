@@ -1,3 +1,4 @@
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
@@ -12,7 +13,7 @@ const OrganizationFields: FC = () => {
 			</Grid>
 			<Grid item xs={10}>
 				<Controller
-					name='organizationName'
+					name={FormFieldNamesMap.clientName}
 					control={control}
 					defaultValue={undefined}
 					rules={{ required: 'Введите название организации' }}

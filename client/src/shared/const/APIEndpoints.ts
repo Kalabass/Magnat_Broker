@@ -16,7 +16,7 @@ const BLANK_ENDPOINTS = {
 	FIND_ALL: 'blanks',
 	FIND_ALL_PROCESSED: 'blanks/processed',
 	ALL_PROCESSED_TO_EXCEL: 'blanks/processed/export-excel',
-	CREATE: 'blanks/createContract',
+	CREATE: 'blanks',
 };
 
 const CLIENT_ENDPOINTS = {
@@ -43,6 +43,10 @@ const SELLING_POINT_ENDPOINTS = {
 	FIND_ALL_NAMES: 'sellingPoints/names',
 };
 
+const PAYMENT_TYPES_ENDPOINTS = {
+	FIND_ALL: 'paymentTypes',
+};
+
 export const API_ENDPOINTS = {
 	AUTH: AUTH_ENDPOINTS,
 	BANK: BANK_ENDPOINTS,
@@ -53,4 +57,5 @@ export const API_ENDPOINTS = {
 	INSURANCE_COMPANY: INSURANCE_COMPANY_ENDPOINTS,
 	INSURANCE_TYPE: INSURANCE_TYPE_ENDPOINTS,
 	SELLING_POINT: SELLING_POINT_ENDPOINTS,
+	PAYMENT_TYPE: PAYMENT_TYPES_ENDPOINTS,
 };

@@ -1,3 +1,4 @@
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { useBlankStore } from '@/shared/stores/useBlankStore';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Grid, Typography } from '@mui/material';
@@ -25,7 +26,7 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
 				{blank.insuranceTypeId !== 4 && (
 					<Grid item xs={4}>
 						<Controller
-							name='blankSeries'
+							name={FormFieldNamesMap.blankSeriesId}
 							control={control}
 							rules={{ required: true }}
 							render={({ field: { onChange }, fieldState: { error } }) => (
@@ -44,7 +45,7 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
 				)}
 				<Grid item xs={blank.insuranceTypeId === 4 ? 12 : 8}>
 					<Controller
-						name='blankNumber'
+						name={FormFieldNamesMap.blankNumber}
 						control={control}
 						rules={{ required: 'Введите номер бланка' }}
 						defaultValue={undefined}

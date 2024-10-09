@@ -1,33 +1,99 @@
-import { IsDate, IsNotEmpty } from 'class-validator'
-import { Blank } from '../entities/blank.entity'
+import {
+	IsBoolean,
+	IsDate,
+	IsEmail,
+	IsNotEmpty,
+	IsNumber,
+	IsString,
+	MaxLength,
+	MinLength,
+} from 'class-validator';
+import { Blank } from '../entities/blank.entity';
 
 export class CreateBlankDto extends Blank {
-	@IsNotEmpty()
 	@IsDate()
-	conclusionDate: Date
-
 	@IsNotEmpty()
+	blankConclusionDate: Date;
 	@IsDate()
-	activeDateStart: Date
-
 	@IsNotEmpty()
+	blankActiveDateStart: Date;
 	@IsDate()
-	activeDateEnd: Date
-
 	@IsNotEmpty()
+	blankActiveDateEnd: Date;
 	@IsDate()
-	useDateStart: Date
-
 	@IsNotEmpty()
+	blankUseDateStart: Date;
 	@IsDate()
-	useDateEnd: Date
+	@IsNotEmpty()
+	blankUseDateEnd: Date;
 
 	@IsNotEmpty()
-	number: string
+	@IsString()
+	blankNumber: string;
+	@IsEmail()
+	@IsString()
+	blankEmail: string;
+	@IsNotEmpty()
+	@IsNumber()
+	blankPremium: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankSum: number;
 
-	insuranceCompanyId: number
-	blankSeriesId: number
-	sellingPointId: number
-	insuranceTypeId: number
-	employeeId: number
+	@IsNotEmpty()
+	@IsNumber()
+	blankSeriesId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankEmployeeId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankInsuranceCompanyId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankInsuranceTypeId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankMortgageTypeId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankSellingPointId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankBankId: number;
+	@IsNotEmpty()
+	@IsNumber()
+	blankPaymentTypeId: number;
+
+	@IsBoolean()
+	@IsNotEmpty()
+	clientIsLegal: boolean;
+	@IsDate()
+	@IsNotEmpty()
+	clientBirthDate: Date;
+	@IsNotEmpty()
+	@IsString()
+	clientName: string;
+	@IsNumber()
+	@MaxLength(12)
+	@MinLength(10)
+	clientINN: number;
+	@IsNumber()
+	@MaxLength(6)
+	@MinLength(6)
+	clientPassportNumber: number;
+	@IsNumber()
+	@MaxLength(4)
+	@MinLength(4)
+	clientPassportSeries: number;
+
+	@IsString()
+	clientPhoneNumber: string;
+	@IsString()
+	clientAddress: string;
+
+	@IsNumber()
+	insuranceObjectHorsePowers: number;
+	@IsString()
+	insuranceObjectName: string;
 }
