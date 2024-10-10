@@ -59,6 +59,39 @@ export interface ProcessedBlank extends Omit<Blank, 'client' | 'bankId'> {
 	series: string;
 }
 
+export type MortgageType = 'жизнь' | 'жильё';
+export interface IMutationDataResponse {
+	blankConclusionDate: Date;
+	blankActiveDateStart: Date;
+	blankActiveDateEnd: Date;
+	blankUseDateStart: Date;
+	blankUseDateEnd: Date;
+	blankNumber: string;
+	blankSeriesId: number;
+	blankEmployeeId: number;
+	blankInsuranceCompanyId: number;
+	blankInsuranceTypeId: number;
+	blankMortgageTypeId: MortgageType;
+	blankSellingPointId: number;
+	blankPremium: number;
+	blankSum: number;
+	blankBankId: number;
+	blankPaymentTypeId: number;
+	blankEmail: string;
+
+	clientIsLegal: boolean;
+	clientBirthDate: Date;
+	clientName: string;
+	clientINN: number;
+	clientPassportNumber: number;
+	clientPassportSeries: number;
+	clientPhoneNumber: string;
+	clientAddress: string;
+
+	insuranceObjectHorsePowers: number;
+	insuranceObjectName: string;
+}
+
 class BlankService {
 	async findAll(): Promise<Blank[]> {
 		try {
@@ -66,6 +99,30 @@ class BlankService {
 			return response.data;
 		} catch (error) {
 			handleError(error, 'Failed to fetch all blanks');
+			throw error;
+		}
+	}
+
+	async findOne(id: number): Promise<Blank> {
+		try {
+			const response = await instance.get(
+				`${API_ENDPOINTS.BLANK.FIND_ALL}/${id}`
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, `Failed to fetch blank №${id}`);
+			throw error;
+		}
+	}
+
+	async findOneProcessed(id: number): Promise<IMutationDataResponse> {
+		try {
+			const response = await instance.get(
+				`${API_ENDPOINTS.BLANK.FIND_ALL_PROCESSED}/${id}`
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, `Failed to fetch blank №${id}`);
 			throw error;
 		}
 	}

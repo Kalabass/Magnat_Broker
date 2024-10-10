@@ -2,6 +2,7 @@ import {
 	IMutationData,
 	useCreateBlankMutation,
 } from '@/entities/blank/lib/useCreateBlank.mutation';
+import { IMutationDataResponse } from '@/shared/api/services/blankService';
 import { Box, Button, Container } from '@mui/material';
 import { FC } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
@@ -11,12 +12,20 @@ import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock';
 import ObjectBlock from './ObjectBlock/ObjectBlock';
 import PaymentBlock from './PaymentBlock/PaymentBlock';
 
-export const ContractNewPage: FC = () => {
+interface IPENIS {
+	initialData?: IMutationDataResponse;
+}
+
+export const ContractNewPage: FC<IPENIS> = ({ initialData }) => {
 	const createBlankMutation = useCreateBlankMutation();
 
 	const navigate = useNavigate();
 
-	const formMethods = useForm<IMutationData>({});
+	const formMethods = useForm<IMutationDataResponse>({
+		defaultValues: {
+			...initialData,
+		},
+	});
 
 	const onSubmit: SubmitHandler<IMutationData> = (data) => {
 		console.log(data);

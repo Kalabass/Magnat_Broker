@@ -7,9 +7,9 @@ export const PaymentTypesSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: PAYMENT_TYPES } = usePaymentTypes();
 	return (
 		<CustomSelectWithTitle
+			{...props}
 			title='Способ оплаты'
 			items={PAYMENT_TYPES}
-			{...props}
 		/>
 	);
 };

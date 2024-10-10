@@ -6,6 +6,6 @@ import { FC } from 'react';
 export const InsuranceTypeSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: INSURANCE_TYPES } = useInsuranceTypesNames();
 	return (
-		<CustomSelectWithTitle title='Вид' items={INSURANCE_TYPES} {...props} />
+		<CustomSelectWithTitle {...props} title='Вид' items={INSURANCE_TYPES} />
 	);
 };

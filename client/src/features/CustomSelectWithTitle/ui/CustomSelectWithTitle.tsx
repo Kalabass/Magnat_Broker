@@ -1,22 +1,18 @@
-import { ItemData } from '@/shared/model/interface';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
-import CustomSelect from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomSelect';
+import CustomSelect, {
+	SelectWithTitleProps,
+} from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomSelect';
 
-export interface CustomSelectWithTitleProps {
-	title: string;
-	items?: ItemData[] | undefined;
-	onChangeHandler?: (value: number | undefined) => void;
-	formHelperText?: string;
-	error?: boolean;
+export interface CustomSelectWithTitleProps extends SelectWithTitleProps {
+	title?: string;
 }
 
 export const CustomSelectWithTitle: FC<CustomSelectWithTitleProps> = ({
 	title,
 	items,
-	onChangeHandler,
-	error,
-	formHelperText,
+	label,
+	...props
 }) => {
 	return (
 		<Grid
@@ -33,13 +29,7 @@ export const CustomSelectWithTitle: FC<CustomSelectWithTitleProps> = ({
 			<Grid item xs={8}>
 				{items && (
 					<>
-						<CustomSelect
-							label={title}
-							items={items}
-							error={error}
-							formHelperText={formHelperText}
-							onChangeHandler={onChangeHandler}
-						/>
+						<CustomSelect label={label || title} items={items} {...props} />
 					</>
 				)}
 			</Grid>

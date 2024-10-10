@@ -7,5 +7,5 @@ import { FC } from 'react';
 export const EmployeeSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: AGENTS } = useEmployeesNames();
 
-	return <CustomSelectWithTitle title='Агент' items={AGENTS} {...props} />;
+	return <CustomSelectWithTitle {...props} title='Агент' items={AGENTS} />;
 };

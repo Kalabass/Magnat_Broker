@@ -29,15 +29,13 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
 							name={FormFieldNamesMap.blankSeriesId}
 							control={control}
 							rules={{ required: true }}
-							render={({ field: { onChange }, fieldState: { error } }) => (
+							render={({ field, fieldState: { error } }) => (
 								<CustomSelect
+									{...field}
 									label='серия'
 									items={items}
 									error={!!error}
 									formHelperText={error?.message}
-									onChangeHandler={(value) => {
-										onChange(value);
-									}}
 								/>
 							)}
 						/>

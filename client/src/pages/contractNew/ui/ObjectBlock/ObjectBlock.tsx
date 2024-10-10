@@ -122,13 +122,8 @@ const ObjectBlock: FC = () => {
 									<Controller
 										name={FormFieldNamesMap.blankBankId}
 										control={control}
-										render={({ field: { onChange } }) => (
-											<CustomSelect
-												items={BANKS}
-												onChangeHandler={(selectedValue) => {
-													onChange(selectedValue);
-												}}
-											/>
+										render={({ field }) => (
+											<CustomSelect {...field} items={BANKS} label='банк' />
 										)}
 									/>
 								</Grid>

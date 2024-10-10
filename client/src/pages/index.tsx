@@ -1,12 +1,14 @@
 import { AppRoutes } from '@/shared/const/AppRoutes';
 import { createBrowserRouter } from 'react-router-dom';
 import { AuthPage } from './auth';
-import { ContractDetailsPage } from './contractDetails';
-import { ContractNewPage } from './contractNew';
 import { ContractsPage } from './contracts';
+import { EditContractPage } from './editContract';
 import { ErrorPage } from './errorPage';
 import { MainPage } from './main';
+
+import { NewContractPage } from './newContract';
 import { ProfilePage } from './profile';
+import { ViewContractPage } from './viewContract';
 export const router = createBrowserRouter([
 	{
 		path: AppRoutes.HOME,
@@ -18,17 +20,17 @@ export const router = createBrowserRouter([
 				element: <ContractsPage />,
 			},
 			{
-				path: AppRoutes.CONTRACT_CREATION,
-				element: <ContractNewPage />,
+				path: AppRoutes.CONTRACT_NEW,
+				element: <NewContractPage />,
 			},
 			{
-				path: AppRoutes.CONTRACT_DETAILS,
-				element: <ContractDetailsPage />,
+				path: AppRoutes.CONTRACT_VIEW,
+				element: <ViewContractPage />,
 			},
-			// {
-			// 	path: AppRoutes.CONTRACT_EDIT,
-			// 	element: < />,
-			// },
+			{
+				path: AppRoutes.CONTRACT_EDIT,
+				element: <EditContractPage />,
+			},
 			{
 				path: AppRoutes.AUTH,
 				element: <AuthPage />,

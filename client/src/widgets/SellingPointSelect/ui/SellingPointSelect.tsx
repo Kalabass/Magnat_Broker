@@ -7,9 +7,9 @@ export const SellingPointSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: SELLING_POINTS } = useSellingPointsNames();
 	return (
 		<CustomSelectWithTitle
+			{...props}
 			title='Точка продажи'
 			items={SELLING_POINTS}
-			{...props}
 		/>
 	);
 };

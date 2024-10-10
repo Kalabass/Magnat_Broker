@@ -1,17 +1,16 @@
 import {
+	BaseSelectProps,
 	FormControl,
 	FormHelperText,
 	InputLabel,
 	MenuItem,
 	Select,
-	SelectChangeEvent,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { itemData } from './GeneralInfoBlock';
 
-interface SelectWithTitleProps {
-	onChangeHandler?: (value: number | undefined) => void; // Изменяем тип на number | null
-	items: itemData[];
+export interface SelectWithTitleProps extends BaseSelectProps {
+	items?: itemData[] | undefined;
 	label?: string;
 	formHelperText?: string;
 	error?: boolean;
@@ -19,42 +18,24 @@ interface SelectWithTitleProps {
 
 const CustomSelect: FC<SelectWithTitleProps> = ({
 	items,
-	onChangeHandler,
 	label,
 	error,
 	formHelperText,
+	...props
 }) => {
-	const [item, setItem] = useState<itemData | undefined>(undefined);
-
-	const handleChange = (e: SelectChangeEvent) => {
-		const selectedId =
-			e.target.value === '' ? undefined : parseInt(e.target.value, 10); // Обработка пустого значения
-		const selectedItem =
-			selectedId !== undefined
-				? items.find((item) => item.id === selectedId)
-				: undefined;
-		setItem(selectedItem);
-		if (onChangeHandler) onChangeHandler(selectedId);
-	};
-
 	return (
 		<FormControl fullWidth error={error}>
 			<InputLabel size='small'>{label}</InputLabel>
-			<Select
-				fullWidth
-				size='small'
-				value={item ? item.id.toString() : ''}
-				onChange={handleChange}
-				label={label}
-			>
+			<Select fullWidth size='small' label={label} {...props}>
 				<MenuItem value='' sx={{ minHeight: '36px', height: '36px' }}>
 					<em></em>
 				</MenuItem>
-				{items.map((item) => (
-					<MenuItem key={item.id} value={item.id}>
-						{item.name}
-					</MenuItem>
-				))}
+				{items &&
+					items.map((item) => (
+						<MenuItem key={item.id} value={item.id}>
+							{item.name}
+						</MenuItem>
+					))}
 			</Select>
 			<FormHelperText>{formHelperText}</FormHelperText>
 		</FormControl>

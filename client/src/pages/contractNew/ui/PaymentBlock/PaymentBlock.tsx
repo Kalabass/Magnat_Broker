@@ -59,14 +59,11 @@ const PaymentBlock: FC = () => {
 							control={control}
 							rules={{ required: 'Выберите способ оплаты' }}
 							defaultValue={undefined}
-							render={({ field: { onChange }, fieldState: { error } }) => (
+							render={({ field, fieldState: { error } }) => (
 								<PaymentTypesSelect
+									{...field}
 									error={!!error}
 									formHelperText={error?.message}
-									onChangeHandler={(value) => {
-										onChange(value);
-										updateBlankField('paymentType', Number(value));
-									}}
 								/>
 							)}
 						/>
