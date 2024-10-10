@@ -54,19 +54,7 @@ const PaymentBlock: FC = () => {
 						justifyContent='center'
 						alignItems='center'
 					>
-						<Controller
-							name={FormFieldNamesMap.blankPaymentTypeId}
-							control={control}
-							rules={{ required: 'Выберите способ оплаты' }}
-							defaultValue={undefined}
-							render={({ field, fieldState: { error } }) => (
-								<PaymentTypesSelect
-									{...field}
-									error={!!error}
-									formHelperText={error?.message}
-								/>
-							)}
-						/>
+						<PaymentTypesSelect />
 
 						{/* TODO: подгружать почту из текущего клиента */}
 						{blank.paymentType === 1 && (

@@ -1,10 +1,10 @@
 import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { useBlankStore } from '@/shared/stores/useBlankStore';
+import CustomSelectRefController from '@/shared/ui/CustomSelectRefController';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import CustomSelect from '../CustomSelect';
 import { itemData } from '../GeneralInfoBlock';
 
 interface BlankNumberBlock {
@@ -25,19 +25,11 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
 			<Grid item container xs={8} spacing={1}>
 				{blank.insuranceTypeId !== 4 && (
 					<Grid item xs={4}>
-						<Controller
-							name={FormFieldNamesMap.blankSeriesId}
-							control={control}
+						<CustomSelectRefController
+							fieldName={FormFieldNamesMap.blankSeriesId}
 							rules={{ required: true }}
-							render={({ field, fieldState: { error } }) => (
-								<CustomSelect
-									{...field}
-									label='серия'
-									items={items}
-									error={!!error}
-									formHelperText={error?.message}
-								/>
-							)}
+							items={items}
+							label='серия'
 						/>
 					</Grid>
 				)}

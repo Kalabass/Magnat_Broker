@@ -13,7 +13,7 @@ import ObjectBlock from './ObjectBlock/ObjectBlock';
 import PaymentBlock from './PaymentBlock/PaymentBlock';
 
 interface IPENIS {
-	initialData?: IMutationDataResponse;
+	initialData: IMutationDataResponse;
 }
 
 export const ContractNewPage: FC<IPENIS> = ({ initialData }) => {
@@ -24,6 +24,12 @@ export const ContractNewPage: FC<IPENIS> = ({ initialData }) => {
 	const formMethods = useForm<IMutationDataResponse>({
 		defaultValues: {
 			...initialData,
+			clientBirthDate: new Date(initialData.clientBirthDate),
+			blankConclusionDate: new Date(initialData.blankConclusionDate),
+			blankActiveDateStart: new Date(initialData.blankActiveDateStart),
+			blankActiveDateEnd: new Date(initialData.blankActiveDateEnd),
+			blankUseDateStart: new Date(initialData.blankUseDateStart),
+			blankUseDateEnd: new Date(initialData.blankUseDateEnd),
 		},
 	});
 

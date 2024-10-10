@@ -28,7 +28,7 @@ const IndividualFields: FC = () => {
 				/>
 			</Grid>
 			<Grid item xs={2}>
-				{/* <Controller
+				<Controller
 					name={FormFieldNamesMap.clientBirthDate}
 					control={control}
 					defaultValue={undefined}
@@ -52,7 +52,7 @@ const IndividualFields: FC = () => {
 							value={field.value ? field.value.toISOString().split('T')[0] : ''}
 						/>
 					)}
-				/> */}
+				/>
 			</Grid>
 
 			{/*TODO: сделать обязательными, когда тип оплаты наличные  */}

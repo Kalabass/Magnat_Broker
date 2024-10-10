@@ -4,8 +4,8 @@ import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import CustomSelect from '../../../../shared/ui/CustomSelectRef';
 import { FormFieldNamesMap } from '../../constants/FormFieldNames';
-import CustomSelect from '../GeneralInfoBlock/CustomSelect';
 
 const ObjectBlock: FC = () => {
 	const { getBlank } = useBlankStore();
