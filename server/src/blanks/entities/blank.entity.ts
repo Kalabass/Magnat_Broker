@@ -19,6 +19,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
+export type MortgageType = 'жизнь' | 'жильё';
 @Entity()
 export class Blank {
 	@PrimaryGeneratedColumn()
@@ -46,7 +47,7 @@ export class Blank {
 	premium: number;
 
 	@Column({ nullable: true })
-	mortgageType: 'жизнь' | 'жильё';
+	mortgageType: MortgageType;
 
 	@Column({ nullable: true })
 	email: string;

@@ -28,7 +28,39 @@ import {
 import { CreateBlankDto } from './dto/create-blank.dto';
 import { FiltersDto } from './dto/filters-blank.dto';
 import { UpdateBlankDto } from './dto/update-blank.dto';
-import { Blank } from './entities/blank.entity';
+import { Blank, MortgageType } from './entities/blank.entity';
+
+export interface IMutationData {
+	blankConclusionDate: Date;
+	blankActiveDateStart: Date;
+	blankActiveDateEnd: Date;
+	blankUseDateStart: Date;
+	blankUseDateEnd: Date;
+	blankNumber: string;
+	blankSeriesId: number;
+	blankEmployeeId: number;
+	blankInsuranceCompanyId: number;
+	blankInsuranceTypeId: number;
+	blankMortgageTypeId: MortgageType;
+	blankSellingPointId: number;
+	blankPremium: number;
+	blankSum: number;
+	blankBankId: number;
+	blankPaymentTypeId: number;
+	blankEmail: string;
+
+	clientIsLegal: boolean;
+	clientBirthDate: Date;
+	clientName: string;
+	clientINN: number;
+	clientPassportNumber: number;
+	clientPassportSeries: number;
+	clientPhoneNumber: string;
+	clientAddress: string;
+
+	insuranceObjectHorsePowers: number;
+	insuranceObjectName: string;
+}
 
 @Injectable()
 export class BlanksService {
@@ -52,11 +84,99 @@ export class BlanksService {
 	};
 
 	async findBlankById(id: number): Promise<Blank> {
-		const blank = await this.blankRepository.findOne({ where: { id } });
+		try {
+			const blank = await this.blankRepository.findOne({
+				where: { id },
+				relations: {
+					client: true,
+					insuranceObject: {
+						bank: true,
+					},
+					blankSeries: true,
+					employee: true,
+					insuranceCompany: true,
+					insuranceType: true,
+					paymentType: true,
+					sellingPoint: true,
+				},
+			});
+			if (!blank) {
+				throw new NotFoundException('Blank not found');
+			}
+			return blank;
+		} catch (error) {
+			this.handleError(error);
+		}
+	}
+
+	async findBlankByIdProcessed(id: number): Promise<IMutationData> {
+		console.log(id);
+		const blank = await this.blankRepository.findOne({
+			where: { id },
+			relations: {
+				client: true,
+				insuranceObject: {
+					bank: true,
+				},
+				blankSeries: true,
+				employee: true,
+				insuranceCompany: true,
+				insuranceType: true,
+				paymentType: true,
+				sellingPoint: true,
+			},
+		});
+
 		if (!blank) {
 			throw new NotFoundException('Blank not found');
 		}
-		return blank;
+
+		const processedBlank: IMutationData = {
+			blankConclusionDate: blank.conclusionDate ?? undefined,
+			blankActiveDateStart: blank.activeDateStart ?? undefined,
+			blankActiveDateEnd: blank.activeDateEnd ?? undefined,
+			blankUseDateStart: blank.useDateStart ?? undefined,
+			blankUseDateEnd: blank.useDateEnd ?? undefined,
+			blankNumber: blank.number ?? undefined,
+			blankSeriesId: blank.blankSeries ? blank.blankSeries.id : undefined,
+			blankEmployeeId: blank.employee ? blank.employee.id : undefined,
+			blankInsuranceCompanyId: blank.insuranceCompany
+				? blank.insuranceCompany.id
+				: undefined,
+			blankInsuranceTypeId: blank.insuranceType
+				? blank.insuranceType.id
+				: undefined,
+			blankMortgageTypeId: blank.mortgageType ?? undefined,
+			blankSellingPointId: blank.sellingPoint
+				? blank.sellingPoint.id
+				: undefined,
+			blankPremium: blank.premium ?? undefined,
+			blankSum: blank.sum ?? undefined,
+			blankBankId:
+				blank.insuranceObject && blank.insuranceObject.bank
+					? blank.insuranceObject.bank.id
+					: undefined,
+			blankPaymentTypeId: blank.paymentType ? blank.paymentType.id : undefined,
+			blankEmail: blank.email ?? undefined,
+
+			clientIsLegal: blank.client ? blank.client.isLegal : undefined,
+			clientBirthDate: blank.client ? blank.client.dateOfBirth : undefined,
+			clientName: blank.client ? blank.client.name : undefined,
+			clientINN: blank.client ? blank.client.inn : undefined,
+			clientPassportNumber: blank.client ? blank.client.number : undefined,
+			clientPassportSeries: blank.client ? blank.client.series : undefined,
+			clientPhoneNumber: blank.client ? blank.client.phone : undefined,
+			clientAddress: blank.client ? blank.client.address : undefined,
+
+			insuranceObjectHorsePowers: blank.insuranceObject
+				? blank.insuranceObject.horsePowers
+				: undefined,
+			insuranceObjectName: blank.insuranceObject
+				? blank.insuranceObject.name
+				: undefined,
+		};
+
+		return processedBlank;
 	}
 
 	async create(createBlankDto: CreateBlankDto) {
@@ -415,7 +535,65 @@ export class BlanksService {
 	async update(id: number, updateBlankDto: UpdateBlankDto) {
 		try {
 			const blank = await this.findBlankById(id);
-			return await this.blankRepository.update(blank.id, updateBlankDto);
+			if (!blank) {
+				throw new Error('Blank not found');
+			}
+
+			if (blank.client) {
+				await this.clientsService.update(blank.client.id, {
+					name: updateBlankDto.clientName,
+					dateOfBirth: updateBlankDto.clientBirthDate,
+					series: updateBlankDto.clientPassportSeries,
+					number: updateBlankDto.clientPassportNumber,
+					phone: updateBlankDto.clientPhoneNumber,
+					inn: updateBlankDto.clientINN,
+					address: updateBlankDto.clientAddress,
+				});
+			}
+
+			const newBank = await this.bankService.findOne(
+				updateBlankDto.blankBankId
+			);
+
+			if (blank.insuranceObject) {
+				await this.insuranceObjectService.update(blank.client.id, {
+					name: updateBlankDto.insuranceObjectName,
+					horsePowers: updateBlankDto.insuranceObjectHorsePowers,
+					bank: newBank,
+				});
+			}
+
+			await this.blankRepository.update(blank.id, {
+				conclusionDate: updateBlankDto.blankConclusionDate,
+				activeDateStart: updateBlankDto.blankActiveDateStart,
+				activeDateEnd: updateBlankDto.blankActiveDateEnd,
+				useDateStart: updateBlankDto.blankUseDateStart,
+				useDateEnd: updateBlankDto.blankUseDateEnd,
+				number: updateBlankDto.blankNumber,
+				email: updateBlankDto.blankEmail,
+				premium: updateBlankDto.blankPremium,
+				sum: updateBlankDto.blankSum,
+				blankSeries: {
+					id: updateBlankDto.blankSeriesId,
+				},
+				insuranceCompany: {
+					id: updateBlankDto.blankInsuranceCompanyId,
+				},
+				employee: {
+					id: updateBlankDto.blankEmployeeId,
+				},
+				insuranceType: {
+					id: updateBlankDto.blankInsuranceTypeId,
+				},
+				sellingPoint: {
+					id: updateBlankDto.blankSellingPointId,
+				},
+				paymentType: {
+					id: updateBlankDto.blankPaymentTypeId,
+				},
+			});
+
+			return { message: 'Update successful' };
 		} catch (error) {
 			this.handleError(error);
 		}

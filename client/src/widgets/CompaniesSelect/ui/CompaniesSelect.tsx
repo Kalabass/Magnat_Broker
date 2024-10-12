@@ -1,15 +1,24 @@
 import { useInsuranceCompaniesNames } from '@/entities/insuranceCompany';
-import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
+import {
+	CustomSelectWithTitle,
+	CustomSelectWithTitleProps,
+} from '@/features/CustomSelectWithTitle/ui/CustomSelectWithTitle';
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 
 import { FC } from 'react';
 
-export interface WidgetSelectProps {
-	onChangeHandler?: (value: number | undefined) => void;
-	formHelperText?: string;
-	error?: boolean;
-}
+export interface WidgetSelectProps extends CustomSelectWithTitleProps {}
 
 export const CompaniesSelect: FC<WidgetSelectProps> = (props) => {
 	const { data: COMPANIES } = useInsuranceCompaniesNames();
-	return <CustomSelectWithTitle title='СК' items={COMPANIES} {...props} />;
+	return (
+		<CustomSelectWithTitle
+			{...props}
+			title='СК'
+			label='СК'
+			items={COMPANIES}
+			fieldName={FormFieldNamesMap.blankInsuranceCompanyId}
+			rules={{ required: 'Укажите страховую компанию' }}
+		/>
+	);
 };

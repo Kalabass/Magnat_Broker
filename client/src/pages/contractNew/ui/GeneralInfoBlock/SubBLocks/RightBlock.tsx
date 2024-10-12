@@ -1,83 +1,38 @@
-import { useBlankSeries } from '@/shared/lib/hooks/useBlankSeries';
-import { useBlankStore } from '@/shared/stores/useBlankStore';
-import { FC } from 'react';
-
 import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
 import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import { MortgageType } from '@/shared/api/services/blankService';
+import { useBlankSeries } from '@/shared/lib/hooks/useBlankSeries';
+import useIsMortgageType from '@/shared/lib/hooks/useIsMortgage';
 import { InsuranceTypeSelect } from '@/widgets/InsuraceTypeSelect';
 import { SellingPointSelect } from '@/widgets/SellingPointSelect';
-import { Controller, useFormContext } from 'react-hook-form';
-import { itemData } from '../GeneralInfoBlock';
+import { FC } from 'react';
 import BlankNumberBlock from './BlankNumberBlock';
 
-const MORTGAGE_TYPES: itemData[] = [
-	{ id: 0, name: 'жизнь' },
-	{ id: 1, name: 'жилье' },
+const MORTGAGE_TYPES: { id: MortgageType; name: MortgageType }[] = [
+	{ id: 'Жизнь', name: 'Жизнь' },
+	{ id: 'Жильё', name: 'Жильё' },
 ];
 
 const RightBlock: FC = () => {
-	const { getBlank, updateBlankField } = useBlankStore();
-	const blank = getBlank();
 	const { data: BLANK_SERIES } = useBlankSeries();
-
-	const { control } = useFormContext();
+	const isMortgageType = useIsMortgageType();
 
 	return (
 		<>
-			{/* FIXME: вынести ИПОТЕКА в константы */}
-			{/* FIXME: подумать что делать с перерисовками */}
-			<Controller
-				name={FormFieldNamesMap.blankInsuranceTypeId}
-				control={control}
-				rules={{ required: 'Выберите тип страховки' }}
-				render={({ field: { onChange }, fieldState: { error } }) => (
-					<InsuranceTypeSelect
-						error={error ? true : false}
-						formHelperText={error?.message}
-						onChangeHandler={(value) => {
-							onChange(value);
-							updateBlankField('insuranceTypeId', value);
-						}}
-					/>
-				)}
-			/>
+			<InsuranceTypeSelect />
 
-			{blank.insuranceTypeId === 4 && (
-				<Controller
-					name={FormFieldNamesMap.blankMortgageTypeId}
-					control={control}
-					rules={{ required: 'Выберите направление' }}
-					render={({ field: { onChange }, fieldState: { error } }) => (
-						<CustomSelectWithTitle
-							error={!!error}
-							formHelperText={error?.message}
-							title='Направление'
-							items={MORTGAGE_TYPES}
-							onChangeHandler={(value) => {
-								onChange(value);
-								updateBlankField('mortgageType', value);
-							}}
-						/>
-					)}
+			{isMortgageType && (
+				<CustomSelectWithTitle
+					title='Направление'
+					label='Направление'
+					items={MORTGAGE_TYPES}
+					fieldName={FormFieldNamesMap.blankMortgageType}
+					rules={{ required: true }}
 				/>
 			)}
 
 			{BLANK_SERIES && <BlankNumberBlock items={BLANK_SERIES} />}
-			<Controller
-				name={FormFieldNamesMap.blankSellingPointId}
-				control={control}
-				rules={{ required: 'Выберите точку продажи' }}
-				render={({ field: { onChange }, fieldState: { error } }) => (
-					<SellingPointSelect
-						error={!!error}
-						formHelperText={error?.message}
-						onChangeHandler={(selectedValue) => {
-							onChange(selectedValue);
-							updateBlankField('sellingPointId', selectedValue);
-						}}
-					/>
-				)}
-			/>
+			<SellingPointSelect />
 		</>
 	);
 };

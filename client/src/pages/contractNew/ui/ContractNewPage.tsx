@@ -1,28 +1,40 @@
-import {
-	IMutationData,
-	useCreateBlankMutation,
-} from '@/entities/blank/lib/useCreateBlank.mutation';
+import { IMutationData } from '@/entities/blank/lib/useCreateBlank.mutation';
+import { ENUM_MODE } from '@/pages/viewContract/ui/ViewContract';
+import { IMutationDataResponse } from '@/shared/api/services/blankService';
 import { Box, Button, Container } from '@mui/material';
 import { FC } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import ClientBlock from './ClientBlock/ClientBlock';
 import GeneralInfoBlock from './GeneralInfoBlock/GeneralInfoBlock';
 import ObjectBlock from './ObjectBlock/ObjectBlock';
 import PaymentBlock from './PaymentBlock/PaymentBlock';
 
-export const ContractNewPage: FC = () => {
-	const createBlankMutation = useCreateBlankMutation();
+interface ContractNewPageProps {
+	mode: ENUM_MODE;
+	initialData?: IMutationDataResponse;
+	onSubmitHandler: SubmitHandler<IMutationData>;
+}
 
-	const navigate = useNavigate();
-
-	const formMethods = useForm<IMutationData>({});
-
-	const onSubmit: SubmitHandler<IMutationData> = (data) => {
-		console.log(data);
-		createBlankMutation.mutate(data);
-		if (createBlankMutation.isSuccess) navigate('/contracts');
-	};
+export const ContractNewPage: FC<ContractNewPageProps> = ({
+	initialData,
+	mode,
+	onSubmitHandler,
+}) => {
+	const inidata2: IMutationData | undefined = initialData
+		? {
+				...initialData,
+				clientBirthDate: new Date(initialData.clientBirthDate),
+				blankConclusionDate: new Date(initialData.blankConclusionDate),
+				blankActiveDateStart: new Date(initialData.blankActiveDateStart),
+				blankActiveDateEnd: new Date(initialData.blankActiveDateEnd),
+				blankUseDateStart: new Date(initialData.blankUseDateStart),
+				blankUseDateEnd: new Date(initialData.blankUseDateEnd),
+		  }
+		: undefined;
+	const formMethods = useForm<IMutationData>({
+		defaultValues: inidata2,
+		// disabled: mode === ENUM_MODE.view ? true : false,
+	});
 
 	return (
 		<Container
@@ -36,19 +48,19 @@ export const ContractNewPage: FC = () => {
 				<Box
 					component={'form'}
 					sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-					onSubmit={formMethods.handleSubmit(onSubmit)}
+					onSubmit={formMethods.handleSubmit(onSubmitHandler)}
 				>
 					<GeneralInfoBlock />
 					<ClientBlock />
 					<ObjectBlock />
 					<PaymentBlock />
-					<Button
-						sx={{ alignSelf: 'end' }}
-						type='submit'
-						disabled={createBlankMutation.isPending ? true : false}
-						variant='contained'
-					>
-						Сохранить
+					{/* TODO: поменять тернарный оператор на объект */}
+					<Button sx={{ alignSelf: 'end' }} type='submit' variant='contained'>
+						{mode === ENUM_MODE.new
+							? 'создать'
+							: mode === ENUM_MODE.view
+							? 'редактировать'
+							: 'сохранить'}
 					</Button>
 				</Box>
 			</FormProvider>

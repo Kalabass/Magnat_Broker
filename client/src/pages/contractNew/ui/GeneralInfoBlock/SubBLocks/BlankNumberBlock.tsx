@@ -1,10 +1,10 @@
 import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
-import { useBlankStore } from '@/shared/stores/useBlankStore';
+import useIsMortgageType from '@/shared/lib/hooks/useIsMortgage';
+import CustomSelectRefController from '@/shared/ui/CustomSelectRefController';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import CustomSelect from '../CustomSelect';
 import { itemData } from '../GeneralInfoBlock';
 
 interface BlankNumberBlock {
@@ -12,10 +12,8 @@ interface BlankNumberBlock {
 }
 
 const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
-	const { getBlank } = useBlankStore();
-	const blank = getBlank();
-
 	const { control } = useFormContext();
+	const isMortgage = useIsMortgageType();
 
 	return (
 		<>
@@ -23,27 +21,17 @@ const BlankNumberBlock: FC<BlankNumberBlock> = ({ items }) => {
 				<Typography>Полис</Typography>
 			</Grid>
 			<Grid item container xs={8} spacing={1}>
-				{blank.insuranceTypeId !== 4 && (
+				{!isMortgage && (
 					<Grid item xs={4}>
-						<Controller
-							name={FormFieldNamesMap.blankSeriesId}
-							control={control}
+						<CustomSelectRefController
+							fieldName={FormFieldNamesMap.blankSeriesId}
 							rules={{ required: true }}
-							render={({ field: { onChange }, fieldState: { error } }) => (
-								<CustomSelect
-									label='серия'
-									items={items}
-									error={!!error}
-									formHelperText={error?.message}
-									onChangeHandler={(value) => {
-										onChange(value);
-									}}
-								/>
-							)}
+							items={items}
+							label='серия'
 						/>
 					</Grid>
 				)}
-				<Grid item xs={blank.insuranceTypeId === 4 ? 12 : 8}>
+				<Grid item xs={isMortgage ? 12 : 8}>
 					<Controller
 						name={FormFieldNamesMap.blankNumber}
 						control={control}

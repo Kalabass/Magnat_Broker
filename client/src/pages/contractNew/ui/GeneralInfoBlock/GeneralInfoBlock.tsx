@@ -1,12 +1,12 @@
-import { Grid, Paper } from '@mui/material'
-import { FC } from 'react'
+import { Grid, Paper } from '@mui/material';
+import { FC } from 'react';
 
-import LeftBlock from './SubBLocks/LeftBlock'
-import RightBlock from './SubBLocks/RightBlock'
+import LeftBlock from './SubBLocks/LeftBlock';
+import RightBlock from './SubBLocks/RightBlock';
 
 export interface itemData {
-	id: number
-	name: string
+	id: number | string;
+	name: string;
 }
 
 const GeneralInfoBlock: FC = () => {
@@ -35,7 +35,7 @@ const GeneralInfoBlock: FC = () => {
 				</Grid>
 			</Grid>
 		</Paper>
-	)
-}
+	);
+};
 
-export default GeneralInfoBlock
+export default GeneralInfoBlock;

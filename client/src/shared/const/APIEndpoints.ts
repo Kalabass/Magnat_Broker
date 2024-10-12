@@ -17,6 +17,7 @@ const BLANK_ENDPOINTS = {
 	FIND_ALL_PROCESSED: 'blanks/processed',
 	ALL_PROCESSED_TO_EXCEL: 'blanks/processed/export-excel',
 	CREATE: 'blanks',
+	UPDATE: 'blanks',
 };
 
 const CLIENT_ENDPOINTS = {

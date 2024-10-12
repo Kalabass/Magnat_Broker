@@ -15,7 +15,6 @@ import { BlanksService } from './blanks.service';
 import { CreateBlankDto } from './dto/create-blank.dto';
 import { FiltersDto } from './dto/filters-blank.dto';
 import { UpdateBlankDto } from './dto/update-blank.dto';
-
 @Controller('blanks')
 export class BlanksController {
 	constructor(private readonly blanksService: BlanksService) {}
@@ -48,6 +47,11 @@ export class BlanksController {
 	@Get(':id')
 	findOne(@Param('id') id: string) {
 		return this.blanksService.findBlankById(+id);
+	}
+	@UseGuards(JwtAuthGuard)
+	@Get('processed/:id')
+	findOneProcessed(@Param('id') id: string) {
+		return this.blanksService.findBlankByIdProcessed(+id);
 	}
 	@UseGuards(JwtAuthGuard)
 	@Patch(':id')

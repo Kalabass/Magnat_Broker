@@ -1,22 +1,15 @@
-import { ItemData } from '@/shared/model/interface';
+import CustomSelectRefController from '@/shared/ui/CustomSelectRefController';
 import { Grid, Typography } from '@mui/material';
 import { FC } from 'react';
-import CustomSelect from '../../../pages/contractNew/ui/GeneralInfoBlock/CustomSelect';
 
-export interface CustomSelectWithTitleProps {
-	title: string;
-	items?: ItemData[] | undefined;
-	onChangeHandler?: (value: number | undefined) => void;
-	formHelperText?: string;
-	error?: boolean;
+export interface CustomSelectWithTitleProps extends CustomSelectRefController {
+	title?: string;
 }
 
 export const CustomSelectWithTitle: FC<CustomSelectWithTitleProps> = ({
 	title,
 	items,
-	onChangeHandler,
-	error,
-	formHelperText,
+	...props
 }) => {
 	return (
 		<Grid
@@ -31,17 +24,7 @@ export const CustomSelectWithTitle: FC<CustomSelectWithTitleProps> = ({
 				<Typography>{title}</Typography>
 			</Grid>
 			<Grid item xs={8}>
-				{items && (
-					<>
-						<CustomSelect
-							label={title}
-							items={items}
-							error={error}
-							formHelperText={formHelperText}
-							onChangeHandler={onChangeHandler}
-						/>
-					</>
-				)}
+				{items && <CustomSelectRefController {...props} items={items} />}
 			</Grid>
 		</Grid>
 	);

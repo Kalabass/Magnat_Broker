@@ -59,6 +59,39 @@ export interface ProcessedBlank extends Omit<Blank, 'client' | 'bankId'> {
 	series: string;
 }
 
+export type MortgageType = 'Жизнь' | 'Жильё';
+export interface IMutationDataResponse {
+	blankConclusionDate: string;
+	blankActiveDateStart: string;
+	blankActiveDateEnd: string;
+	blankUseDateStart: string;
+	blankUseDateEnd: string;
+	blankNumber: string;
+	blankSeriesId: number;
+	blankEmployeeId: number;
+	blankInsuranceCompanyId: number;
+	blankInsuranceTypeId: number;
+	blankMortgageType: MortgageType;
+	blankSellingPointId: number;
+	blankPremium: number;
+	blankSum: number;
+	blankBankId: number;
+	blankPaymentTypeId: number;
+	blankEmail: string;
+
+	clientIsLegal: boolean;
+	clientBirthDate: string;
+	clientName: string;
+	clientINN: number;
+	clientPassportNumber: number;
+	clientPassportSeries: number;
+	clientPhoneNumber: string;
+	clientAddress: string;
+
+	insuranceObjectHorsePowers: number;
+	insuranceObjectName: string;
+}
+
 class BlankService {
 	async findAll(): Promise<Blank[]> {
 		try {
@@ -66,6 +99,30 @@ class BlankService {
 			return response.data;
 		} catch (error) {
 			handleError(error, 'Failed to fetch all blanks');
+			throw error;
+		}
+	}
+
+	async findOne(id: number): Promise<Blank> {
+		try {
+			const response = await instance.get(
+				`${API_ENDPOINTS.BLANK.FIND_ALL}/${id}`
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, `Failed to fetch blank №${id}`);
+			throw error;
+		}
+	}
+
+	async findOneProcessed(id: number): Promise<IMutationDataResponse> {
+		try {
+			const response = await instance.get(
+				`${API_ENDPOINTS.BLANK.FIND_ALL_PROCESSED}/${id}`
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, `Failed to fetch blank №${id}`);
 			throw error;
 		}
 	}
@@ -111,6 +168,19 @@ class BlankService {
 			return response.data;
 		} catch (error) {
 			handleError(error, 'Failed to create blank  ');
+			throw error;
+		}
+	}
+
+	async update(id: number, data: Partial<IMutationData>): Promise<Blank> {
+		try {
+			const response = await instance.patch(
+				`${API_ENDPOINTS.BLANK.UPDATE}/${id}`,
+				data
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, 'Failed to update blank  ');
 			throw error;
 		}
 	}

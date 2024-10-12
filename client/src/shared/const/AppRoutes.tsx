@@ -3,7 +3,7 @@ export const AppRoutes = {
 	PROFILE: '/profile',
 	AUTH: '/auth',
 	CONTRACTS: '/contracts',
-	CONTRACT_DETAILS: '/contracts/:id',
+	CONTRACT_VIEW: '/contracts/:id',
 	CONTRACT_EDIT: '/contracts/:id/edit',
-	CONTRACT_CREATION: '/contracts/new',
+	CONTRACT_NEW: '/contracts/new',
 };
