@@ -2,21 +2,19 @@ import { CustomToggle } from '@/features/ClientTypeToggle';
 import { CLIENT_TYPES } from '@/pages/contractNew/constants/clinetTypes.const';
 
 import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
-import { useClientStore } from '@/shared/stores/useClientStore';
+import useIsCashPaymentType from '@/shared/lib/hooks/useIsCashPaymentType';
+import useIsLegal from '@/shared/lib/hooks/useIsLegal';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { Box, Grid, Typography } from '@mui/material';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import IndividualFields from './IndividualFields';
 import OrganizationFields from './OrganizationFields';
 
 const ClientForm: FC = () => {
-	const { updateClientField, getClient } = useClientStore();
 	const { control } = useFormContext();
-	const client = getClient();
-	useEffect(() => {
-		updateClientField('isIndividual', true);
-	}, []);
+	const isLegal = useIsLegal();
+	const isCash = useIsCashPaymentType();
 
 	return (
 		<Box component={'section'}>
@@ -31,7 +29,7 @@ const ClientForm: FC = () => {
 					<CustomToggle items={CLIENT_TYPES} />
 				</Grid>
 
-				{client.isIndividual ? <IndividualFields /> : <OrganizationFields />}
+				{isLegal ? <OrganizationFields /> : <IndividualFields />}
 
 				<Grid item xs={2}>
 					<Typography>Номер телефона</Typography>
@@ -53,7 +51,6 @@ const ClientForm: FC = () => {
 
 				<Grid item xs={6} />
 
-				{/*TODO: сделать обязательным, когда тип оплаты наличные  */}
 				<Grid item xs={2}>
 					<Typography>ИНН</Typography>
 				</Grid>
@@ -71,6 +68,7 @@ const ClientForm: FC = () => {
 								value: 12,
 								message: 'Максимальная длина ИНН 12 символов',
 							},
+							required: isCash,
 						}}
 						render={({ field, fieldState: { error } }) => (
 							<CustomTextFieldRef
@@ -78,10 +76,6 @@ const ClientForm: FC = () => {
 								error={!!error}
 								helperText={error?.message}
 								{...field}
-								onChange={(e) => {
-									field.onChange(Number(e.target.value));
-								}}
-								value={field.value ?? ''}
 							/>
 						)}
 					/>

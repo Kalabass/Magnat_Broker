@@ -1,16 +1,15 @@
-import { useBlankStore } from '@/shared/stores/useBlankStore';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { ChangeEvent, FC } from 'react';
 
+import useIsCashPaymentType from '@/shared/lib/hooks/useIsCashPaymentType';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
 import { PaymentTypesSelect } from '@/widgets/PaymentTypesSelect';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FormFieldNamesMap } from '../../constants/FormFieldNames';
 
 const PaymentBlock: FC = () => {
-	const { getBlank, updateBlankField } = useBlankStore();
-	const blank = getBlank();
 	const { control } = useFormContext();
+	const isCash = useIsCashPaymentType();
 	return (
 		<Paper component={'section'} sx={{ borderRadius: '10px', padding: '40px' }}>
 			<Box component={'section'}>
@@ -56,8 +55,7 @@ const PaymentBlock: FC = () => {
 					>
 						<PaymentTypesSelect />
 
-						{/* TODO: подгружать почту из текущего клиента */}
-						{blank.paymentType === 1 && (
+						{isCash && (
 							<>
 								<Grid item xs={4}>
 									<Typography>Почта</Typography>

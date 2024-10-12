@@ -13,6 +13,7 @@ const CustomSelectRefController: FC<CustomSelectRefController> = ({
 	...props
 }) => {
 	const { control } = useFormContext();
+
 	return (
 		<Controller
 			defaultValue={undefined}

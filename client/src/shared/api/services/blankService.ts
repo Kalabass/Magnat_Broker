@@ -59,19 +59,19 @@ export interface ProcessedBlank extends Omit<Blank, 'client' | 'bankId'> {
 	series: string;
 }
 
-export type MortgageType = 'жизнь' | 'жильё';
+export type MortgageType = 'Жизнь' | 'Жильё';
 export interface IMutationDataResponse {
-	blankConclusionDate: Date;
-	blankActiveDateStart: Date;
-	blankActiveDateEnd: Date;
-	blankUseDateStart: Date;
-	blankUseDateEnd: Date;
+	blankConclusionDate: string;
+	blankActiveDateStart: string;
+	blankActiveDateEnd: string;
+	blankUseDateStart: string;
+	blankUseDateEnd: string;
 	blankNumber: string;
 	blankSeriesId: number;
 	blankEmployeeId: number;
 	blankInsuranceCompanyId: number;
 	blankInsuranceTypeId: number;
-	blankMortgageTypeId: MortgageType;
+	blankMortgageType: MortgageType;
 	blankSellingPointId: number;
 	blankPremium: number;
 	blankSum: number;
@@ -80,7 +80,7 @@ export interface IMutationDataResponse {
 	blankEmail: string;
 
 	clientIsLegal: boolean;
-	clientBirthDate: Date;
+	clientBirthDate: string;
 	clientName: string;
 	clientINN: number;
 	clientPassportNumber: number;
@@ -168,6 +168,19 @@ class BlankService {
 			return response.data;
 		} catch (error) {
 			handleError(error, 'Failed to create blank  ');
+			throw error;
+		}
+	}
+
+	async update(id: number, data: Partial<IMutationData>): Promise<Blank> {
+		try {
+			const response = await instance.patch(
+				`${API_ENDPOINTS.BLANK.UPDATE}/${id}`,
+				data
+			);
+			return response.data;
+		} catch (error) {
+			handleError(error, 'Failed to update blank  ');
 			throw error;
 		}
 	}

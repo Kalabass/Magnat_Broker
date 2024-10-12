@@ -1,4 +1,4 @@
-import { blankService } from '@/shared/api/services/blankService';
+import { blankService, MortgageType } from '@/shared/api/services/blankService';
 import { useMutation } from '@tanstack/react-query';
 
 export interface IMutationData {
@@ -12,7 +12,7 @@ export interface IMutationData {
 	blankEmployeeId: number;
 	blankInsuranceCompanyId: number;
 	blankInsuranceTypeId: number;
-	blankMortgageTypeId: number;
+	blankMortgageType: MortgageType;
 	blankSellingPointId: number;
 	blankPremium: number;
 	blankSum: number;
@@ -21,7 +21,7 @@ export interface IMutationData {
 	blankEmail: string;
 
 	clientIsLegal: boolean;
-	clientBirthDate: string;
+	clientBirthDate: Date;
 	clientName: string;
 	clientINN: number;
 	clientPassportNumber: number;

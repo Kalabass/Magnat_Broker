@@ -26,7 +26,7 @@ const CustomSelect = forwardRef<HTMLSelectElement, SelectWithTitleProps>(
 					size='small'
 					label={label}
 					inputRef={ref}
-					value={value || ''}
+					value={value ?? ''}
 					{...props}
 				>
 					<MenuItem value='' sx={{ minHeight: '36px', height: '36px' }}>

@@ -17,7 +17,7 @@ export const FormFieldNamesMap: Record<FormFieldNames, FormFieldNames> = {
 	blankSum: 'blankSum',
 	blankBankId: 'blankBankId',
 	blankInsuranceTypeId: 'blankInsuranceTypeId',
-	blankMortgageTypeId: 'blankMortgageTypeId',
+	blankMortgageType: 'blankMortgageType',
 	blankEmail: 'blankEmail',
 	blankPaymentTypeId: 'blankPaymentTypeId',
 

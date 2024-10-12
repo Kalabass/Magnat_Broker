@@ -535,7 +535,65 @@ export class BlanksService {
 	async update(id: number, updateBlankDto: UpdateBlankDto) {
 		try {
 			const blank = await this.findBlankById(id);
-			return await this.blankRepository.update(blank.id, updateBlankDto);
+			if (!blank) {
+				throw new Error('Blank not found');
+			}
+
+			if (blank.client) {
+				await this.clientsService.update(blank.client.id, {
+					name: updateBlankDto.clientName,
+					dateOfBirth: updateBlankDto.clientBirthDate,
+					series: updateBlankDto.clientPassportSeries,
+					number: updateBlankDto.clientPassportNumber,
+					phone: updateBlankDto.clientPhoneNumber,
+					inn: updateBlankDto.clientINN,
+					address: updateBlankDto.clientAddress,
+				});
+			}
+
+			const newBank = await this.bankService.findOne(
+				updateBlankDto.blankBankId
+			);
+
+			if (blank.insuranceObject) {
+				await this.insuranceObjectService.update(blank.client.id, {
+					name: updateBlankDto.insuranceObjectName,
+					horsePowers: updateBlankDto.insuranceObjectHorsePowers,
+					bank: newBank,
+				});
+			}
+
+			await this.blankRepository.update(blank.id, {
+				conclusionDate: updateBlankDto.blankConclusionDate,
+				activeDateStart: updateBlankDto.blankActiveDateStart,
+				activeDateEnd: updateBlankDto.blankActiveDateEnd,
+				useDateStart: updateBlankDto.blankUseDateStart,
+				useDateEnd: updateBlankDto.blankUseDateEnd,
+				number: updateBlankDto.blankNumber,
+				email: updateBlankDto.blankEmail,
+				premium: updateBlankDto.blankPremium,
+				sum: updateBlankDto.blankSum,
+				blankSeries: {
+					id: updateBlankDto.blankSeriesId,
+				},
+				insuranceCompany: {
+					id: updateBlankDto.blankInsuranceCompanyId,
+				},
+				employee: {
+					id: updateBlankDto.blankEmployeeId,
+				},
+				insuranceType: {
+					id: updateBlankDto.blankInsuranceTypeId,
+				},
+				sellingPoint: {
+					id: updateBlankDto.blankSellingPointId,
+				},
+				paymentType: {
+					id: updateBlankDto.blankPaymentTypeId,
+				},
+			});
+
+			return { message: 'Update successful' };
 		} catch (error) {
 			this.handleError(error);
 		}
