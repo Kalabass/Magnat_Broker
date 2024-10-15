@@ -13,7 +13,6 @@ export const PaymentTypesSelect: FC<WidgetSelectProps> = (props) => {
 			label='Способ оплаты'
 			items={PAYMENT_TYPES}
 			fieldName={FormFieldNamesMap.blankPaymentTypeId}
-			rules={{ required: 'Укажите тип оплаты' }}
 		/>
 	);
 };

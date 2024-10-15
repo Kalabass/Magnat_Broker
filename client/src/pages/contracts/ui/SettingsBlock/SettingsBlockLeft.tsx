@@ -1,12 +1,11 @@
-import { useFiltersStore } from '@/shared/stores/useFiltersStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { InsuranceTypeSelect } from '@/widgets/InsuraceTypeSelect'
-import { Box, Grid, Typography } from '@mui/material'
-import { FC } from 'react'
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import DateInputController from '@/shared/ui/Controllers/DateInputController';
+import InputController from '@/shared/ui/Controllers/NumberInputController';
+import { InsuranceTypeSelect } from '@/widgets/InsuraceTypeSelect';
+import { Box, Grid, Typography } from '@mui/material';
+import { FC } from 'react';
 
 const SettingsBlockLeft: FC = () => {
-	const { updateFiltersField } = useFiltersStore()
-
 	return (
 		<Grid
 			item
@@ -29,39 +28,25 @@ const SettingsBlockLeft: FC = () => {
 						alignItems: 'center',
 					}}
 				>
-					<CustomTextField
-						type='date'
-						onBlurHandler={value => {
-							updateFiltersField('conclusionDateStart', new Date(value))
-						}}
+					<DateInputController
+						name={FormFieldNamesMap.blankConclusionDateStart}
 					/>
 					-
-					<CustomTextField
-						type='date'
-						onBlurHandler={value => {
-							updateFiltersField('conclusionDateEnd', new Date(value))
-						}}
+					<DateInputController
+						name={FormFieldNamesMap.blankConclusionDateEnd}
 					/>
 				</Box>
 			</Grid>
 
-			<InsuranceTypeSelect
-				onChangeHandler={(value: number | undefined) => {
-					updateFiltersField('typeId', value)
-				}}
-			/>
+			<InsuranceTypeSelect />
 			<Grid item xs={4}>
 				<Typography>Страхователь</Typography>
 			</Grid>
 			<Grid item xs={8}>
-				<CustomTextField
-					onBlurHandler={value => {
-						updateFiltersField('client', value)
-					}}
-				/>
+				<InputController name={FormFieldNamesMap.clientName} />
 			</Grid>
 		</Grid>
-	)
-}
+	);
+};
 
-export default SettingsBlockLeft
+export default SettingsBlockLeft;

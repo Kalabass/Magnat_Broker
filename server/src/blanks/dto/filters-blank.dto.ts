@@ -1,20 +1,20 @@
-import { IsDate, IsNumber, IsString } from 'class-validator'
+import { IsDate, IsNumber, IsString } from 'class-validator';
 
 export class FiltersDto {
 	@IsDate()
-	conclusionDateStart?: Date
+	blankConclusionDateStart?: Date;
 	@IsDate()
-	conclusionDateEnd?: Date
+	blankConclusionDateEnd?: Date;
 	@IsString()
-	client?: string
+	clientName?: string;
 	@IsString()
-	policeNumber?: string
+	blankNumber?: string;
 	@IsNumber()
-	typeId?: number
+	blankInsuranceTypeId?: number;
 	@IsNumber()
-	employeeId?: number
+	blankEmployeeId?: number;
 	@IsNumber()
-	sellingPointId?: number
+	blankSellingPointId?: number;
 	@IsNumber()
-	insuranceCompanyId?: number
+	blankInsuranceCompanyId?: number;
 }

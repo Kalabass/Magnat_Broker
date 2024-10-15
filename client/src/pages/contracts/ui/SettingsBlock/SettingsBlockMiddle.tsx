@@ -1,12 +1,11 @@
-import { useFiltersStore } from '@/shared/stores/useFiltersStore'
-import CustomTextField from '@/shared/ui/CustomTextField'
-import { EmployeeSelect } from '@/widgets/EmployeeSelect'
-import { SellingPointSelect } from '@/widgets/SellingPointSelect'
-import { Grid, Typography } from '@mui/material'
-import { FC } from 'react'
+import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import InputController from '@/shared/ui/Controllers/NumberInputController';
+import { EmployeeSelect } from '@/widgets/EmployeeSelect';
+import { SellingPointSelect } from '@/widgets/SellingPointSelect';
+import { Grid, Typography } from '@mui/material';
+import { FC } from 'react';
 
 const SettingsBlockMiddle: FC = () => {
-	const { updateFiltersField } = useFiltersStore()
 	return (
 		<Grid
 			item
@@ -20,24 +19,12 @@ const SettingsBlockMiddle: FC = () => {
 				<Typography>№ Полиса</Typography>
 			</Grid>
 			<Grid item xs={8}>
-				<CustomTextField
-					onBlurHandler={value => {
-						updateFiltersField('policeNumber', value)
-					}}
-				/>
+				<InputController name={FormFieldNamesMap.blankNumber} />
 			</Grid>
-			<EmployeeSelect
-				onChangeHandler={value => {
-					updateFiltersField('employeeId', value)
-				}}
-			/>
-			<SellingPointSelect
-				onChangeHandler={value => {
-					updateFiltersField('sellingPointId', value)
-				}}
-			/>
+			<EmployeeSelect />
+			<SellingPointSelect />
 		</Grid>
-	)
-}
+	);
+};
 
-export default SettingsBlockMiddle
+export default SettingsBlockMiddle;

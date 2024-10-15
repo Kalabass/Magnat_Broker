@@ -18,7 +18,6 @@ export const CompaniesSelect: FC<WidgetSelectProps> = (props) => {
 			label='СК'
 			items={COMPANIES}
 			fieldName={FormFieldNamesMap.blankInsuranceCompanyId}
-			rules={{ required: 'Укажите страховую компанию' }}
 		/>
 	);
 };

@@ -4,15 +4,13 @@ import { CLIENT_TYPES } from '@/pages/contractNew/constants/clinetTypes.const';
 import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import useIsCashPaymentType from '@/shared/lib/hooks/useIsCashPaymentType';
 import useIsLegal from '@/shared/lib/hooks/useIsLegal';
-import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
+import InputController from '@/shared/ui/Controllers/NumberInputController';
 import { Box, Grid, Typography } from '@mui/material';
 import { FC } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
 import IndividualFields from './IndividualFields';
 import OrganizationFields from './OrganizationFields';
 
 const ClientForm: FC = () => {
-	const { control } = useFormContext();
 	const isLegal = useIsLegal();
 	const isCash = useIsCashPaymentType();
 
@@ -35,17 +33,9 @@ const ClientForm: FC = () => {
 					<Typography>Номер телефона</Typography>
 				</Grid>
 				<Grid item xs={4}>
-					<Controller
+					<InputController
 						name={FormFieldNamesMap.clientPhoneNumber}
-						control={control}
-						defaultValue={undefined}
-						render={({ field }) => (
-							<CustomTextFieldRef
-								type='tel'
-								{...field}
-								value={field.value ?? ''}
-							/>
-						)}
+						type='tel'
 					/>
 				</Grid>
 
@@ -55,10 +45,9 @@ const ClientForm: FC = () => {
 					<Typography>ИНН</Typography>
 				</Grid>
 				<Grid item xs={4}>
-					<Controller
+					<InputController
 						name={FormFieldNamesMap.clientINN}
-						control={control}
-						defaultValue={undefined}
+						type='number'
 						rules={{
 							minLength: {
 								value: 10,
@@ -70,14 +59,6 @@ const ClientForm: FC = () => {
 							},
 							required: isCash,
 						}}
-						render={({ field, fieldState: { error } }) => (
-							<CustomTextFieldRef
-								type='number'
-								error={!!error}
-								helperText={error?.message}
-								{...field}
-							/>
-						)}
 					/>
 				</Grid>
 
@@ -87,14 +68,7 @@ const ClientForm: FC = () => {
 					<Typography>Адрес</Typography>
 				</Grid>
 				<Grid item xs={10}>
-					<Controller
-						defaultValue={undefined}
-						name={FormFieldNamesMap.clientAddress}
-						control={control}
-						render={({ field }) => (
-							<CustomTextFieldRef {...field} value={field.value ?? ''} />
-						)}
-					/>
+					<InputController name={FormFieldNamesMap.clientAddress} />
 				</Grid>
 			</Grid>
 		</Box>
