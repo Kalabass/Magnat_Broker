@@ -13,7 +13,6 @@ export const SellingPointSelect: FC<WidgetSelectProps> = (props) => {
 			label='Точка продажи'
 			items={SELLING_POINTS}
 			fieldName={FormFieldNamesMap.blankSellingPointId}
-			rules={{ required: 'Укажите точку продажи' }}
 		/>
 	);
 };

@@ -14,7 +14,6 @@ export const InsuranceTypeSelect: FC<WidgetSelectProps> = (props) => {
 			label='Вид'
 			items={INSURANCE_TYPES}
 			fieldName={FormFieldNamesMap.blankInsuranceTypeId}
-			rules={{ required: 'Укажите вид ' }}
 		/>
 	);
 };

@@ -325,54 +325,58 @@ export class BlanksService {
 	async findAllProcessedExcel(filtersDto: FiltersDto, res: Response) {
 		try {
 			let {
-				conclusionDateStart,
-				conclusionDateEnd,
-				policeNumber,
-				client,
-				employeeId,
-				insuranceCompanyId,
-				sellingPointId,
-				typeId,
+				blankConclusionDateEnd,
+				blankConclusionDateStart,
+				blankEmployeeId,
+				blankInsuranceCompanyId,
+				blankInsuranceTypeId,
+				blankNumber,
+				blankSellingPointId,
+				clientName,
 			} = filtersDto;
 
 			const whereConditions: any = {};
 
-			if (policeNumber) {
-				whereConditions.number = ILike(`%${policeNumber}%`);
+			if (blankNumber) {
+				whereConditions.number = ILike(`%${blankNumber}%`);
 			}
 
-			if (employeeId) {
-				whereConditions.employee = { id: employeeId };
+			if (blankEmployeeId) {
+				whereConditions.employee = { id: blankEmployeeId };
 			}
 
-			if (insuranceCompanyId) {
-				whereConditions.insuranceCompany = { id: insuranceCompanyId };
+			if (blankInsuranceCompanyId) {
+				whereConditions.insuranceCompany = { id: blankInsuranceCompanyId };
 			}
 
-			if (sellingPointId) {
-				whereConditions.sellingPoint = { id: sellingPointId };
+			if (blankSellingPointId) {
+				whereConditions.sellingPoint = { id: blankSellingPointId };
 			}
 
-			if (typeId) {
-				whereConditions.insuranceType = { id: typeId };
+			if (blankInsuranceTypeId) {
+				whereConditions.insuranceType = { id: blankInsuranceTypeId };
 			}
 
-			if (conclusionDateStart && conclusionDateEnd) {
-				const endDatePlusOne = new Date(conclusionDateEnd);
+			if (blankConclusionDateStart && blankConclusionDateEnd) {
+				const endDatePlusOne = new Date(blankConclusionDateEnd);
 				endDatePlusOne.setDate(endDatePlusOne.getDate() + 1);
 
 				whereConditions.conclusionDate = Between(
-					conclusionDateStart,
+					blankConclusionDateStart,
 					endDatePlusOne
 				);
-			} else if (conclusionDateStart) {
-				whereConditions.conclusionDate = MoreThanOrEqual(conclusionDateStart);
-			} else if (conclusionDateEnd) {
-				whereConditions.conclusionDate = LessThanOrEqual(conclusionDateEnd);
+			} else if (blankConclusionDateStart) {
+				whereConditions.conclusionDate = MoreThanOrEqual(
+					blankConclusionDateStart
+				);
+			} else if (blankConclusionDateEnd) {
+				whereConditions.conclusionDate = LessThanOrEqual(
+					blankConclusionDateEnd
+				);
 			}
 
-			if (client) {
-				whereConditions.client = { name: ILike(`%${client}%`) };
+			if (clientName) {
+				whereConditions.client = { name: ILike(`%${clientName}%`) };
 			}
 
 			const blanks = await this.blankRepository.find({
@@ -437,56 +441,61 @@ export class BlanksService {
 	}
 
 	async findAllProcessed(filtersDto: FiltersDto) {
+		console.log(filtersDto);
 		try {
 			let {
-				conclusionDateStart,
-				conclusionDateEnd,
-				policeNumber,
-				client,
-				employeeId,
-				insuranceCompanyId,
-				sellingPointId,
-				typeId,
+				blankConclusionDateStart,
+				blankConclusionDateEnd,
+				blankEmployeeId,
+				blankInsuranceCompanyId,
+				blankInsuranceTypeId,
+				blankNumber,
+				blankSellingPointId,
+				clientName,
 			} = filtersDto;
 
 			const whereConditions: any = {};
 
-			if (policeNumber) {
-				whereConditions.number = ILike(`%${policeNumber}%`);
+			if (blankNumber) {
+				whereConditions.number = ILike(`%${blankNumber}%`);
 			}
 
-			if (employeeId) {
-				whereConditions.employee = { id: employeeId };
+			if (blankEmployeeId) {
+				whereConditions.employee = { id: blankEmployeeId };
 			}
 
-			if (insuranceCompanyId) {
-				whereConditions.insuranceCompany = { id: insuranceCompanyId };
+			if (blankInsuranceCompanyId) {
+				whereConditions.insuranceCompany = { id: blankInsuranceCompanyId };
 			}
 
-			if (sellingPointId) {
-				whereConditions.sellingPoint = { id: sellingPointId };
+			if (blankSellingPointId) {
+				whereConditions.sellingPoint = { id: blankSellingPointId };
 			}
 
-			if (typeId) {
-				whereConditions.insuranceType = { id: typeId };
+			if (blankInsuranceTypeId) {
+				whereConditions.insuranceType = { id: blankInsuranceTypeId };
 			}
 
-			if (conclusionDateStart && conclusionDateEnd) {
-				const endDatePlusOne = new Date(conclusionDateEnd);
+			if (blankConclusionDateStart && blankConclusionDateEnd) {
+				const endDatePlusOne = new Date(blankConclusionDateEnd);
 				endDatePlusOne.setDate(endDatePlusOne.getDate() + 1);
 
 				whereConditions.conclusionDate = Between(
-					conclusionDateStart,
+					blankConclusionDateStart,
 					endDatePlusOne
 				);
-			} else if (conclusionDateStart) {
-				whereConditions.conclusionDate = MoreThanOrEqual(conclusionDateStart);
-			} else if (conclusionDateEnd) {
-				whereConditions.conclusionDate = LessThanOrEqual(conclusionDateEnd);
+			} else if (blankConclusionDateStart) {
+				whereConditions.conclusionDate = MoreThanOrEqual(
+					blankConclusionDateStart
+				);
+			} else if (blankConclusionDateEnd) {
+				whereConditions.conclusionDate = LessThanOrEqual(
+					blankConclusionDateEnd
+				);
 			}
 
-			if (client) {
-				whereConditions.client = { name: ILike(`%${client}%`) };
+			if (clientName) {
+				whereConditions.client = { name: ILike(`%${clientName}%`) };
 			}
 
 			const blanks = await this.blankRepository.find({
@@ -509,23 +518,27 @@ export class BlanksService {
 
 			const processedBlanks = blanks.map((blank) => ({
 				...blank,
-				clientName: blank.client.name,
+				clientName: blank.client.name ?? undefined,
 				insuranceTypeName:
 					blank.insuranceType.name.toLowerCase() === 'ипотека'
-						? blank.insuranceType.name
-						: blank.insuranceType.name,
-				insuranceCompanyName: blank.insuranceCompany.name,
+						? (blank.insuranceType.name ?? undefined)
+						: (blank.insuranceType.name ?? undefined),
+				insuranceCompanyName: blank.insuranceCompany
+					? blank.insuranceCompany.name
+						? blank.insuranceCompany.name
+						: undefined
+					: undefined,
 				insuranceObjectName: blank.insuranceObject.name ?? undefined,
 				insuranceObjectYear: blank.insuranceObject.year ?? undefined,
 				sum: blank.sum,
 				premium: blank.premium,
-				employeeName: blank.employee.name,
-				sellingPointName: blank.sellingPoint.name,
-				seriesNumber: `${blank.blankSeries.name}  ${blank.number}`,
+				employeeName: blank.employee.name ?? undefined,
+				sellingPointName: blank.sellingPoint.name ?? undefined,
+				seriesNumber: `${blank.blankSeries.name ?? ''}  ${blank.number}`,
 				dateRange: `${this.formatDate(blank.activeDateStart)} - ${this.formatDate(blank.activeDateEnd)}`,
 				conclusionDate: this.formatDate(blank.conclusionDate),
 			}));
-
+			console.log(processedBlanks);
 			return processedBlanks;
 		} catch (error) {
 			this.handleError(error);

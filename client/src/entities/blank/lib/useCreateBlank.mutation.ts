@@ -1,23 +1,31 @@
 import { blankService, MortgageType } from '@/shared/api/services/blankService';
 import { useMutation } from '@tanstack/react-query';
 
-export interface IMutationData {
+export interface IMutationDataSelect {
+	blankSeriesId: number;
+	blankEmployeeId: number;
+	blankInsuranceCompanyId: number;
+	blankInsuranceTypeId: number;
+	blankSellingPointId: number;
+	blankBankId: number;
+	blankPaymentTypeId: number;
+}
+
+export interface IMutationData extends IMutationDataSelect {
 	blankConclusionDate: Date;
+	blankConclusionDateStart: Date;
+	blankConclusionDateEnd: Date;
 	blankActiveDateStart: Date;
 	blankActiveDateEnd: Date;
 	blankUseDateStart: Date;
 	blankUseDateEnd: Date;
 	blankNumber: string;
-	blankSeriesId: number;
-	blankEmployeeId: number;
-	blankInsuranceCompanyId: number;
-	blankInsuranceTypeId: number;
+
 	blankMortgageType: MortgageType;
-	blankSellingPointId: number;
+
 	blankPremium: number;
 	blankSum: number;
-	blankBankId: number;
-	blankPaymentTypeId: number;
+
 	blankEmail: string;
 
 	clientIsLegal: boolean;

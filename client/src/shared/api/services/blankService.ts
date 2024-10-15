@@ -127,7 +127,9 @@ class BlankService {
 		}
 	}
 
-	async findAllProcessed(data: Partial<FilterData>): Promise<ProcessedBlank[]> {
+	async findAllProcessed(
+		data?: Partial<IMutationData>
+	): Promise<ProcessedBlank[]> {
 		try {
 			const response = await instance.post(
 				API_ENDPOINTS.BLANK.FIND_ALL_PROCESSED,

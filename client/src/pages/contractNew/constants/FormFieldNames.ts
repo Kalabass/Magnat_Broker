@@ -4,6 +4,8 @@ type FormFieldNames = keyof IMutationData;
 
 export const FormFieldNamesMap: Record<FormFieldNames, FormFieldNames> = {
 	blankConclusionDate: 'blankConclusionDate',
+	blankConclusionDateEnd: 'blankConclusionDateEnd',
+	blankConclusionDateStart: 'blankConclusionDateStart',
 	blankActiveDateStart: 'blankActiveDateStart',
 	blankActiveDateEnd: 'blankActiveDateEnd',
 	blankUseDateStart: 'blankUseDateStart',

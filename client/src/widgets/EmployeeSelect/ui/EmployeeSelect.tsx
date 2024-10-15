@@ -15,7 +15,6 @@ export const EmployeeSelect: FC<WidgetSelectProps> = (props) => {
 			label='Агент'
 			items={AGENTS}
 			fieldName={FormFieldNamesMap.blankEmployeeId}
-			rules={{ required: 'Укажите агента' }}
 		/>
 	);
 };

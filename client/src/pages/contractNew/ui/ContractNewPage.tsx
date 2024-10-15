@@ -33,7 +33,6 @@ export const ContractNewPage: FC<ContractNewPageProps> = ({
 		: undefined;
 	const formMethods = useForm<IMutationData>({
 		defaultValues: inidata2,
-		// disabled: mode === ENUM_MODE.view ? true : false,
 	});
 
 	return (
