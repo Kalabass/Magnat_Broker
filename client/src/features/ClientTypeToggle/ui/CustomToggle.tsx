@@ -1,12 +1,13 @@
-import { CLIENT_TYPE_NAME_ORGANIZATION } from '@/pages/contractNew/constants/clinetTypes.const';
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
-import { itemData } from '@/pages/contractNew/ui/GeneralInfoBlock/GeneralInfoBlock';
+import { ItemData } from '@/shared/model/interface';
+import { CLIENT_TYPE_NAME_ORGANIZATION } from '@/widgets/contractForm/constants/clinetTypes.const';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
+
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export interface CustomToggleProps {
-	items: itemData[];
+	items: ItemData[];
 }
 
 export const CustomToggle: FC<CustomToggleProps> = ({ items }) => {

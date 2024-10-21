@@ -1,8 +1,8 @@
-import { Container, Stack } from '@mui/material'
-import { FC } from 'react'
-import DataGridBlock from './DataGridBlock/DataGridBlock'
-import SettingsBlock from './SettingsBlock/SettingsBLock'
-import UtilsBlock from './UtilsBlock/UtilsBlock'
+import { Container, Stack } from '@mui/material';
+import { FC } from 'react';
+import DataGridBlock from './DataGridBlock/DataGridBlock';
+import SettingsBlock from './SettingsBlock/SettingsBLock';
+import UtilsBlock from './UtilsBlock/UtilsBlock';
 
 export const ContractsPage: FC = () => {
 	return (
@@ -15,11 +15,11 @@ export const ContractsPage: FC = () => {
 				width: '100%',
 			}}
 		>
-			<Stack gap={2}>
+			<Stack gap={2} sx={{ width: '100%' }}>
 				<UtilsBlock />
 				<SettingsBlock />
 				<DataGridBlock />
 			</Stack>
 		</Container>
-	)
-}
+	);
+};

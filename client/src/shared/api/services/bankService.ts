@@ -1,13 +1,7 @@
-import { handleError } from '@/shared/lib/utils/errorHandler';
+import { BankData } from '@/shared/model/bankInterfaces';
 import { ItemData } from '@/shared/model/interface';
 import { API_ENDPOINTS } from '../../const/APIEndpoints';
 import instance from '../axiosInstance';
-
-interface BankData {
-	id: number;
-	name: string;
-	comment: string;
-}
 
 class BankService {
 	async findAll(): Promise<BankData[]> {
@@ -15,7 +9,7 @@ class BankService {
 			const response = await instance.get(API_ENDPOINTS.BANK.FIND_ALL);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all banks');
+			console.error(error, 'Failed to fetch all banks');
 			throw error;
 		}
 	}
@@ -25,7 +19,7 @@ class BankService {
 			const response = await instance.get(API_ENDPOINTS.BANK.FIND_ALL_NAMES);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all bank names');
+			console.error(error, 'Failed to fetch all bank names');
 			throw error;
 		}
 	}

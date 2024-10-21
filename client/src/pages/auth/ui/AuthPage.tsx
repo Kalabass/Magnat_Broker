@@ -1,11 +1,13 @@
 import { Container, Paper, styled, Typography } from '@mui/material';
 import { FC } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { LoginData } from '../model/interfaces';
 import AuthPageForm from './AuthPageForm';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
 	backgroundColor: 'lightBlue',
 	marginTop: theme.spacing(8),
-	height: 'calc(100vh - 64px)',
+	minHeight: 'calc(100vh - 64px)',
 	display: 'flex',
 	flexDirection: 'column',
 	justifyContent: 'center',
@@ -32,11 +34,19 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 export const AuthPage: FC = () => {
+	const formMethods = useForm<LoginData>({
+		defaultValues: {
+			login: '',
+			password: '',
+		},
+	});
 	return (
 		<StyledContainer>
 			<StyledPaper>
 				<StyledTypography>Войти в систему</StyledTypography>
-				<AuthPageForm />
+				<FormProvider {...formMethods}>
+					<AuthPageForm />
+				</FormProvider>
 			</StyledPaper>
 		</StyledContainer>
 	);

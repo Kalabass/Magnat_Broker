@@ -4,8 +4,8 @@ import { useMutation } from '@tanstack/react-query';
 
 export const useLoginMutation = () => {
 	return useMutation({
-		mutationFn: (props: { login: string; password: string }) =>
-			authService.login(props.login, props.password),
+		mutationFn: ({ login, password }: { login: string; password: string }) =>
+			authService.login(login, password),
 		mutationKey: ['employees', 'login'],
 		onSuccess: (data) => {
 			setTokenToLocalStorage(data.access_token);

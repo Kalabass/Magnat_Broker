@@ -1,6 +1,6 @@
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import DateInputController from '@/shared/ui/Controllers/DateInputController';
 import InputController from '@/shared/ui/Controllers/NumberInputController';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 import { InsuranceTypeSelect } from '@/widgets/InsuraceTypeSelect';
 import { Box, Grid, Typography } from '@mui/material';
 import { FC } from 'react';

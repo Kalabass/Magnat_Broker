@@ -1,5 +1,5 @@
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import InputController from '@/shared/ui/Controllers/NumberInputController';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 import { EmployeeSelect } from '@/widgets/EmployeeSelect';
 import { SellingPointSelect } from '@/widgets/SellingPointSelect';
 import { Grid, Typography } from '@mui/material';

@@ -3,7 +3,7 @@ import {
 	CustomSelectWithTitle,
 	CustomSelectWithTitleProps,
 } from '@/features/CustomSelectWithTitle/ui/CustomSelectWithTitle';
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 
 import { FC } from 'react';
 

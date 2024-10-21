@@ -1,5 +1,5 @@
 import { usePaymentTypes } from '@/entities/paymentType';
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 

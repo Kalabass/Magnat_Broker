@@ -1,7 +1,7 @@
 import { useSellingPointsNames } from '@/entities/sellingPoint';
 import { CustomSelectWithTitle } from '@/features/CustomSelectWithTitle';
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
 import { WidgetSelectProps } from '@/widgets/CompaniesSelect/ui/CompaniesSelect';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 import { FC } from 'react';
 
 export const SellingPointSelect: FC<WidgetSelectProps> = (props) => {

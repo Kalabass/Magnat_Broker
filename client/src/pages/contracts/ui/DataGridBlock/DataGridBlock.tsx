@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { paginationModel } from '../../const/paginationModel';
 import { TABLE_COLUMNS_NAMES } from '../../const/tableColumnNames';
 const DataGridBlock: FC = () => {
-	const { data } = useProcessedBlanks();
+	const { data, isFetching } = useProcessedBlanks();
 	const processedBlanks = data?.map((blank, index) => ({
 		...blank,
 		blankNumber: index + 1,
@@ -21,20 +21,16 @@ const DataGridBlock: FC = () => {
 				padding: 5,
 				width: '100%',
 				height: 'auto',
+				display: 'block',
 			}}
 		>
 			<DataGrid
 				autoHeight
 				columns={columns}
 				rows={rows}
-				sx={{
-					background: 'white',
-					alignItems: 'center',
-					border: 0,
-					fontSize: '16px',
-				}}
 				checkboxSelection
 				initialState={{ pagination: { paginationModel } }}
+				loading={isFetching}
 			/>
 		</Paper>
 	);

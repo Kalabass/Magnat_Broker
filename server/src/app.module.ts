@@ -22,6 +22,7 @@ import { SellingPointsModule } from './selling-points/selling-points.module';
 		ConfigModule.forRoot({ isGlobal: true }),
 		TypeOrmModule.forRootAsync({
 			imports: [ConfigModule],
+
 			useFactory: (configService: ConfigService) => ({
 				type: 'postgres',
 				host: configService.get('TYPEORM_HOST'),
@@ -34,6 +35,7 @@ import { SellingPointsModule } from './selling-points/selling-points.module';
 				entities: [__dirname + '/**/*.entity{.js, .ts}'],
 				migrations: [__dirname + '/migrations/*{.js, .ts}'],
 				subscribers: [],
+				parseInt8: true,
 			}),
 			inject: [ConfigService],
 		}),

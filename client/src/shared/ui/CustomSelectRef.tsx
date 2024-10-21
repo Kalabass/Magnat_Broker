@@ -7,10 +7,10 @@ import {
 	Select,
 } from '@mui/material';
 import { forwardRef } from 'react';
-import { itemData } from '../../pages/contractNew/ui/GeneralInfoBlock/GeneralInfoBlock';
+import { ItemData } from '../model/interface';
 
 export interface SelectWithTitleProps extends BaseSelectProps {
-	items?: itemData[] | undefined;
+	items?: ItemData[] | undefined;
 	label?: string;
 	formHelperText?: string;
 	error?: boolean;

@@ -1,4 +1,3 @@
-import { handleError } from '@/shared/lib/utils/errorHandler';
 import { API_ENDPOINTS } from '../../const/APIEndpoints';
 import { tokenRefreshInstance } from '../axiosInstance';
 
@@ -19,7 +18,7 @@ class AuthService {
 
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to login');
+			console.error('Failed to Login', error);
 			throw error;
 		}
 	}
@@ -31,7 +30,7 @@ class AuthService {
 			);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to refresh tokens');
+			console.error('Failed to refresh tokens', error);
 			throw error;
 		}
 	}
