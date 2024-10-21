@@ -1,4 +1,4 @@
-import { FormFieldNamesMap } from '@/pages/contractNew/constants/FormFieldNames';
+import { FormFieldNamesMap } from '@/widgets/contractForm/constants/FormFieldNames';
 import { useFormContext } from 'react-hook-form';
 
 const useIsLegal = () => {

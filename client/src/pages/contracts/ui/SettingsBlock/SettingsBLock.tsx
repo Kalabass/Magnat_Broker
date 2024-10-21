@@ -1,4 +1,4 @@
-import { IMutationData } from '@/entities/blank/lib/useCreateBlank.mutation';
+import { MutationData } from '@/shared/model/blanksInterfaces';
 import { Box, Button, Grid, Paper } from '@mui/material';
 import { FC } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
@@ -7,9 +7,9 @@ import SettingsBlockMiddle from './SettingsBlockMiddle';
 import SettingsBlockRight from './SettingsBlockRight';
 
 const SettingsBlock: FC = () => {
-	const formMethods = useForm<Partial<IMutationData>>({});
+	const formMethods = useForm<Partial<MutationData>>({});
 
-	const onSubmit: SubmitHandler<Partial<IMutationData>> = (data) => {
+	const onSubmit: SubmitHandler<Partial<MutationData>> = (data) => {
 		data;
 	};
 	return (

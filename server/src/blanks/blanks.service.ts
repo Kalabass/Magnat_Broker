@@ -98,6 +98,8 @@ export class BlanksService {
 					insuranceType: true,
 					paymentType: true,
 					sellingPoint: true,
+					previousBlank: true,
+					nextBlank: true,
 				},
 			});
 			if (!blank) {
@@ -110,7 +112,6 @@ export class BlanksService {
 	}
 
 	async findBlankByIdProcessed(id: number): Promise<IMutationData> {
-		console.log(id);
 		const blank = await this.blankRepository.findOne({
 			where: { id },
 			relations: {
@@ -124,6 +125,8 @@ export class BlanksService {
 				insuranceType: true,
 				paymentType: true,
 				sellingPoint: true,
+				previousBlank: true,
+				nextBlank: true,
 			},
 		});
 
@@ -186,6 +189,7 @@ export class BlanksService {
 		await queryRunner.startTransaction();
 
 		try {
+			//TODO: добавить сюда еще поиск клиента, и только, если клиента нет его создаем
 			const client = await this.clientsService.create({
 				address: createBlankDto.clientAddress,
 				dateOfBirth: createBlankDto.clientBirthDate,
@@ -235,58 +239,6 @@ export class BlanksService {
 		}
 	}
 
-	// async createBlank(createContractDto: CreateContractDto) {
-	// 	const {
-	// 		client: clientDTO,
-	// 		insuranceObject: insuranceObjectDTO,
-	// 		blank: blankDTO,
-	// 	} = createContractDto;
-	// 	const {
-	// 		insuranceCompanyId,
-	// 		employeeId,
-	// 		insuranceTypeId,
-	// 		blankSeriesId,
-	// 		sellingPointId,
-	// 	} = blankDTO;
-	// 	try {
-	// 		const client = await this.clientsService.create(clientDTO);
-	// 		const insuranceObject =
-	// 			await this.insuranceObjectService.create(insuranceObjectDTO);
-
-	// 		const insuranceCompany =
-	// 			await this.insuranceCompanyService.findOne(insuranceCompanyId);
-
-	// 		const blankSeries = await this.blankSeriesService.findOne(blankSeriesId);
-
-	// 		const sellingPoint =
-	// 			await this.sellingPointService.findOne(sellingPointId);
-
-	// 		const insuranceType =
-	// 			await this.insuranceTypeService.findOne(insuranceTypeId);
-
-	// 		const employee = await this.employeesService.findOne(employeeId);
-
-	// 		const blank = await this.create({
-	// 			...blankDTO,
-	// 			sellingPoint,
-	// 			employee,
-	// 			insuranceType,
-	// 			blankSeries,
-	// 			insuranceCompany,
-	// 			client: client,
-	// 			insuranceObject: insuranceObject,
-	// 		});
-
-	// 		if (!blank) {
-	// 			throw new BadRequestException('Не удалось создать бланк');
-	// 		}
-
-	// 		return blank;
-	// 	} catch (error) {
-	// 		this.handleError(error);
-	// 	}
-	// }
-
 	async findAll() {
 		try {
 			const blanks = await this.blankRepository.find({
@@ -300,6 +252,8 @@ export class BlanksService {
 						bank: true,
 					},
 					blankSeries: true,
+					previousBlank: true,
+					nextBlank: true,
 				},
 				order: {
 					conclusionDate: 'DESC',
@@ -391,6 +345,8 @@ export class BlanksService {
 					employee: true,
 					sellingPoint: true,
 					blankSeries: true,
+					previousBlank: true,
+					nextBlank: true,
 				},
 				order: {
 					conclusionDate: 'DESC',
@@ -418,7 +374,6 @@ export class BlanksService {
 			const workbook = XLSX.utils.book_new();
 			XLSX.utils.book_append_sheet(workbook, worksheet, 'Processed Blanks');
 
-			// Генерация файла
 			const excelBuffer = XLSX.write(workbook, {
 				bookType: 'xlsx',
 				type: 'buffer',
@@ -433,7 +388,6 @@ export class BlanksService {
 				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 			);
 
-			// Отправка файла
 			res.send(excelBuffer);
 		} catch (error) {
 			this.handleError(error);
@@ -510,6 +464,8 @@ export class BlanksService {
 					employee: true,
 					sellingPoint: true,
 					blankSeries: true,
+					previousBlank: true,
+					nextBlank: true,
 				},
 				order: {
 					id: 'DESC',
@@ -538,7 +494,7 @@ export class BlanksService {
 				dateRange: `${this.formatDate(blank.activeDateStart)} - ${this.formatDate(blank.activeDateEnd)}`,
 				conclusionDate: this.formatDate(blank.conclusionDate),
 			}));
-			console.log(processedBlanks);
+
 			return processedBlanks;
 		} catch (error) {
 			this.handleError(error);

@@ -19,7 +19,7 @@ export class Client {
 	@Column({ nullable: true })
 	phone: string;
 
-	@Column({ nullable: true, type: 'bigint' })
+	@Column({ nullable: true, type: 'int8' })
 	inn: number;
 
 	@Column({ nullable: true })

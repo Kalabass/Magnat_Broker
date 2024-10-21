@@ -1,36 +1,15 @@
 import { useLoginMutation } from '@/entities/auth';
 import { AppRoutes } from '@/shared/const/AppRoutes';
 import CustomTextFieldRef from '@/shared/ui/CustomTextFieldRef';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Box, Button, IconButton, InputAdornment, Stack } from '@mui/material';
+import PasswordInputAdornment from '@/shared/ui/PasswordInputAdornment';
+import { Box, Button, Stack } from '@mui/material';
 import { FC, useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
-//TODO: Компонент слишком огромный получился, мб декомпозировать
-
-const codes = {
-	invalidPasswordCode: 'INVALID_PASSWORD',
-	invalidLoginCode: 'INVALID_LOGIN',
-};
-
-interface ILoginData {
-	login: string;
-	password: string;
-}
+import { ERROR_CODES } from '../const/constants';
+import { LoginData } from '../model/interfaces';
 
 const AuthPageForm: FC = () => {
-	const {
-		handleSubmit,
-		control,
-		formState: { errors },
-	} = useForm<ILoginData>({
-		defaultValues: {
-			login: '',
-			password: '',
-		},
-	});
-
 	const loginMutation = useLoginMutation();
 	const navigate = useNavigate();
 
@@ -41,25 +20,28 @@ const AuthPageForm: FC = () => {
 		string | undefined
 	>(undefined);
 
-	const onSubmit: SubmitHandler<ILoginData> = (data) => {
+	const onSubmit: SubmitHandler<LoginData> = (data) => {
+		setLoginErrorMessage(undefined);
+		setPasswordErrorMessage(undefined);
 		loginMutation.mutate(data, {
 			onSuccess: () => {
 				navigate(AppRoutes.CONTRACTS);
 			},
 			onError: (error) => {
-				setLoginErrorMessage(undefined);
-				setPasswordErrorMessage(undefined);
 				const { response } = error as {
 					response?: { data: { code: string; message: string } };
 				};
-				if (response?.data.code == codes.invalidLoginCode)
-					setLoginErrorMessage('Неверный логин');
-				if (response?.data.code == codes.invalidPasswordCode)
-					setPasswordErrorMessage('Неверный пароль');
+
+				if (response?.data.code === ERROR_CODES.invalidLoginCode)
+					setLoginErrorMessage(response.data.message);
+				if (response?.data.code === ERROR_CODES.invalidPasswordCode)
+					setPasswordErrorMessage(response.data.message);
 			},
 		});
 	};
+
 	const [inputType, setInputType] = useState<'password' | 'text'>('password');
+	const { handleSubmit, control } = useFormContext<LoginData>();
 
 	return (
 		<Box
@@ -79,19 +61,13 @@ const AuthPageForm: FC = () => {
 							message: 'Неверный формат электронной почты',
 						},
 					}}
-					render={({ field }) => (
+					render={({ field, fieldState: { error } }) => (
 						<CustomTextFieldRef
 							inputLabel='логин'
 							label='логин'
 							type='email'
-							error={errors.login ? true : loginErrorMessage ? true : false}
-							helperText={
-								errors.login?.message
-									? errors.login.message
-									: loginErrorMessage
-									? loginErrorMessage
-									: ' '
-							}
+							error={!!error || !!loginErrorMessage}
+							helperText={error?.message || loginErrorMessage}
 							{...field}
 						/>
 					)}
@@ -102,39 +78,22 @@ const AuthPageForm: FC = () => {
 					rules={{
 						required: 'Введите пароль',
 					}}
-					render={({ field }) => (
+					render={({ field, fieldState: { error } }) => (
 						<CustomTextFieldRef
 							inputLabel='пароль'
 							label='пароль'
 							type={inputType}
-							sx={{ flexGrow: 1 }}
-							error={
-								errors.password ? true : passwordErrorMessage ? true : false
-							}
-							helperText={
-								errors.password?.message
-									? errors.password.message
-									: passwordErrorMessage
-									? passwordErrorMessage
-									: ' '
-							}
+							error={!!error || !!passwordErrorMessage}
+							helperText={error?.message || passwordErrorMessage}
 							endAdornment={
-								<InputAdornment position='end'>
-									<IconButton
-										onClick={() =>
-											setInputType(
-												inputType === 'password' ? 'text' : 'password'
-											)
-										}
-										aria-label='toggle password visibility'
-									>
-										{inputType === 'password' ? (
-											<VisibilityOff />
-										) : (
-											<Visibility />
-										)}
-									</IconButton>
-								</InputAdornment>
+								<PasswordInputAdornment
+									onCLick={() => {
+										setInputType(
+											inputType === 'password' ? 'text' : 'password'
+										);
+									}}
+									inputType={inputType}
+								/>
 							}
 							{...field}
 						/>

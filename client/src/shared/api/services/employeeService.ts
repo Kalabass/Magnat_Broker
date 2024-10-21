@@ -1,26 +1,15 @@
-import { handleError } from '@/shared/lib/utils/errorHandler';
+import { EmployeeData } from '@/shared/model/employeeInterfaces';
 import { ItemData } from '@/shared/model/interface';
 import { API_ENDPOINTS } from '../../const/APIEndpoints';
 import instance from '../axiosInstance';
 
-interface employeesData {
-	id: number;
-	name: string;
-	login: string;
-	password: string;
-	comment: string;
-	isActive: boolean;
-	series: number;
-	number: number;
-}
-
 class EmployeeService {
-	async findAll(): Promise<employeesData[]> {
+	async findAll(): Promise<EmployeeData[]> {
 		try {
 			const response = await instance.get(API_ENDPOINTS.EMPLOYEE.FIND_ALL);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all employees');
+			console.error(error, 'Failed to fetch all employees');
 			throw error;
 		}
 	}
@@ -32,7 +21,7 @@ class EmployeeService {
 			);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all employee names');
+			console.error(error, 'Failed to fetch all employee names');
 			throw error;
 		}
 	}

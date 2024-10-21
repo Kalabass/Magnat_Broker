@@ -1,17 +1,12 @@
 import { useProcessedBlankById } from '@/entities/blank';
-import { ContractNewPage } from '@/pages/contractNew';
+import CustomStyledContainer from '@/shared/ui/StyledContainer';
+import { ContractForm, ENUM_MODE } from '@/widgets/contractForm';
+
 import { FC } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-export enum ENUM_MODE {
-	view = 'view',
-	new = 'new',
-	edit = 'edit',
-}
-
 export const ViewContractPage: FC = () => {
 	const { id } = useParams<{ id: string }>();
-	//TODO: Добавить обработку исключений
 	const { data: BLANK_DATA } = useProcessedBlankById(+id!);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
@@ -20,11 +15,13 @@ export const ViewContractPage: FC = () => {
 	};
 	return (
 		BLANK_DATA && (
-			<ContractNewPage
-				initialData={BLANK_DATA}
-				mode={ENUM_MODE.view}
-				onSubmitHandler={onSubmitHandler}
-			/>
+			<CustomStyledContainer>
+				<ContractForm
+					initialData={BLANK_DATA}
+					mode={ENUM_MODE.view}
+					onSubmitHandler={onSubmitHandler}
+				/>
+			</CustomStyledContainer>
 		)
 	);
 };

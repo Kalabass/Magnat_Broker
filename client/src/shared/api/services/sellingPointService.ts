@@ -1,22 +1,15 @@
-import { handleError } from '@/shared/lib/utils/errorHandler';
 import { ItemData } from '@/shared/model/interface';
+import { SellingPointData } from '@/shared/model/sellingPointInterfaces';
 import { API_ENDPOINTS } from '../../const/APIEndpoints';
 import instance from '../axiosInstance';
 
-interface SellingPointsData {
-	id: number;
-	name: string;
-	comment: string;
-	isActive: boolean;
-}
-
 class SellingPointService {
-	async findAll(): Promise<SellingPointsData[]> {
+	async findAll(): Promise<SellingPointData[]> {
 		try {
 			const response = await instance.get(API_ENDPOINTS.SELLING_POINT.FIND_ALL);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all selling points');
+			console.error(error, 'Failed to fetch all selling points');
 			throw error;
 		}
 	}
@@ -28,7 +21,7 @@ class SellingPointService {
 			);
 			return response.data;
 		} catch (error) {
-			handleError(error, 'Failed to fetch all selling points names');
+			console.error(error, 'Failed to fetch all selling points names');
 			throw error;
 		}
 	}
